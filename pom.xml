@@ -3,6 +3,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Parent POM -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -10,16 +11,20 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
+    <!-- Project Metadata -->
     <groupId>com.example</groupId>
     <artifactId>coursemanagement</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>CourseManagement</name>
     <description>Demo project for Spring Boot</description>
 
+    <!-- Properties -->
     <properties>
         <java.version>21</java.version>
+        <mysql-connector.version>9.1.0</mysql-connector.version>
     </properties>
 
+    <!-- Dependencies -->
     <dependencies>
         <!-- Spring Boot Starter Web -->
         <dependency>
@@ -39,6 +44,12 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Spring Boot Starter Thymeleaf (for HTML templates) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
         <!-- MySQL Driver -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -46,7 +57,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Spring Boot DevTools (Optional) -->
+        <!-- Spring Boot DevTools (Optional for development) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -54,7 +65,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Lombok (Optional) -->
+        <!-- Lombok (Optional for reducing boilerplate code) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -76,11 +87,21 @@
         </dependency>
     </dependencies>
 
+    <!-- Build Configuration -->
     <build>
         <plugins>
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
