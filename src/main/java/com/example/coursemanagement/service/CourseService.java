@@ -9,14 +9,22 @@ import java.util.List;
 
 @Service
 public class CourseService {
+
     @Autowired
     private CourseRepository courseRepository;
 
+    // Add a new course
+    public void addCourse(Course course) {
+        courseRepository.save(course);
+    }
+
+    // Get all courses
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
-    public Course addCourse(Course course) {
-        return courseRepository.save(course);
+    // Get a course by ID
+    public Course getCourseById(Long id) {
+        return courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found"));
     }
 }
