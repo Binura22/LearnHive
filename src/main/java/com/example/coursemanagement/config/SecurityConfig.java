@@ -21,17 +21,16 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 // Public endpoints
                 .requestMatchers("/courses/view-all", "/courses/view/**").permitAll()
+                .requestMatchers("/login", "/login.html").permitAll() // Allow login page
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login") // Custom login page
-                .defaultSuccessUrl("/courses/view-all", true) // Redirect after login
+                .defaultSuccessUrl("/courses/view-all", true)
                 .permitAll()
             )
-            .logout(logout -> logout
-                .permitAll()
-            );
+            .logout(logout -> logout.permitAll());
         return http.build();
     }
 
@@ -42,19 +41,16 @@ public class SecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        // Create an admin user
         UserDetails admin = User.withUsername("admin")
                                  .password(passwordEncoder().encode("adminpassword"))
                                  .roles("ADMIN")
                                  .build();
 
-        // Create a normal user
         UserDetails user = User.withUsername("user")
                                .password(passwordEncoder().encode("userpassword"))
                                .roles("USER")
                                .build();
 
-        // Return both users
         return new InMemoryUserDetailsManager(admin, user);
     }
 }
