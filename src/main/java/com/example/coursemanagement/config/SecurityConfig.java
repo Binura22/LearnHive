@@ -13,37 +13,48 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    /**
-     * Configures the security filter chain to enforce role-based access control.
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-only endpoints
-                .requestMatchers("/user/**").permitAll()       // Public endpoints
-                .anyRequest().authenticated()                  // All other requests require authentication
+                // Admin-only endpoints
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                // Public endpoints
+                .requestMatchers("/courses/view-all", "/courses/view/**").permitAll()
+                // All other requests require authentication
+                .anyRequest().authenticated()
             )
-            .httpBasic(); // Use Basic Authentication (no arguments needed)
+            .formLogin(form -> form
+                .loginPage("/login") // Custom login page
+                .defaultSuccessUrl("/courses/view-all", true) // Redirect after login
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .permitAll()
+            );
         return http.build();
-    }
-
-    /**
-     * Creates an in-memory user with the username "admin" and password "password".
-     */
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        // Create an admin user with the username "admin" and a securely encoded password
-        UserDetails admin = User.builder()
-            .username("admin")
-            .password(passwordEncoder.encode("password"))
-            .roles("ADMIN")
-            .build();
-        return new InMemoryUserDetailsManager(admin);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        // Create an admin user
+        UserDetails admin = User.withUsername("admin")
+                                 .password(passwordEncoder().encode("adminpassword"))
+                                 .roles("ADMIN")
+                                 .build();
+
+        // Create a normal user
+        UserDetails user = User.withUsername("user")
+                               .password(passwordEncoder().encode("userpassword"))
+                               .roles("USER")
+                               .build();
+
+        // Return both users
+        return new InMemoryUserDetailsManager(admin, user);
     }
 }
