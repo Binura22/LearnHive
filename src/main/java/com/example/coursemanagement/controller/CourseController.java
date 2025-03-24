@@ -5,20 +5,27 @@ import com.example.coursemanagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/courses")
+public class CourseController {
 
     @Autowired
     private CourseService courseService;
 
-    @PostMapping("/courses")
+    @GetMapping
+    public List<Course> getAllCourses() {
+        return courseService.getAllCourses();
+    }
+
+    @PostMapping
     public Course addCourse(@RequestBody Course course) {
         return courseService.addCourse(course);
     }
 
-    @GetMapping("/courses/{id}")
-    public Course getCourse(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public Course getCourseById(@PathVariable String id) {
         return courseService.getCourseById(id);
     }
 }

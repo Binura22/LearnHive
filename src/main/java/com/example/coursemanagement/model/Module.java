@@ -1,26 +1,17 @@
 package com.example.coursemanagement.model;
 
-import jakarta.persistence.*;
-
-@Entity
 public class Module {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    private String id;
     private String title;
     private String videoUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
-
     // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -38,13 +29,5 @@ public class Module {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
     }
 }

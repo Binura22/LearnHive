@@ -1,7 +1,8 @@
 package com.example.coursemanagement.repository;
 
 import com.example.coursemanagement.model.Course;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface CourseRepository extends JpaRepository<Course, Long> {
+public interface CourseRepository extends MongoRepository<Course, String> {
+    // Add custom query methods if needed
 }
