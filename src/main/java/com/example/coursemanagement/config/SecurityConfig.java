@@ -17,12 +17,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((auth) -> auth
-                // Admin-only endpoints
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                // Public endpoints
                 .requestMatchers("/courses/view-all", "/courses/view/**").permitAll()
-                .requestMatchers("/login", "/login.html").permitAll() // Allow login page
-                // All other requests require authentication
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

@@ -9,10 +9,11 @@ import java.util.List;
 
 @Service
 public class ModuleService {
+
     @Autowired
     private ModuleRepository moduleRepository;
 
-    public List<Module> getModulesByCourseId(Long courseId) {
+    public List<Module> getModulesByCourseId(String courseId) {
         return moduleRepository.findByCourseId(courseId);
     }
 
