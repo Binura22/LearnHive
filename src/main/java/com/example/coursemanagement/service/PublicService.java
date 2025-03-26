@@ -8,20 +8,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CourseService {
+public class PublicService {
 
     @Autowired
     private CourseRepository courseRepository;
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
-    }
-
-    public Course addCourse(Course course) {
-        return courseRepository.save(course);
-    }
-
-    public Course getCourseById(String id) {
-        return courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found"));
     }
 }

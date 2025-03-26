@@ -1,12 +1,28 @@
 package com.example.coursemanagement.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "modules")
 public class Module {
 
+    @Id
     private String id;
     private String title;
-    private String videoUrl;
+    private String description;
+    private String videoLink;
 
-    // Getters and Setters
+    // Default Constructor
+    public Module() {}
+
+    // Parameterized Constructor
+    public Module(String title, String description, String videoLink) {
+        this.title = title;
+        this.description = description;
+        this.videoLink = videoLink;
+    }
+
+    // Getter and Setter for 'id'
     public String getId() {
         return id;
     }
@@ -15,6 +31,7 @@ public class Module {
         this.id = id;
     }
 
+    // Getter and Setter for 'title'
     public String getTitle() {
         return title;
     }
@@ -23,11 +40,21 @@ public class Module {
         this.title = title;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    // Getter and Setter for 'description'
+    public String getDescription() {
+        return description;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    // Getter and Setter for 'videoLink'
+    public String getVideoLink() {
+        return videoLink;
+    }
+
+    public void setVideoLink(String videoLink) {
+        this.videoLink = videoLink;
     }
 }
