@@ -22,15 +22,22 @@ public class SecurityConfig {
                 .requestMatchers("/api/public/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic()
-            .and()
+            // Explicitly configure form login instead of using withDefaults()
+            .formLogin(form -> form
+                .loginPage("/login") // Default login page provided by Spring Security
+                .defaultSuccessUrl("/api/admin/courses", true) // Redirect after login
+                .permitAll()
+            )
+            .logout(logout -> logout.permitAll())
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
             .build();
     }
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
+        String encodedPassword = new BCryptPasswordEncoder().encode("admin123");
         UserDetails admin = User.withUsername("admin")
-            .password(passwordEncoder().encode("admin123")) // Hashed password
+            .password(encodedPassword)
             .roles("ADMIN")
             .build();
 
