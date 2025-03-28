@@ -4,4 +4,5 @@ import com.example.coursemanagement.model.Course;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface CourseRepository extends MongoRepository<Course, String> {
+    // Additional custom queries if needed
 }

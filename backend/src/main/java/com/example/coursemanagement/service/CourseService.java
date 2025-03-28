@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AdminService {
+public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
@@ -26,7 +26,6 @@ public class AdminService {
         if (existingCourse != null) {
             existingCourse.setTitle(updatedCourse.getTitle());
             existingCourse.setDescription(updatedCourse.getDescription());
-            existingCourse.setInstructor(updatedCourse.getInstructor());
             existingCourse.setModules(updatedCourse.getModules());
             return courseRepository.save(existingCourse);
         }

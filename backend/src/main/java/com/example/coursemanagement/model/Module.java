@@ -1,28 +1,28 @@
 package com.example.coursemanagement.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "modules")
 public class Module {
 
     @Id
     private String id;
+    private String courseId; // Link to the parent course
     private String title;
     private String description;
     private String videoLink;
+    private String pdfLink;
 
-    // Default Constructor
+    // Constructors, Getters, and Setters
     public Module() {}
 
-    // Parameterized Constructor
-    public Module(String title, String description, String videoLink) {
+    public Module(String courseId, String title, String description, String videoLink, String pdfLink) {
+        this.courseId = courseId;
         this.title = title;
         this.description = description;
         this.videoLink = videoLink;
+        this.pdfLink = pdfLink;
     }
 
-    // Getter and Setter for 'id'
     public String getId() {
         return id;
     }
@@ -31,7 +31,14 @@ public class Module {
         this.id = id;
     }
 
-    // Getter and Setter for 'title'
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -40,7 +47,6 @@ public class Module {
         this.title = title;
     }
 
-    // Getter and Setter for 'description'
     public String getDescription() {
         return description;
     }
@@ -49,12 +55,19 @@ public class Module {
         this.description = description;
     }
 
-    // Getter and Setter for 'videoLink'
     public String getVideoLink() {
         return videoLink;
     }
 
     public void setVideoLink(String videoLink) {
         this.videoLink = videoLink;
+    }
+
+    public String getPdfLink() {
+        return pdfLink;
+    }
+
+    public void setPdfLink(String pdfLink) {
+        this.pdfLink = pdfLink;
     }
 }
