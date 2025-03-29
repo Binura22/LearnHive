@@ -2,38 +2,39 @@
 
 import React, { useState } from 'react';
 import { login } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for error parameter in URL
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('error')) {
+      setError('Invalid credentials. Please try again.');
+    }
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     try {
       const response = await login(username, password);
-      if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
-      }
-      
-      // Check if user is admin
-      if (response.data.roles?.includes('ROLE_ADMIN')) {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/home');
+      if (response.data.authenticated) {
+        navigate('/api/auth/check-role');
       }
     } catch (error) {
       console.error('Login failed:', error);
-      setError(error.response?.data?.message || 'Invalid credentials. Please try again.');
+      setError('Invalid credentials. Please try again.');
     }
   };
 
   const handleGoogleLogin = () => {
-    // Redirect to the correct OAuth2 endpoint
-    window.location.href = "http://localhost:8080/login/admin/dashboard";
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
   };
 
   return (
