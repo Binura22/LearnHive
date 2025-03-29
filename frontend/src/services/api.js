@@ -1,34 +1,48 @@
-import axios from 'axios';
+// src/services/api.js
 
-const BASE_URL = 'http://localhost:8081'; // Replace with your backend URL
+import axiosInstance from './axiosInstance';
 
-export const login = (username, password) => {
-  const base64Credentials = btoa(`${username}:${password}`);
-  return axios.get(`${BASE_URL}/login`, {
-    headers: {
-      Authorization: `Basic ${base64Credentials}`,
-    },
-  });
+// Login request
+export const login = async (username, password) => {
+  return axiosInstance.post('/login', { username, password });
 };
 
-export const fetchCourses = () => {
-  return axios.get(`${BASE_URL}/api/public/courses`);
+// Get all courses (public)
+export const getAllCourses = async () => {
+  return axiosInstance.get('/api/public/courses');
 };
 
-export const addCourse = (courseData, token) => {
-  return axios.post(`${BASE_URL}/api/admin/courses`, courseData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+// Admin course operations
+export const addCourse = async (course) => {
+  return axiosInstance.post('/api/admin/courses', course);
 };
 
-export const updateCourse = (id, courseData, token) => {
-  return axios.put(`${BASE_URL}/api/admin/courses/${id}`, courseData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const updateCourse = async (id, updatedCourse) => {
+  return axiosInstance.put(`/api/admin/courses/${id}`, updatedCourse);
 };
 
-export const deleteCourse = (id, token) => {
-  return axios.delete(`${BASE_URL}/api/admin/courses/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const deleteCourse = async (id) => {
+  return axiosInstance.delete(`/api/admin/courses/${id}`);
+};
+
+// Module operations
+export const getModulesByCourseId = async (courseId) => {
+  return axiosInstance.get(`/api/public/courses/${courseId}/modules`);
+};
+
+export const addModule = async (courseId, module) => {
+  return axiosInstance.post(`/api/admin/courses/${courseId}/modules`, module);
+};
+
+export const updateModule = async (moduleId, updatedModule) => {
+  return axiosInstance.put(`/api/admin/modules/${moduleId}`, updatedModule);
+};
+
+export const deleteModule = async (moduleId) => {
+  return axiosInstance.delete(`/api/admin/modules/${moduleId}`);
+};
+
+// Admin dashboard
+export const getAdminDashboard = async () => {
+  return axiosInstance.get('/api/admin/dashboard');
 };
