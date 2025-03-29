@@ -22,11 +22,12 @@ public class SecurityConfig {
                 .requestMatchers("/api/public/**").permitAll()
                 .anyRequest().authenticated()
             )
-            // Explicitly configure form login instead of using withDefaults()
-            .formLogin(form -> form
-                .loginPage("/login") // Default login page provided by Spring Security
-                .defaultSuccessUrl("/api/admin/courses", true) // Redirect after login
-                .permitAll()
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login") // Optional: Customize the login page
+                .defaultSuccessUrl("/admin/dashboard", true) // Redirect after successful login
+                .redirectionEndpoint(endpoint -> endpoint
+                    .baseUri("/login/admin/dashboard") // Handle custom redirect URI
+                )
             )
             .logout(logout -> logout.permitAll())
             .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
@@ -35,9 +36,8 @@ public class SecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        String encodedPassword = new BCryptPasswordEncoder().encode("admin123");
         UserDetails admin = User.withUsername("admin")
-            .password(encodedPassword)
+            .password(new BCryptPasswordEncoder().encode("admin123"))
             .roles("ADMIN")
             .build();
 

@@ -6,12 +6,13 @@ import com.example.coursemanagement.service.CourseService;
 import com.example.coursemanagement.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
@@ -20,6 +21,12 @@ public class AdminController {
     @Autowired
     private ModuleService moduleService;
 
+    @GetMapping("/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Course>> getDashboard() {
+        return ResponseEntity.ok(courseService.getAllCourses());
+    }
+
     // Courses
     @GetMapping("/courses")
     public ResponseEntity<List<Course>> getAllCourses() {
@@ -27,6 +34,7 @@ public class AdminController {
     }
 
     @PostMapping("/courses")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Course> addCourse(@RequestBody Course course) {
         return ResponseEntity.ok(courseService.addCourse(course));
     }
@@ -66,5 +74,8 @@ public class AdminController {
     public ResponseEntity<Void> deleteModule(@PathVariable String id) {
         moduleService.deleteModule(id);
         return ResponseEntity.noContent().build();
+        
     }
+
+    
 }

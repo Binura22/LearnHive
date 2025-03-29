@@ -17,6 +17,10 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
+    public Course getCourseById(String id) {
+        return courseRepository.findById(id).orElse(null);
+    }
+    
     public Course addCourse(Course course) {
         return courseRepository.save(course);
     }
