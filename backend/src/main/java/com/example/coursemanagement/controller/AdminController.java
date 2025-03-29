@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class AdminController {
 
     @Autowired
@@ -24,58 +26,108 @@ public class AdminController {
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Course>> getDashboard() {
-        return ResponseEntity.ok(courseService.getAllCourses());
+        try {
+            List<Course> courses = courseService.getAllCourses();
+            return ResponseEntity.ok(courses);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     // Courses
     @GetMapping("/courses")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Course>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
     @PostMapping("/courses")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Course> addCourse(@RequestBody Course course) {
-        return ResponseEntity.ok(courseService.addCourse(course));
+    public ResponseEntity<?> addCourse(@RequestBody Course course) {
+        try {
+            Course savedCourse = courseService.addCourse(course);
+            return ResponseEntity.ok(savedCourse);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to add course: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
 
     @PutMapping("/courses/{id}")
-    public ResponseEntity<Course> updateCourse(@PathVariable String id, @RequestBody Course updatedCourse) {
-        Course updated = courseService.updateCourse(id, updatedCourse);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateCourse(@PathVariable String id, @RequestBody Course updatedCourse) {
+        try {
+            Course updated = courseService.updateCourse(id, updatedCourse);
+            if (updated == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to update course: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
         }
-        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/courses/{id}")
-    public ResponseEntity<Void> deleteCourse(@PathVariable String id) {
-        courseService.deleteCourse(id);
-        return ResponseEntity.noContent().build();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteCourse(@PathVariable String id) {
+        try {
+            courseService.deleteCourse(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to delete course: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
 
     // Modules
     @PostMapping("/courses/{courseId}/modules")
-    public ResponseEntity<Module> addModule(@PathVariable String courseId, @RequestBody Module module) {
-        module.setCourseId(courseId);
-        return ResponseEntity.ok(moduleService.addModule(module));
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> addModule(@PathVariable String courseId, @RequestBody Module module) {
+        try {
+            module.setCourseId(courseId);
+            Module savedModule = moduleService.addModule(module);
+            return ResponseEntity.ok(savedModule);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to add module: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
 
     @PutMapping("/modules/{id}")
-    public ResponseEntity<Module> updateModule(@PathVariable String id, @RequestBody Module updatedModule) {
-        Module updated = moduleService.updateModule(id, updatedModule);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateModule(@PathVariable String id, @RequestBody Module updatedModule) {
+        try {
+            Module updated = moduleService.updateModule(id, updatedModule);
+            if (updated == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to update module: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
         }
-        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/modules/{id}")
-    public ResponseEntity<Void> deleteModule(@PathVariable String id) {
-        moduleService.deleteModule(id);
-        return ResponseEntity.noContent().build();
-        
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteModule(@PathVariable String id) {
+        try {
+            moduleService.deleteModule(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to delete module: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
-
-    
 }
