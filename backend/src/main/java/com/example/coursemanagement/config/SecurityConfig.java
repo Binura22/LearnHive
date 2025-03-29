@@ -1,47 +1,57 @@
 package com.example.coursemanagement.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/login", "/oauth2/**", "/api/auth/**", "/error").permitAll()
                 .anyRequest().authenticated()
             )
-            .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login") // Optional: Customize the login page
-                .defaultSuccessUrl("/admin/dashboard", true) // Redirect after successful login
-                .redirectionEndpoint(endpoint -> endpoint
-                    .baseUri("/login/admin/dashboard") // Handle custom redirect URI
-                )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/api/auth/login")
+                .defaultSuccessUrl("/api/auth/check-role", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
             )
-            .logout(logout -> logout.permitAll())
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .successHandler(oauth2AuthenticationSuccessHandler())
+            )
+            .logout(logout -> logout
+                .logoutUrl("/api/auth/logout")
+                .logoutSuccessUrl("/login")
+                .permitAll()
+            )
+            .csrf(csrf -> csrf.disable())
             .build();
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails admin = User.withUsername("admin")
-            .password(new BCryptPasswordEncoder().encode("admin123"))
-            .roles("ADMIN")
-            .build();
-
-        return new InMemoryUserDetailsManager(admin);
+    public AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler() {
+        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
+        handler.setDefaultTargetUrl("http://localhost:4000/api/auth/check-role");
+        return handler;
     }
 
     @Bean
