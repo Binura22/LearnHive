@@ -4,7 +4,12 @@ import axiosInstance from './axiosInstance';
 
 // Login request
 export const login = async (username, password) => {
-  return axiosInstance.post('/login', { username, password });
+  return axiosInstance.post('/api/auth/login', { username, password });
+};
+
+// Logout request
+export const logout = async () => {
+  return axiosInstance.post('/api/auth/logout');
 };
 
 // Get all courses (public)
