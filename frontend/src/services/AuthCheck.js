@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from './axiosInstance';
 
 const AuthCheck = () => {
   const navigate = useNavigate();
@@ -7,10 +8,8 @@ const AuthCheck = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/auth/check-role', {
-          credentials: 'include'
-        });
-        const data = await response.json();
+        const response = await axiosInstance.get('/api/auth/check-role');
+        const data = response.data;
         
         if (data.authenticated) {
           // Navigate based on role
