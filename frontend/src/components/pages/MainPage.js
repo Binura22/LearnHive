@@ -9,7 +9,7 @@ const MainPage = () => {
       <Navbar/>
 
       <div className="main-content">
-        <h1>Welcome to Learning Platform</h1>
+        <h1>Welcome to LearnHive</h1>
         <p>Start your learning journey today!</p>
       </div>
     </div>
