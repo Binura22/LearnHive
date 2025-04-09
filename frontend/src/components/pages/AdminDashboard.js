@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getAdminDashboard } from '../services/api';
+import { getAdminDashboard } from '../../services/api';
 import CourseList from './CourseList';
-import AddCourseForm from './AddCourseForm';
+import AddCourseForm from '../forms/AddCourseForm';
+import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [courses, setCourses] = useState([]);
