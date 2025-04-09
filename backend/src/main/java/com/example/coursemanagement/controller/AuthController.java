@@ -6,8 +6,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +25,7 @@ public class AuthController {
             response.put("authenticated", true);
             response.put("isAdmin", isAdmin);
             response.put("username", auth.getName());
-            response.put("redirectUrl", isAdmin ? "/admin/dashboard" : "/courses");
+            response.put("redirectUrl", isAdmin ? "/admin/dashboard" : "/main");
             
             return ResponseEntity.ok(response);
         }

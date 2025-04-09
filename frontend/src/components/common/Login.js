@@ -1,49 +1,40 @@
-// src/components/Login.js
-
 import React, { useState } from 'react';
-import { login } from '../services/api';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../services/axiosInstance';
+import Button from './Button';
+import './Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Check for error parameter in URL
-  React.useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.get('error')) {
-      setError('Invalid credentials. Please try again.');
-    }
-  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
     try {
-      const response = await login(username, password);
+      const response = await axiosInstance.post('/api/login', {
+        username,
+        password
+      });
+      
       if (response.data.authenticated) {
         navigate('/api/auth/check-role');
       }
     } catch (error) {
-      console.error('Login failed:', error);
       setError('Invalid credentials. Please try again.');
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
   return (
     <div className="login-container">
       <h2>Login</h2>
-
       {error && <div className="error-message">{error}</div>}
-
-      <form onSubmit={handleSubmit} className="login-form">
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <input
             type="text"
@@ -62,21 +53,21 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="login-button">Login</button>
+        <Button type="submit" variant="primary" fullWidth>
+          Login
+        </Button>
       </form>
-
-      <div className="oauth-separator">
-        <span>OR</span>
+      <div className="oauth-container">
+        <Button
+          onClick={handleGoogleLogin}
+          variant="outline"
+          fullWidth
+        >
+          Login with Google
+        </Button>
       </div>
-
-      <button 
-        onClick={handleGoogleLogin} 
-        className="google-login-button"
-      >
-        Login with Google
-      </button>
     </div>
   );
 };
 
-export default Login;
+export default Login; 
