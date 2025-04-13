@@ -1,18 +1,24 @@
 package com.example.coursemanagement.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
 
+@Document(collection = "modules")
 public class Module {
 
     @Id
     private String id;
-    private String courseId; // Link to the parent course
+    
+    @Indexed
+    private String courseId; // Reference to the parent course
     private String title;
     private String description;
     private String videoLink;
     private String pdfLink;
+    private int orderIndex; // To maintain module order within a course
 
-    // Constructors, Getters, and Setters
+    // Constructors
     public Module() {}
 
     public Module(String courseId, String title, String description, String videoLink, String pdfLink) {
@@ -69,5 +75,13 @@ public class Module {
 
     public void setPdfLink(String pdfLink) {
         this.pdfLink = pdfLink;
+    }
+
+    public int getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(int orderIndex) {
+        this.orderIndex = orderIndex;
     }
 }
