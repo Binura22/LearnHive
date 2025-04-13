@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addCourse, addModule, uploadCourseImage, uploadModuleFiles } from '../../services/api';
+import { addCourse, addModule, uploadCourseImage } from '../../services/api';
 import './AddCourseForm.css';
 
 const AddCourseForm = ({ onClose, onCourseAdded }) => {
@@ -91,22 +91,18 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
         await uploadCourseImage(courseId, courseImage);
       }
 
-      // 3. Create modules and upload their files
+      // 3. Create modules with their files
       for (const module of modules) {
-        // Create module
-        const moduleResponse = await addModule(courseId, {
-          title: module.title,
-          description: module.description,
-          orderIndex: module.orderIndex
-        });
-
-        // Upload module files if they exist
-        if (module.videoFile || module.pdfFile) {
-          await uploadModuleFiles(moduleResponse.data.id, {
-            videoFile: module.videoFile,
-            pdfFile: module.pdfFile
-          });
-        }
+        await addModule(
+          courseId,
+          {
+            title: module.title,
+            description: module.description,
+            orderIndex: module.orderIndex
+          },
+          module.videoFile,
+          module.pdfFile
+        );
       }
 
       onCourseAdded(courseResponse.data);

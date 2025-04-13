@@ -45,20 +45,31 @@ export const getModulesByCourseId = async (courseId) => {
   return axiosInstance.get(`/api/public/courses/${courseId}/modules`);
 };
 
-export const addModule = async (courseId, moduleData) => {
-  return axiosInstance.post(`/api/admin/courses/${courseId}/modules`, moduleData);
+export const addModule = async (courseId, moduleData, videoFile, pdfFile) => {
+  try {
+    const formData = new FormData();
+    formData.append('module', new Blob([JSON.stringify(moduleData)], { type: 'application/json' }));
+    if (videoFile) {
+      formData.append('video', videoFile);
+    }
+    if (pdfFile) {
+      formData.append('pdf', pdfFile);
+    }
+    
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    
+    return fileUploadInstance.post(`/api/admin/courses/${courseId}/modules`, formData, config);
+  } catch (error) {
+    console.error('Error in addModule:', error);
+    throw error;
+  }
 };
 
-export const uploadModuleFiles = async (moduleId, { videoFile, pdfFile }) => {
-  const formData = new FormData();
-  if (videoFile) {
-    formData.append('video', videoFile);
-  }
-  if (pdfFile) {
-    formData.append('pdf', pdfFile);
-  }
-  return fileUploadInstance.post(`/api/admin/modules/${moduleId}/files`, formData);
-};
+
 
 export const updateModule = async (moduleId, updatedModule) => {
   return axiosInstance.put(`/api/admin/modules/${moduleId}`, updatedModule);
