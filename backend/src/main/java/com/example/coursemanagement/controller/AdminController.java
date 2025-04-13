@@ -107,11 +107,19 @@ public class AdminController {
     // Modules
     @PostMapping("/courses/{courseId}/modules")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addModule(@PathVariable String courseId, @RequestBody Module module) {
+    public ResponseEntity<?> addModule(
+            @PathVariable String courseId,
+            @RequestPart("module") Module module,
+            @RequestPart(value = "video", required = false) MultipartFile videoFile,
+            @RequestPart(value = "pdf", required = false) MultipartFile pdfFile) {
         try {
             module.setCourseId(courseId);
-            Module savedModule = moduleService.addModule(module);
+            Module savedModule = moduleService.addModuleWithFiles(module, videoFile, pdfFile);
             return ResponseEntity.ok(savedModule);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", "Failed to add module: " + e.getMessage());
@@ -121,12 +129,13 @@ public class AdminController {
 
     @PutMapping("/modules/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateModule(@PathVariable String id, @RequestBody Module updatedModule) {
+    public ResponseEntity<?> updateModule(
+            @PathVariable String id,
+            @RequestPart("module") Module updatedModule,
+            @RequestPart(value = "video", required = false) MultipartFile videoFile,
+            @RequestPart(value = "pdf", required = false) MultipartFile pdfFile) {
         try {
-            Module updated = moduleService.updateModule(id, updatedModule);
-            if (updated == null) {
-                return ResponseEntity.notFound().build();
-            }
+            Module updated = moduleService.updateModuleWithFiles(id, updatedModule, videoFile, pdfFile);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
