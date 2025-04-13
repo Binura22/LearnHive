@@ -1,24 +1,40 @@
 .login-container {
-  max-width: 400px;
-  margin: 2rem auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-color-dark);
   padding: 2rem;
-  background: var(--background-color-light);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
 }
 
-.login-container h2 {
+.login-box {
+  background-color: var(--background-color-light);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--text-color-primary);
+  color: var(--secondary-color);
+  margin-bottom: 2rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-group input {
-  width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
@@ -29,7 +45,86 @@
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+}
+
+.login-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.login-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.oauth-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.oauth-divider {
+  text-align: center;
+  color: var(--text-color-secondary);
+  position: relative;
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.oauth-divider::before {
+  left: 0;
+}
+
+.oauth-divider::after {
+  right: 0;
+}
+
+.oauth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.oauth-button:hover {
+  background-color: var(--background-color-dark);
+}
+
+.oauth-button.google {
+  color: #4285F4;
+}
+
+.oauth-button.github {
+  color: #24292e;
+}
+
+.oauth-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .error-message {
@@ -41,14 +136,8 @@
   text-align: center;
 }
 
-.oauth-container {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  .login-container {
-    margin: 1rem;
+@media (max-width: 480px) {
+  .login-box {
     padding: 1.5rem;
   }
 } 

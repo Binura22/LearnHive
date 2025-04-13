@@ -2,6 +2,7 @@ package com.example.coursemanagement.service;
 
 import com.example.coursemanagement.config.CustomOAuth2User;
 import com.example.coursemanagement.model.User;
+import com.example.coursemanagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -10,27 +11,61 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oauth2User = super.loadUser(userRequest);
-        Map<String, Object> attributes = oauth2User.getAttributes();
-        
-        String email = (String) attributes.get("email");
-        String name = (String) attributes.get("name");
-        String providerId = (String) attributes.get("sub");
+        OAuth2User oAuth2User = super.loadUser(userRequest);
         String provider = userRequest.getClientRegistration().getRegistrationId();
+        Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        // Create or update user in database
-        User user = userService.createOrUpdateOAuthUser(email, name, provider, providerId);
+        String email;
+        String name;
+        String role = "USER"; // Default role
 
-        // Create a custom OAuth2User with the user's role
-        return new CustomOAuth2User(oauth2User, user.getRole());
+        if (provider.equals("google")) {
+            email = (String) attributes.get("email");
+            name = (String) attributes.get("name");
+        } else if (provider.equals("github")) {
+            email = (String) attributes.get("email");
+            if (email == null) {
+                // GitHub might not provide email in the initial response
+                email = (String) attributes.get("login") + "@github.com";
+            }
+            name = (String) attributes.get("name");
+            if (name == null) {
+                name = (String) attributes.get("login");
+            }
+        } else {
+            throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
+        }
+
+        // Check if user exists in database
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        User user;
+
+        if (existingUser.isPresent()) {
+            user = existingUser.get();
+            // Update user information if needed
+            user.setName(name);
+            user.setProvider(provider);
+        } else {
+            // Create new user
+            user = new User();
+            user.setEmail(email);
+            user.setName(name);
+            user.setProvider(provider);
+            user.setRole(role);
+        }
+
+        userRepository.save(user);
+
+        return new CustomOAuth2User(oAuth2User, user.getRole());
     }
 } 
