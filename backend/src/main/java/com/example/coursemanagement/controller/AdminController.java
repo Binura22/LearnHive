@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +84,22 @@ public class AdminController {
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", "Failed to delete course: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @PostMapping("/courses/{id}/image")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> uploadCourseImage(@PathVariable String id, @RequestParam("file") MultipartFile file) {
+        try {
+            Course course = courseService.getCourseById(id)
+                .orElseThrow(() -> new Exception("Course not found"));
+            
+            Course updatedCourse = courseService.updateCourseWithImage(id, course, file);
+            return ResponseEntity.ok(updatedCourse);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to upload image: " + e.getMessage());
             return ResponseEntity.internalServerError().body(response);
         }
     }
