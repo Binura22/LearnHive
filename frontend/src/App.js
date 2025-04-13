@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/common/Login';
 import MainPage from './components/pages/MainPage';
 import AdminDashboard from './components/pages/AdminDashboard';
+import AdminCourseList from './components/pages/AdminCourseList';
 import AuthCheck from './services/AuthCheck';
 import CourseList from './components/pages/CourseList';
 import './App.css';
@@ -16,6 +17,7 @@ function App() {
         <Route path="/courses" element={<CourseList />} />
         <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/courses" element={<AdminCourseList />} />
         <Route path="/api/auth/check-role" element={<AuthCheck />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
