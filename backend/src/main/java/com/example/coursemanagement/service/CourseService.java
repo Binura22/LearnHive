@@ -1,12 +1,15 @@
 package com.example.coursemanagement.service;
 
 import com.example.coursemanagement.model.Course;
+import com.example.coursemanagement.model.Module;
 import com.example.coursemanagement.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -18,12 +21,67 @@ public class CourseService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    @Autowired
+    private ModuleService moduleService;
+
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
     public Optional<Course> getCourseById(String id) {
         return courseRepository.findById(id);
+    }
+
+    public void deleteCourse(String id) throws IOException {
+        try {
+            // Get the course to delete its image
+            Course course = courseRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Course not found"));
+
+            // Delete course image if exists
+            if (course.getImageUrl() != null && !course.getImageUrl().isEmpty()) {
+                try {
+                    cloudinaryService.deleteFile(course.getImageUrl());
+                } catch (IOException e) {
+                    // Log error but continue with deletion
+                    System.err.println("Failed to delete course image: " + e.getMessage());
+                }
+            }
+
+            // Delete all modules associated with this course
+            List<Module> modules = moduleService.getModulesByCourseId(id);
+            if (modules != null && !modules.isEmpty()) {
+                System.out.println("Found " + modules.size() + " modules to delete for course " + id);
+                boolean hasModuleErrors = false;
+                StringBuilder errorMessages = new StringBuilder();
+
+                for (Module module : modules) {
+                    try {
+                        // Delete module and its associated files
+                        moduleService.deleteModule(module.getId());
+                        System.out.println("Successfully deleted module " + module.getId());
+                    } catch (IOException e) {
+                        hasModuleErrors = true;
+                        String errorMsg = "Failed to delete module " + module.getId() + ": " + e.getMessage();
+                        System.err.println(errorMsg);
+                        errorMessages.append(errorMsg).append("\n");
+                        // Continue with other modules even if one fails
+                    }
+                }
+
+                // If we had any module deletion errors, throw an exception after course deletion
+                if (hasModuleErrors) {
+                    throw new IOException("Some modules could not be fully deleted:\n" + errorMessages.toString());
+                }
+            }
+
+            // Finally delete the course from database
+            courseRepository.deleteById(id);
+            System.out.println("Successfully deleted course " + id);
+        } catch (Exception e) {
+            System.err.println("Error in deleteCourse: " + e.getMessage());
+            throw new IOException("Failed to delete course: " + e.getMessage());
+        }
     }
 
     public Course addCourse(Course course) {
@@ -52,21 +110,16 @@ public class CourseService {
         existingCourse.setDescription(courseDetails.getDescription());
         existingCourse.setCategory(courseDetails.getCategory());
         existingCourse.setLevel(courseDetails.getLevel());
-        existingCourse.setInstructor(courseDetails.getInstructor());
         existingCourse.setPublished(courseDetails.isPublished());
         existingCourse.setDuration(courseDetails.getDuration());
         
         return courseRepository.save(existingCourse);
     }
 
-    public void deleteCourse(String id) {
-        courseRepository.deleteById(id);
-    }
-
     public Course createCourseWithImage(Course course, MultipartFile imageFile) throws Exception {
         if (imageFile != null && !imageFile.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(imageFile);
-            course.setImageUrl(imageUrl);
+            Map<String, String> imageResult = cloudinaryService.uploadFile(imageFile);
+            course.setImageUrl(imageResult.get("url"));
         }
         return courseRepository.save(course);
     }
@@ -81,8 +134,13 @@ public class CourseService {
         
         // Update image if provided
         if (imageFile != null && !imageFile.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(imageFile);
-            existingCourse.setImageUrl(imageUrl);
+            // Delete existing image if present
+            if (existingCourse.getImageUrl() != null) {
+                cloudinaryService.deleteFile(existingCourse.getImageUrl());
+            }
+            // Upload new image
+            Map<String, String> imageResult = cloudinaryService.uploadFile(imageFile);
+            existingCourse.setImageUrl(imageResult.get("url"));
         }
         
         return courseRepository.save(existingCourse);
@@ -94,10 +152,6 @@ public class CourseService {
 
     public List<Course> getCoursesByLevel(String level) {
         return courseRepository.findByLevel(level);
-    }
-
-    public List<Course> getCoursesByInstructor(String instructor) {
-        return courseRepository.findByInstructor(instructor);
     }
 
     public List<Course> getPublishedCourses() {
