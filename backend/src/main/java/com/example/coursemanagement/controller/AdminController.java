@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,25 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Course>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
+    }
+
+    @GetMapping("/courses/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getCourseById(@PathVariable String id) {
+        try {
+            Course course = courseService.getCourseById(id)
+                .orElseThrow(() -> new Exception("Course not found"));
+            
+            // Get modules for this course
+            List<Module> modules = moduleService.getModulesByCourseId(id);
+            course.setModules(modules);
+            
+            return ResponseEntity.ok(course);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to get course: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
 
     @PostMapping("/courses")
@@ -81,6 +101,10 @@ public class AdminController {
         try {
             courseService.deleteCourse(id);
             return ResponseEntity.noContent().build();
+        } catch (IOException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to delete course files: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", "Failed to delete course: " + e.getMessage());
