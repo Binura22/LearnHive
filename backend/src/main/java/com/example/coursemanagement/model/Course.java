@@ -3,6 +3,8 @@ package com.example.coursemanagement.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document(collection = "courses")
 public class Course {
     @Id
@@ -10,21 +12,21 @@ public class Course {
     private String title;
     private String description;
     private String imageUrl;
-    private String instructor;
     private int duration; // in hours
     private String level; // beginner, intermediate, advanced
     private String category;
     private boolean published;
+    private List<Module> modules;
 
     // Constructors
     public Course() {}
 
-    public Course(String title, String description, String category, String level, String instructor) {
+    public Course(String title, String description, String category, String level) {
         this.title = title;
         this.description = description;
         this.category = category;
         this.level = level;
-        this.instructor = instructor;
+        
         this.published = false;
     }
 
@@ -61,13 +63,6 @@ public class Course {
         this.imageUrl = imageUrl;
     }
 
-    public String getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(String instructor) {
-        this.instructor = instructor;
-    }
 
     public int getDuration() {
         return duration;
@@ -99,5 +94,13 @@ public class Course {
 
     public void setPublished(boolean published) {
         this.published = published;
+    }
+
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
     }
 }

@@ -33,7 +33,14 @@ const AdminCourseList = () => {
         await deleteCourse(courseId);
         setCourses(courses.filter(course => course.id !== courseId));
       } catch (err) {
-        setError('Failed to delete course');
+        console.error('Delete error:', err);
+        const errorMessage = err.response?.data?.error || err.message || 'Failed to delete course';
+        setError(`Failed to delete course: ${errorMessage}`);
+        
+        // If unauthorized, redirect to login
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          navigate('/login');
+        }
       }
     }
   };

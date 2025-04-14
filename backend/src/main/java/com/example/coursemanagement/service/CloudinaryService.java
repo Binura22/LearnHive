@@ -1,7 +1,6 @@
 package com.example.coursemanagement.service;
 
 import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +15,7 @@ public class CloudinaryService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public String uploadImage(MultipartFile file) throws IOException {
+    public Map<String, String> uploadFile(MultipartFile file) throws IOException {
         String contentType = file.getContentType();
         Map<String, Object> options = new HashMap<>();
         
@@ -30,10 +29,57 @@ public class CloudinaryService {
 
         @SuppressWarnings("unchecked")
         Map<String, Object> uploadResult = (Map<String, Object>) cloudinary.uploader().upload(file.getBytes(), options);
-        return (String) uploadResult.get("url");
+        
+        Map<String, String> result = new HashMap<>();
+        result.put("url", (String) uploadResult.get("url"));
+        result.put("publicId", (String) uploadResult.get("public_id"));
+        return result;
     }
 
-    public void deleteImage(String publicId) throws IOException {
-        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+    public void deleteFile(String url) throws IOException {
+        if (url == null || url.isEmpty()) {
+            return;
+        }
+
+        try {
+
+            String[] urlParts = url.split("/upload/");
+            if (urlParts.length != 2) {
+                System.err.println("Invalid Cloudinary URL format: " + url);
+                return;
+            }
+
+            // Get the part after /upload/
+            String path = urlParts[1];
+            // Remove version number 
+            if (path.matches("v\\d+/.*")) {
+                path = path.replaceFirst("v\\d+/", "");
+            }
+            // Remove file extension if present
+            String publicId = path;
+            if (path.contains(".")) {
+                publicId = path.substring(0, path.lastIndexOf('.'));
+            }
+
+            // Determine resource type from URL
+            String resourceType = "image";
+            if (url.contains("/video/")) {
+                resourceType = "video";
+            } else if (url.contains("/raw/")) {
+                resourceType = "raw";
+            }
+
+            System.out.println("Deleting file from Cloudinary: publicId=" + publicId + ", resourceType=" + resourceType);
+            
+            Map<String, Object> options = new HashMap<>();
+            options.put("resource_type", resourceType);
+            
+            cloudinary.uploader().destroy(publicId, options);
+            System.out.println("Successfully deleted file from Cloudinary: " + publicId);
+        } catch (Exception e) {
+            String errorMessage = "Failed to delete file from Cloudinary: " + e.getMessage();
+            System.err.println(errorMessage);
+            throw new IOException(errorMessage, e);
+        }
     }
 } 
