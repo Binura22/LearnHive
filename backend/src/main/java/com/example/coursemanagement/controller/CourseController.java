@@ -40,10 +40,6 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCoursesByLevel(level));
     }
 
-    @GetMapping("/instructor/{instructor}")
-    public ResponseEntity<List<Course>> getCoursesByInstructor(@PathVariable String instructor) {
-        return ResponseEntity.ok(courseService.getCoursesByInstructor(instructor));
-    }
 
     // Admin endpoints
     @PostMapping
