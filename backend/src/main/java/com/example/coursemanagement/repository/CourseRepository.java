@@ -10,6 +10,6 @@ import java.util.List;
 public interface CourseRepository extends MongoRepository<Course, String> {
     List<Course> findByCategory(String category);
     List<Course> findByLevel(String level);
-    List<Course> findByInstructor(String instructor);
+
     List<Course> findByPublished(boolean published);
 }

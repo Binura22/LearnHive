@@ -17,6 +17,10 @@ export const getAllCourses = async () => {
   return axiosInstance.get('/api/public/courses');
 };
 
+export const getCourseById = async (id) => {
+  return axiosInstance.get(`/api/admin/courses/${id}`);
+};
+
 export const getPublishedCourses = async () => {
   return axiosInstance.get('/api/public/courses/published');
 };
@@ -71,12 +75,12 @@ export const addModule = async (courseId, moduleData, videoFile, pdfFile) => {
 
 
 
-export const updateModule = async (moduleId, updatedModule) => {
-  return axiosInstance.put(`/api/admin/modules/${moduleId}`, updatedModule);
+export const updateModule = async (moduleId, formData) => {
+  return fileUploadInstance.put(`/api/admin/modules/${moduleId}`, formData);
 };
 
-export const deleteModule = async (moduleId) => {
-  return axiosInstance.delete(`/api/admin/modules/${moduleId}`);
+export const deleteModule = async (id) => {
+  return axiosInstance.delete(`/api/admin/modules/${id}`);
 };
 
 // Admin dashboard
