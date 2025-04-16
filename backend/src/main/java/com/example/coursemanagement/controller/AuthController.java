@@ -22,9 +22,19 @@ public class AuthController {
             boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
             
+            // Extract roles from authorities
+            String[] roles = auth.getAuthorities().stream()
+                .map(grantedAuthority -> {
+                    String authority = grantedAuthority.getAuthority();
+                    // Remove the 'ROLE_' prefix if it exists
+                    return authority.startsWith("ROLE_") ? authority.substring(5) : authority;
+                })
+                .toArray(String[]::new);
+            
             response.put("authenticated", true);
             response.put("isAdmin", isAdmin);
             response.put("username", auth.getName());
+            response.put("roles", roles);
             response.put("redirectUrl", isAdmin ? "/admin/dashboard" : "/main");
             
             return ResponseEntity.ok(response);
