@@ -18,7 +18,7 @@ export const getAllCourses = async () => {
 };
 
 export const getCourseById = async (id) => {
-  return axiosInstance.get(`/api/admin/courses/${id}`);
+  return axiosInstance.get(`/api/courses/${id}`);
 };
 
 export const getPublishedCourses = async () => {
@@ -27,21 +27,21 @@ export const getPublishedCourses = async () => {
 
 // Admin course operations
 export const addCourse = async (courseData) => {
-  return axiosInstance.post('/api/admin/courses', courseData);
+  return axiosInstance.post('/api/courses', courseData);
 };
 
 export const updateCourse = async (id, updatedCourse) => {
-  return axiosInstance.put(`/api/admin/courses/${id}`, updatedCourse);
+  return axiosInstance.put(`/api/courses/${id}`, updatedCourse);
 };
 
 export const deleteCourse = async (id) => {
-  return axiosInstance.delete(`/api/admin/courses/${id}`);
+  return axiosInstance.delete(`/api/courses/${id}`);
 };
 
 export const uploadCourseImage = async (courseId, imageFile) => {
   const formData = new FormData();
   formData.append('file', imageFile);
-  return fileUploadInstance.post(`/api/admin/courses/${courseId}/image`, formData);
+  return fileUploadInstance.post(`/api/courses/${courseId}/image`, formData);
 };
 
 // Module operations
@@ -66,7 +66,7 @@ export const addModule = async (courseId, moduleData, videoFile, pdfFile) => {
       }
     };
     
-    return fileUploadInstance.post(`/api/admin/courses/${courseId}/modules`, formData, config);
+    return fileUploadInstance.post(`/api/courses/${courseId}/modules`, formData, config);
   } catch (error) {
     console.error('Error in addModule:', error);
     throw error;
@@ -76,14 +76,14 @@ export const addModule = async (courseId, moduleData, videoFile, pdfFile) => {
 
 
 export const updateModule = async (moduleId, formData) => {
-  return fileUploadInstance.put(`/api/admin/modules/${moduleId}`, formData);
+  return fileUploadInstance.put(`/api/courses/modules/${moduleId}`, formData);
 };
 
 export const deleteModule = async (id) => {
-  return axiosInstance.delete(`/api/admin/modules/${id}`);
+  return axiosInstance.delete(`/api/courses/modules/${id}`);
 };
 
 // Admin dashboard
 export const getAdminDashboard = async () => {
-  return axiosInstance.get('/api/admin/dashboard');
+  return axiosInstance.get('/api/dashboard');
 };
