@@ -14,7 +14,9 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-content">
         <div className="nav-brand">
-          <Link to="/main">LearnHive</Link>
+          <Link to="/main">
+            <img src="/logos/LearnHive_logo-white.png" alt="LearnHive Logo" />
+          </Link>
         </div>
         <div className="nav-links">
           <Link to="/main" className="nav-link">Home</Link>
