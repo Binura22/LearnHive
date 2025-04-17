@@ -22,6 +22,9 @@
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .course-card:hover {
@@ -29,9 +32,18 @@
   box-shadow: var(--shadow-md);
 }
 
+.course-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+}
+
 .course-card h3 {
   color: var(--secondary-color);
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .course-card p {
