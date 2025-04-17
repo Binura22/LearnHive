@@ -18,7 +18,7 @@
 
 .course-banner {
   width: 100%;
-  max-height: 400px;
+  max-height: 360px;
   object-fit: cover;
   border-radius: var(--border-radius);
   margin-bottom: 2rem;

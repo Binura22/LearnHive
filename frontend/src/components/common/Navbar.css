@@ -12,14 +12,25 @@
   justify-content: space-between;
   align-items: center;
   max-width: 1200px;
+  max-height: 40px;
   margin: 0 auto;
+}
+
+.nav-brand img {
+  width: 120px;
+  height: 100px;
+  object-fit: contain;
+  margin-right: 0rem;
+  vertical-align: middle;
 }
 
 .nav-brand a {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--primary-color);
+  color: var(--white);
   text-decoration: none;
+  display: flex;
+  align-items: center;
   transition: var(--transition);
 }
 
@@ -62,16 +73,3 @@
   background-color: var(--error-color-dark);
 }
 
-@media (max-width: 768px) {
-  .navbar {
-    padding: 1rem;
-  }
-
-  .nav-links {
-    gap: 1rem;
-  }
-
-  .nav-brand a {
-    font-size: 1.2rem;
-  }
-} 
