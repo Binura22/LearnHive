@@ -42,6 +42,9 @@ public class SecurityConfig {
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
                 .successHandler(oauth2AuthenticationSuccessHandler())
+                .failureHandler((request, response, exception) -> {
+                    response.sendRedirect("http://localhost:4000/login");
+                })
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(oauth2UserService)
                 )
