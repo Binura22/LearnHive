@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,6 +20,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    // List of admin emails - you can also load this from application.properties
+    private final List<String> adminEmails = Arrays.asList(
+        "binura903@gmail.com.com"
+           
+    );
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -27,7 +35,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         String email;
         String name;
-        String role = "USER"; // Default role
+        String role;
 
         if (provider.equals("google")) {
             email = (String) attributes.get("email");
@@ -55,12 +63,21 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             // Update user information if needed
             user.setName(name);
             user.setProvider(provider);
+            // Keep existing role
+            role = user.getRole();
         } else {
             // Create new user
             user = new User();
             user.setEmail(email);
             user.setName(name);
             user.setProvider(provider);
+            
+            // Check if the email is in the admin list
+            if (adminEmails.contains(email)) {
+                role = "ADMIN";
+            } else {
+                role = "USER"; // Default role
+            }
             user.setRole(role);
         }
 
@@ -68,4 +85,4 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         return new CustomOAuth2User(oAuth2User, user.getRole());
     }
-} 
+}
