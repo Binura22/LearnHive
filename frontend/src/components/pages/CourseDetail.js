@@ -42,7 +42,6 @@ const CourseDetail = () => {
     if (!video) return;
 
     setVideoLoading(true);
-    console.log('Loading video:', currentModule.videoLink);
 
     const handleCanPlay = () => {
       console.log('Video can play');
@@ -114,7 +113,6 @@ const CourseDetail = () => {
   }
 
   const currentModule = course.modules[currentModuleIndex];
-  console.log('Current module:', currentModule);
 
   return (
     <div className="course-detail-container">
