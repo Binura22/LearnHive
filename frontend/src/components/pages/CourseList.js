@@ -46,8 +46,14 @@ const CourseList = () => {
       <div className="course-grid">
         {courses.map(course => (
           <div key={course.id} className="course-card">
+            {course.imageUrl && (
+              <img 
+                src={course.imageUrl} 
+                alt={course.title}
+                className="course-image"
+              />
+            )}
             <h3>{course.title}</h3>
-            <p>{course.description}</p>
             {course.modules && (
               <div className="module-count">
                 {course.modules.length} Modules
