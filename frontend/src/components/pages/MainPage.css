@@ -104,6 +104,18 @@
   width: 100%;
 }
 
+/*Post*/
+.create-post-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem;

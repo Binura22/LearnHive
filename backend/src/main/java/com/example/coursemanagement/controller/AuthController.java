@@ -15,6 +15,7 @@ public class AuthController {
 
     @GetMapping("/check-role")
     public ResponseEntity<?> checkRole() {
+        System.out.println("Hello");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> response = new HashMap<>();
         
