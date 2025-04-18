@@ -1,0 +1,27 @@
+.create-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .create-post-form textarea {
+    width: 100%;
+    padding: 10px;
+    resize: vertical;
+  }
+  
+  .create-post-form input[type="file"] {
+    padding: 5px;
+  }
+  
+  .create-post-form button {
+    align-self: flex-start;
+    padding: 8px 16px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  

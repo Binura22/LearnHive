@@ -10,6 +10,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import CourseList from './components/pages/CourseList';
 import CourseDetail from './components/pages/CourseDetail';
 import './App.css';
+import CreatePostPage from './components/pages/CreatePostPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/create-post" element={<CreatePostPage />} />
         <Route path="/courses" element={<CourseList />} />
         <Route path="/courses/:courseId" element={<CourseDetail />} />
         <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
