@@ -32,4 +32,4 @@ public class CloudinaryConfig {
         config.put("upload_preset", uploadPreset);
         return new Cloudinary(config);
     }
-} 
+}
