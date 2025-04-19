@@ -13,18 +13,35 @@ public class Post {
     private List<String> mediaUrls;
     private String userEmail; // From authenticated user
     private long createdAt = System.currentTimeMillis();
-    public void setMediaUrls(List<String> urls) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setMediaUrls'");
+    public String getId() {
+        return id;
     }
-    public void setDescription(String description2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setDescription'");
+    public void setId(String id) {
+        this.id = id;
     }
-    public void setUserEmail(Object attribute) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setUserEmail'");
+    public String getDescription() {
+        return description;
     }
-
-    // Getters and Setters
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public List<String> getMediaUrls() {
+        return mediaUrls;
+    }
+    public void setMediaUrls(List<String> mediaUrls) {
+        this.mediaUrls = mediaUrls;
+    }
+    public String getUserEmail() {
+        return userEmail;
+    }
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+    public long getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+    
 }

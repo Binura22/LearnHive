@@ -23,7 +23,7 @@ const CreatePostForm = () => {
 
     try {
       await axios.post("http://localhost:8080/api/posts/create", formData, {
-        withCredentials: false,
+        withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data"
         }
