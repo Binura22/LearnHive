@@ -1,10 +1,10 @@
 import React from 'react';
 import './MainPage.css';
 import Navbar from '../common/Navbar';
-import { useNavigate } from 'react-router-dom'; // 👈 Add this
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
-  const navigate = useNavigate(); // 👈 Hook for navigation
+  const navigate = useNavigate(); // Hook for navigation
 
   return (
     <div className="main-page">
