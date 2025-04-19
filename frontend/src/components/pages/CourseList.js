@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCourses } from '../../services/api';
 import './CourseList.css';
+import Navbar from '../common/Navbar';
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -44,6 +45,7 @@ const CourseList = () => {
 
   return (
     <div className="course-list-container">
+      <Navbar/>
       <h1>Available Courses</h1>
       <div className="course-grid">
         {courses.map(course => (
