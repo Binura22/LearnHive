@@ -69,11 +69,11 @@ const Login = () => {
         <div className="oauth-container">
           <p className="oauth-divider">Or login with</p>
           <button onClick={handleGoogleLogin} className="oauth-button google">
-            <img src="/google-icon.png" alt="Google" className="oauth-icon" />
+            <img src="/logos/google-icon.png" alt="Google" className="oauth-icon" />
             Continue with Google
           </button>
           <button onClick={handleGithubLogin} className="oauth-button github">
-            <img src="/github-icon.png" alt="GitHub" className="oauth-icon" />
+            <img src="/logos/github-icon.png" alt="GitHub" className="oauth-icon" />
             Continue with GitHub
           </button>
         </div>
