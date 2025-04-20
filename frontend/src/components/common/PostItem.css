@@ -1,0 +1,58 @@
+.postItem {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .postImage img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .postContent {
+    margin-top: 12px;
+  }
+  
+  .postDescription {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .postTime {
+    font-size: 12px;
+    color: gray;
+    margin-bottom: 8px;
+  }
+  
+  .likeCount {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #444;
+  }
+  
+  .postActions {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .postActions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
+    transition: transform 0.2s ease;
+  }
+  
+  .postActions button:hover {
+    transform: scale(1.2);
+  }
+  
