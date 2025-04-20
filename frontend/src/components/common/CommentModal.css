@@ -58,4 +58,11 @@
     padding: 6px 0;
     border-bottom: 1px solid #eee;
   }
+
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+  }
   

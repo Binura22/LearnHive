@@ -8,19 +8,23 @@ const CommentModal = ({ postId, onClose }) => {
 
   useEffect(() => {
     //post to get comments
-    axios.get(`/api/posts/${postId}`)
+    axios.get(`http://localhost:8080/api/posts/${postId}`)
       .then((res) => {
         setComments(res.data.comments || []);
       });
   }, [postId]);
 
+  const [error, setError] = useState(null);
   const handleCommentSubmit = async () => {
     try {
-      await axios.post(`/api/posts/${postId}/comment`, { text: commentText });
-      setComments([...comments, { text: commentText, userId: "You", timestamp: new Date() }]);
+      await axios.post(`http://localhost:8080/api/posts/${postId}/comment`, { text: commentText });
+      const res = await axios.get(`http://localhost:8080/api/posts/${postId}`);
+      setComments(res.data.comments || []);
       setCommentText("");
+      setError(null); 
     } catch (err) {
       console.error("Failed to post comment:", err);
+      setError("Failed to post comment. Please try again.");
     }
   };
 
@@ -35,6 +39,7 @@ const CommentModal = ({ postId, onClose }) => {
             </div>
           ))}
         </div>
+        {error && <div className="error-message">{error}</div>}
         <div className="comment-form">
           <input
             type="text"
