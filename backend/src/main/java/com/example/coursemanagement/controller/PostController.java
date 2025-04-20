@@ -30,7 +30,7 @@ public class PostController {
     public ResponseEntity<?> createPost(@RequestParam("description") String description,
             @RequestParam("media") MultipartFile[] files,
             @AuthenticationPrincipal CustomOAuth2User user) {
-                System.out.println("Hello here");
+        System.out.println("Hello here");
         try {
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("User not authenticated");
@@ -47,7 +47,7 @@ public class PostController {
             Post post = new Post();
             post.setDescription(description);
             post.setMediaUrls(urls);
-            post.setUserEmail(user.getAttribute("email"));
+            post.setUserId(user.getId()); // assuming getId() returns MongoDB ObjectId string
 
             return ResponseEntity.ok(postService.savePost(post));
 
@@ -55,6 +55,32 @@ public class PostController {
             e.printStackTrace(); // This will print full stack trace in backend console
             return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                     .body("Post creation failed: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserPosts(@AuthenticationPrincipal CustomOAuth2User user) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("User not authenticated");
+        }
+
+        try {
+            // Assume you can get MongoDB User ID from user details
+            String userId = user.getId(); // Or fetch from DB if needed
+            List<Post> posts = postService.getUserPosts(userId);
+            return ResponseEntity.ok(posts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllPosts() {
+        try {
+            List<Post> posts = postService.getAllPosts(); // new method in service
+            return ResponseEntity.ok(posts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
         }
     }
 

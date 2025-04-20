@@ -39,4 +39,9 @@ public class CustomOAuth2User implements OAuth2User {
     public String getRole() {
         return role;
     }
+
+    public String getId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+    }
 }
