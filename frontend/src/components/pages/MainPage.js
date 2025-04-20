@@ -3,6 +3,7 @@ import axios from 'axios';
 import './MainPage.css';
 import Navbar from '../common/Navbar';
 import { useNavigate } from 'react-router-dom';
+import PostList from '../common/PostList';
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -45,6 +46,8 @@ const MainPage = () => {
             </div>
           ))}
         </div>
+
+        <PostList />
       </div>
     </div>
   );

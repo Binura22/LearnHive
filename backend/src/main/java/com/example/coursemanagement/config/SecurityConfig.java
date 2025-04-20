@@ -25,37 +25,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/login", "/oauth2/**", "/api/auth/**", "/error").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/api/auth/login")
-                .defaultSuccessUrl("/api/auth/check-role", true)
-                .failureUrl("/login?error=true")
-                .permitAll()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
-                .successHandler(oauth2AuthenticationSuccessHandler())
-                .failureHandler((request, response, exception) -> {
-                    response.sendRedirect("http://localhost:4000/login");
-                })
-                .userInfoEndpoint(userInfo -> userInfo
-                    .userService(oauth2UserService)
-                )
-            )
-            .logout(logout -> logout
-                .logoutUrl("/api/auth/logout")
-                .logoutSuccessUrl("/login")
-                .permitAll()
-            )
-            .csrf(csrf -> csrf.disable())
-            .build();
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/posts", "/api/public/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/login", "/oauth2/**", "/api/auth/**", "/error").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/api/auth/login")
+                        .defaultSuccessUrl("/api/auth/check-role", true)
+                        .failureUrl("/login?error=true")
+                        .permitAll())
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .successHandler(oauth2AuthenticationSuccessHandler())
+                        .failureHandler((request, response, exception) -> {
+                            response.sendRedirect("http://localhost:4000/login");
+                        })
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oauth2UserService)))
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessUrl("/login")
+                        .permitAll())
+                .csrf(csrf -> csrf.disable())
+                .build();
     }
 
     @Bean
