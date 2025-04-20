@@ -52,7 +52,7 @@ public class PostController {
             return ResponseEntity.ok(postService.savePost(post));
 
         } catch (Exception e) {
-            e.printStackTrace(); // This will print full stack trace in backend console
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                     .body("Post creation failed: " + e.getMessage());
         }
@@ -63,7 +63,7 @@ public class PostController {
         postService.deletePost(postId);
     }
 
-    // [Like or Unlike a Post]
+    // like, unlike
     @PutMapping("/{postId}/like")
     public ResponseEntity<?> toggleLike(
             @PathVariable String postId,
@@ -83,9 +83,9 @@ public class PostController {
         List<String> likedUsers = post.getLikedUserIds();
 
         if (likedUsers.contains(userId)) {
-            likedUsers.remove(userId); // Unlike
+            likedUsers.remove(userId);
         } else {
-            likedUsers.add(userId); // Like
+            likedUsers.add(userId);
         }
 
         post.setLikedUserIds(likedUsers);
@@ -94,7 +94,7 @@ public class PostController {
         return ResponseEntity.ok("Like status updated");
     }
 
-    // [Add a Comment to a Post]
+    // add a comment to a post
     @PostMapping("/{postId}/comment")
     public ResponseEntity<?> addComment(
             @PathVariable String postId,
@@ -134,7 +134,7 @@ public class PostController {
         String commentText = payload.get("text");
 
         Comment comment = new Comment();
-        comment.setUserId(user.getName()); // or user.getAttribute("email") if you prefer email
+        comment.setUserId(user.getName());
         comment.setText(commentText);
 
         Post updatedPost = postService.addCommentToPost(postId, comment);
