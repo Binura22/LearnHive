@@ -41,6 +41,7 @@ public class PostController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
             }
 
+            System.out.println("inside try block");
             List<String> urls = new ArrayList<>();
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
@@ -49,6 +50,7 @@ public class PostController {
                 }
             }
 
+            System.out.println("user id "+ user.getId());
             Post post = new Post();
             post.setDescription(description);
             post.setMediaUrls(urls);
@@ -66,7 +68,7 @@ public class PostController {
     @GetMapping("/user")
     public ResponseEntity<?> getUserPosts(@AuthenticationPrincipal CustomOAuth2User user) {
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("User not authenticated");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
 
         try {
@@ -75,17 +77,17 @@ public class PostController {
             List<Post> posts = postService.getUserPosts(userId);
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
         }
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllPosts() {
+    public ResponseEntity<?> getAllThePosts() {
         try {
             List<Post> posts = postService.getAllPosts(); // new method in service
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
         }
     }
 
