@@ -11,7 +11,7 @@ public class Post {
     private String id;
     private String description;
     private List<String> mediaUrls;
-    private String userEmail; // From authenticated user
+    private String userId; // From authenticated user
     private long createdAt = System.currentTimeMillis();
     public String getId() {
         return id;
@@ -31,12 +31,14 @@ public class Post {
     public void setMediaUrls(List<String> mediaUrls) {
         this.mediaUrls = mediaUrls;
     }
-    public String getUserEmail() {
-        return userEmail;
+    public String getUserId() {
+        return userId;
     }
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
+    
     public long getCreatedAt() {
         return createdAt;
     }
