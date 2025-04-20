@@ -48,10 +48,6 @@ public class PostService {
         return null;
     }
 
-    // for get all posts
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
-    }
 
     public Post getPostById(String postId) {
         return postRepository.findById(postId).orElse(null);
