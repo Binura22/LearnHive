@@ -87,3 +87,43 @@ export const deleteModule = async (id) => {
 export const getAdminDashboard = async () => {
   return axiosInstance.get('/api/dashboard');
 };
+
+
+// Get a user by ID
+export const getUserById = async (userId) => {
+  return axiosInstance.get(`/api/users/${userId}`);
+};
+
+
+// Update profile with optional images
+export const updateProfile = async (email, bio, profileImage, coverImage) => {
+  const formData = new FormData();
+  formData.append('email', email);
+  if (bio) formData.append('bio', bio);
+  if (profileImage) formData.append('profileImage', profileImage);
+  if (coverImage) formData.append('coverImage', coverImage);
+
+  return fileUploadInstance.put('/api/users/update', formData);
+};
+
+
+// Follow another user
+export const followUser = async (userId, targetUserId) => {
+  return axiosInstance.post(`/api/interactions/follow`, { userId, targetUserId });
+};
+
+// Unfollow another user
+export const unfollowUser = async (userId, targetUserId) => {
+  return axiosInstance.delete(`/api/interactions/unfollow`, { userId, targetUserId });
+};
+
+// Get followers
+export const getFollowers = async (userId) => {
+  return axiosInstance.get(`/api/interactions/${userId}/followers`);
+};
+
+// Get following
+export const getFollowing = async (userId) => {
+  return axiosInstance.get(`/api/interactions/${userId}/following`);
+};
+

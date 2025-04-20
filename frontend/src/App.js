@@ -11,6 +11,7 @@ import CourseList from './components/pages/CourseList';
 import CourseDetail from './components/pages/CourseDetail';
 import './App.css';
 import CreatePostPage from './components/pages/CreatePostPage';
+import ProfilePage from './components/pages/ProfilePage';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         <Route path="/create-post" element={<CreatePostPage />} />
         <Route path="/courses" element={<CourseList />} />
         <Route path="/courses/:courseId" element={<CourseDetail />} />
-        <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/admin/dashboard" element={
           <ProtectedRoute requiredRole="ADMIN">
             <AdminDashboard />
