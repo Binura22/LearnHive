@@ -50,11 +50,11 @@ public class PostController {
                 }
             }
 
-            System.out.println("user id "+ user.getId());
+            System.out.println("user id "+ user.getUserId());
             Post post = new Post();
             post.setDescription(description);
             post.setMediaUrls(urls);
-            post.setUserId(user.getId()); // assuming getId() returns MongoDB ObjectId string
+            post.setUserId(user.getUserId()); // assuming getId() returns MongoDB ObjectId string
 
             return ResponseEntity.ok(postService.savePost(post));
 
@@ -73,7 +73,7 @@ public class PostController {
 
         try {
             // Assume you can get MongoDB User ID from user details
-            String userId = user.getId(); // Or fetch from DB if needed
+            String userId = user.getUserId(); // Or fetch from DB if needed
             List<Post> posts = postService.getUserPosts(userId);
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
