@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './MainPage.css';
-import Navbar from '../common/Navbar';
 import { useNavigate } from 'react-router-dom';
 import PostList from '../common/PostList';
 
@@ -18,7 +17,6 @@ const MainPage = () => {
 
   return (
     <div className="main-page">
-      <Navbar />
       <div className="main-content">
         <h1>Welcome to LearnHive</h1>
         <p>Start your learning journey today!</p>
