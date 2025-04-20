@@ -1,5 +1,6 @@
 package com.example.coursemanagement.config;
 
+import com.example.coursemanagement.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -10,11 +11,11 @@ import java.util.Map;
 
 public class CustomOAuth2User implements OAuth2User {
     private final OAuth2User oauth2User;
-    private final String role;
+    private final User user;
 
-    public CustomOAuth2User(OAuth2User oauth2User, String role) {
+    public CustomOAuth2User(OAuth2User oauth2User, User user) {
         this.oauth2User = oauth2User;
-        this.role = role;
+        this.user = user;
     }
 
     @Override
@@ -24,20 +25,28 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
     }
 
     @Override
     public String getName() {
-        return oauth2User.getAttribute("name");
+        return user.getName(); // or user.getId().toString() if preferred
     }
 
     public String getEmail() {
-        return oauth2User.getAttribute("email");
+        return user.getEmail();
     }
 
     public String getRole() {
-        return role;
+        return user.getRole();
+    }
+
+    public String getUserId() {
+        return user.getId();
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public String getId() {
