@@ -7,7 +7,7 @@ const CommentModal = ({ postId, onClose }) => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    // Fetch post to get comments
+    //post to get comments
     axios.get(`/api/posts/${postId}`)
       .then((res) => {
         setComments(res.data.comments || []);

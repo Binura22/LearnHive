@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
-// [Added for Like & Comment]
 import java.util.ArrayList;
 import com.example.coursemanagement.model.Comment;
 
@@ -22,7 +21,7 @@ public class Post {
         return id;
     }
 
-    // [Added for Like & Comment]
+    // for like & comment
     private List<String> likedUserIds = new ArrayList<>();
     private List<Comment> comments = new ArrayList<>();
 
@@ -62,7 +61,7 @@ public class Post {
         this.createdAt = createdAt;
     }
 
-    // [Added for Like & Comment]
+    // for like & comment
     public List<String> getLikedUserIds() {
         return likedUserIds;
     }
