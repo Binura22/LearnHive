@@ -1,6 +1,5 @@
 import React from 'react';
 import './MainPage.css';
-import Navbar from '../common/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
@@ -8,7 +7,6 @@ const MainPage = () => {
 
   return (
     <div className="main-page">
-      <Navbar />
       <div className="main-content">
         <h1>Welcome to LearnHive</h1>
         <p>Start your learning journey today!</p>

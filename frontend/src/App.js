@@ -12,17 +12,24 @@ import CourseDetail from './components/pages/CourseDetail';
 import './App.css';
 import CreatePostPage from './components/pages/CreatePostPage';
 import ProfilePage from './components/pages/ProfilePage';
+import Layout from './components/common/Layout';
 
 function App() {
   return (
     <Router>
       <Routes>
+
         <Route path="/login" element={<Login />} />
-        <Route path="/main" element={<MainPage />} />
-        <Route path="/create-post" element={<CreatePostPage />} />
-        <Route path="/courses" element={<CourseList />} />
-        <Route path="/courses/:courseId" element={<CourseDetail />} />
-        <Route path="/profile/:userId" element={<ProfilePage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Routes with Navbar (wrapped in Layout) */}
+        <Route element={<Layout />}>
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/create-post" element={<CreatePostPage />} />
+          <Route path="/courses" element={<CourseList />} />
+          <Route path="/courses/:courseId" element={<CourseDetail />} />
+          <Route path="/profile/:userId" element={<ProfilePage />} />
+        </Route>
         <Route path="/admin/dashboard" element={
           <ProtectedRoute requiredRole="ADMIN">
             <AdminDashboard />
@@ -39,7 +46,6 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/api/auth/check-role" element={<AuthCheck />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );
