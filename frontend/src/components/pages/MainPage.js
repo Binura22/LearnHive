@@ -2,6 +2,7 @@ import React from 'react';
 import './MainPage.css';
 import Navbar from '../common/Navbar';
 import { useNavigate } from 'react-router-dom';
+import PostList from '../common/PostList';
 
 const MainPage = () => {
   const navigate = useNavigate(); // Hook for navigation
@@ -16,6 +17,8 @@ const MainPage = () => {
         <button onClick={() => navigate("/create-post")} className="create-post-btn">
           Create Post
         </button>
+
+        <PostList />
       </div>
     </div>
   );
