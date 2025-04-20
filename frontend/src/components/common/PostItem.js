@@ -10,20 +10,24 @@ const PostItem = ({ post, userEmail }) => {
   const [likeCount, setLikeCount] = useState(post.likedUserIds.length);
   const [showComments, setShowComments] = useState(false);
 
+  // Handle Like/Unlike
   const handleLikeClick = async () => {
+    console.log("Like button clicked for post:", post.id);
+  
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:8080/api/posts/${post.id}/like`,
         {},
         { withCredentials: true }
       );
-
+  
       setIsLiked(!isLiked);
-      setLikeCount(response.data.likedUserIds.length);
+      setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
     } catch (error) {
       console.error("Error liking post:", error);
     }
   };
+  
 
   return (
     <div className="postItem">
@@ -39,7 +43,9 @@ const PostItem = ({ post, userEmail }) => {
           {new Date(post.createdAt).toLocaleString()}
         </p>
 
-        <p className="likeCount">{likeCount} {likeCount === 1 ? "Like" : "Likes"}</p>
+        <p className="likeCount">
+          {likeCount} {likeCount === 1 ? "Like" : "Likes"}
+        </p>
 
         <div className="postActions">
           <button onClick={handleLikeClick} className="likeBtn">
