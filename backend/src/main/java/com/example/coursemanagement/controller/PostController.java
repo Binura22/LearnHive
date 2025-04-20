@@ -69,7 +69,7 @@ public class PostController {
     }
 
     // like, unlike
-    @PutMapping("/{postId}/like")
+    @PostMapping("/{postId}/like")
     public ResponseEntity<?> toggleLike(
             @PathVariable String postId,
             @AuthenticationPrincipal CustomOAuth2User user) {

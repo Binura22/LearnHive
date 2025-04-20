@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import PostList from '../common/PostList';
 
 const MainPage = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
 
   return (
     <div className="main-page">
