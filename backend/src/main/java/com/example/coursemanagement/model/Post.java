@@ -12,9 +12,10 @@ public class Post {
 
     @Id
     private String id;
+    private String userName;
     private String description;
     private List<String> mediaUrls;
-    private String userEmail; // From authenticated user
+    private String userEmail;
     private long createdAt = System.currentTimeMillis();
 
     public String getId() {
@@ -27,6 +28,14 @@ public class Post {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getDescription() {

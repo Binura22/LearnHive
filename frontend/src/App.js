@@ -11,6 +11,8 @@ import CourseList from './components/pages/CourseList';
 import CourseDetail from './components/pages/CourseDetail';
 import './App.css';
 import CreatePostPage from './components/pages/CreatePostPage';
+import NotificationsPage from './components/pages/NotificationsPage';
+import SinglePostPage from './components/pages/SinglePostPage';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/courses" element={<CourseList />} />
         <Route path="/courses/:courseId" element={<CourseDetail />} />
         <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/post/:postId" element={<SinglePostPage />} />
         <Route path="/admin/dashboard" element={
           <ProtectedRoute requiredRole="ADMIN">
             <AdminDashboard />

@@ -12,7 +12,9 @@ import com.example.coursemanagement.config.CustomOAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.coursemanagement.model.Comment;
-//import java.io.IOException;
+import com.example.coursemanagement.model.Notification;
+import com.example.coursemanagement.repository.NotificationRepository;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:4000", allowCredentials = "true")
@@ -22,6 +24,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Autowired
     private CloudinaryService cloudinaryService;
@@ -53,6 +58,7 @@ public class PostController {
             post.setDescription(description);
             post.setMediaUrls(urls);
             post.setUserEmail(user.getAttribute("email"));
+            post.setUserName(user.getAttribute("name"));
 
             return ResponseEntity.ok(postService.savePost(post));
 
@@ -61,6 +67,86 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Post creation failed: " + e.getMessage());
         }
+    }
+
+    @DeleteMapping("/{postId}/comment/by-id/{commentId}")
+    public ResponseEntity<?> deleteCommentById(
+            @PathVariable String postId,
+            @PathVariable String commentId,
+            @AuthenticationPrincipal CustomOAuth2User user) {
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        if (commentId == null || commentId.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Comment ID cannot be null or empty");
+        }
+
+        System.out.println("DELETE Comment Request:");
+        System.out.println("Post ID: " + postId);
+        System.out.println("Comment ID: " + commentId);
+        System.out.println("User Email: " + user.getAttribute("email"));
+
+        Post post = postService.getPostById(postId);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+        }
+
+        System.out.println("--- All comments in this post ---");
+        for (Comment c : post.getComments()) {
+            System.out.println("Comment: ID=" + c.getId() + ", Text=" + c.getText() + ", User=" + c.getUserId());
+        }
+
+        Optional<Comment> optionalComment = post.getComments().stream()
+                .filter(c -> c.getId() != null && c.getId().equals(commentId))
+                .findFirst();
+
+        if (!optionalComment.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Comment not found with ID: " + commentId);
+        }
+
+        Comment commentToDelete = optionalComment.get();
+        post.getComments().remove(commentToDelete);
+        Post updatedPost = postService.savePost(post);
+
+        System.out.println("Comment deleted successfully. Remaining comments: " + updatedPost.getComments().size());
+
+        return ResponseEntity.ok("Comment deleted successfully");
+    }
+
+    @DeleteMapping("/{postId}/comment/by-index/{commentIndex}")
+    public ResponseEntity<?> deleteCommentByIndex(
+            @PathVariable String postId,
+            @PathVariable int commentIndex,
+            @AuthenticationPrincipal CustomOAuth2User user) {
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        Post post = postService.getPostById(postId);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+        }
+
+        List<Comment> comments = post.getComments();
+        if (commentIndex < 0 || commentIndex >= comments.size()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid comment index");
+        }
+
+        String userEmail = user.getAttribute("email");
+
+        if (!post.getUserEmail().equals(userEmail)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only post owner can delete comments");
+        }
+
+        Post updatedPost = postService.deleteCommentByIndex(postId, commentIndex);
+        if (updatedPost == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete comment");
+        }
+
+        return ResponseEntity.ok("Comment deleted");
     }
 
     @DeleteMapping("/{postId}")
@@ -78,7 +164,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
 
-        String userId = user.getAttribute("email");
+        String userEmail = user.getAttribute("email");
         Post post = postService.findById(postId);
 
         if (post == null) {
@@ -87,14 +173,29 @@ public class PostController {
 
         List<String> likedUsers = post.getLikedUserIds();
 
-        if (likedUsers.contains(userId)) {
-            likedUsers.remove(userId);
+        boolean isLiked = false;
+
+        if (likedUsers.contains(userEmail)) {
+            likedUsers.remove(userEmail);
         } else {
-            likedUsers.add(userId);
+            likedUsers.add(userEmail);
+            isLiked = true;
         }
 
         post.setLikedUserIds(likedUsers);
         postService.savePost(post);
+
+        if (isLiked && !post.getUserEmail().equals(userEmail)) {
+            Notification notification = new Notification();
+            notification.setRecipientEmail(post.getUserEmail());
+            notification.setSenderEmail(userEmail);
+            notification.setPostId(postId);
+            notification.setType("like");
+            notification.setMessage(userEmail + " liked your post.");
+            notification.setRead(false);
+            notification.setTimestamp(LocalDateTime.now());
+            notificationRepository.save(notification);
+        }
 
         return ResponseEntity.ok("Like status updated");
     }
@@ -106,6 +207,17 @@ public class PostController {
         if (post == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
+
+        if (post.getComments() != null) {
+            for (Comment comment : post.getComments()) {
+                if (comment.getId() == null || comment.getId().trim().isEmpty()) {
+                    comment.setId(UUID.randomUUID().toString());
+                    System.out.println("Fixed missing ID for comment in getPostById: " + comment.getText());
+                }
+            }
+            postService.savePost(post);
+        }
+
         return ResponseEntity.ok(post);
     }
 
@@ -126,13 +238,65 @@ public class PostController {
         comment.setUserId(user.getName());
         comment.setText(commentText);
 
+        if (comment.getId() == null) {
+            comment.setId(UUID.randomUUID().toString());
+        }
+
+        System.out.println("Creating comment with ID: " + comment.getId());
+
         Post updatedPost = postService.addCommentToPost(postId, comment);
 
         if (updatedPost == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
 
+        if (!updatedPost.getUserEmail().equals(user.getAttribute("email"))) {
+            Notification notification = new Notification();
+            notification.setRecipientEmail(updatedPost.getUserEmail());
+            notification.setSenderEmail(user.getAttribute("email"));
+            notification.setPostId(postId);
+            notification.setType("comment");
+            notification.setMessage(user.getAttribute("email") + " commented on your post.");
+            notification.setRead(false);
+            notification.setTimestamp(LocalDateTime.now());
+            notificationRepository.save(notification);
+        }
+
         return ResponseEntity.ok(updatedPost);
+    }
+
+    @GetMapping("/repair-comments")
+    public ResponseEntity<?> repairCommentIds(@AuthenticationPrincipal CustomOAuth2User user) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        int postsProcessed = 0;
+        int commentsRepaired = 0;
+
+        List<Post> allPosts = postService.getAllPosts();
+
+        for (Post post : allPosts) {
+            boolean postModified = false;
+
+            if (post.getComments() != null) {
+                for (Comment comment : post.getComments()) {
+                    if (comment.getId() == null || comment.getId().trim().isEmpty()) {
+                        comment.setId(UUID.randomUUID().toString());
+                        commentsRepaired++;
+                        postModified = true;
+                    }
+                }
+            }
+
+            if (postModified) {
+                postService.savePost(post);
+                postsProcessed++;
+            }
+        }
+
+        return ResponseEntity.ok("Repair complete: Fixed " + commentsRepaired +
+                " comments across " + postsProcessed + " posts");
     }
 
 }
