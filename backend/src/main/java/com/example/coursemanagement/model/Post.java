@@ -15,16 +15,18 @@ public class Post {
     private String userName;
     private String description;
     private List<String> mediaUrls;
-    private String userEmail;
+    // Keep both fields for compatibility
+    private String userEmail; // Used for notifications and existing code
+    private String userId; // Used for new user ID-based functionality
     private long createdAt = System.currentTimeMillis();
-
-    public String getId() {
-        return id;
-    }
 
     // for like & comment
     private List<String> likedUserIds = new ArrayList<>();
     private List<Comment> comments = new ArrayList<>();
+
+    public String getId() {
+        return id;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -62,6 +64,14 @@ public class Post {
         this.userEmail = userEmail;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public long getCreatedAt() {
         return createdAt;
     }
@@ -70,7 +80,6 @@ public class Post {
         this.createdAt = createdAt;
     }
 
-    // for like & comment
     public List<String> getLikedUserIds() {
         return likedUserIds;
     }
