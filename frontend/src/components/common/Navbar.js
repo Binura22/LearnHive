@@ -8,8 +8,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
 
+  // 👇 Get the logged-in user ID from localStorage
+  const userId = localStorage.getItem('userId');
+
   const handleLogout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userId'); // Clean up user ID too
     navigate('/login');
   };
 
@@ -42,8 +46,8 @@ const Navbar = () => {
         <div className="nav-links">
           <Link to="/main" className="nav-link">Home</Link>
           <Link to="/courses" className="nav-link">Courses</Link>
-          <Link to="/profile" className="nav-link">Profile</Link>
-
+          {/* Dynamic Profile Link */}
+          <Link to={userId ? `/profile/${userId}` : "/profile"} className="nav-link">Profile</Link>
           <div className="notification-bell">
             <Link to="/notifications" className="nav-link">
               <Bell size={24} />
@@ -52,7 +56,6 @@ const Navbar = () => {
               )}
             </Link>
           </div>
-
           <button onClick={handleLogout} className="logout-button">Logout</button>
         </div>
       </div>

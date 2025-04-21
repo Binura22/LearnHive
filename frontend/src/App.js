@@ -13,19 +13,27 @@ import './App.css';
 import CreatePostPage from './components/pages/CreatePostPage';
 import NotificationsPage from './components/pages/NotificationsPage';
 import SinglePostPage from './components/pages/SinglePostPage';
+import ProfilePage from './components/pages/ProfilePage';
+import Layout from './components/common/Layout';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/main" element={<MainPage />} />
-        <Route path="/create-post" element={<CreatePostPage />} />
-        <Route path="/courses" element={<CourseList />} />
-        <Route path="/courses/:courseId" element={<CourseDetail />} />
-        <Route path="/profile" element={<div>Profile Page (Coming Soon)</div>} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/post/:postId" element={<SinglePostPage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        {/* Main app routes with Navbar */}
+        <Route element={<Layout />}>
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/create-post" element={<CreatePostPage />} />
+          <Route path="/courses" element={<CourseList />} />
+          <Route path="/courses/:courseId" element={<CourseDetail />} />
+          <Route path="/profile/:userId" element={<ProfilePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/post/:postId" element={<SinglePostPage />} />
+        </Route>
+        {/* Admin routes */}
         <Route path="/admin/dashboard" element={
           <ProtectedRoute requiredRole="ADMIN">
             <AdminDashboard />
@@ -42,7 +50,6 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/api/auth/check-role" element={<AuthCheck />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

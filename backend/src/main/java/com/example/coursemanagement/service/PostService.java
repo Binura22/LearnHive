@@ -21,9 +21,14 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public List<Post> getUserPosts(String email) {
-        return postRepository.findByUserEmail(email);
+    public List<Post> getUserPosts(String userId) {
+        return postRepository.findByUserId(userId);
     }
+    
+    public List<Post> getAllPosts() {
+        return postRepository.findAll();
+    }
+    
 
     public void deletePost(String postId) {
         postRepository.deleteById(postId);
@@ -59,10 +64,6 @@ public class PostService {
         return null;
     }
 
-    // for get all posts
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
-    }
 
     public Post getPostById(String postId) {
         return postRepository.findById(postId).orElse(null);

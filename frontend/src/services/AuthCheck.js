@@ -10,8 +10,13 @@ const AuthCheck = () => {
       try {
         const response = await axiosInstance.get('/api/auth/check-role');
         const data = response.data;
-        
+
         if (data.authenticated) {
+          console.log("data", data)
+          // Save user info
+          localStorage.setItem('userId', data.userId); 
+          localStorage.setItem('username', data.username);
+
           // Navigate based on role
           navigate(data.redirectUrl);
         } else {

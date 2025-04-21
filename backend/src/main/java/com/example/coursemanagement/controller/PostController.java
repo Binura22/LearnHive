@@ -46,6 +46,7 @@ public class PostController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
             }
 
+            System.out.println("inside try block");
             List<String> urls = new ArrayList<>();
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
@@ -54,11 +55,14 @@ public class PostController {
                 }
             }
 
+            System.out.println("user id " + user.getUserId());
             Post post = new Post();
             post.setDescription(description);
             post.setMediaUrls(urls);
+            // Set both fields for compatibility
             post.setUserEmail(user.getAttribute("email"));
             post.setUserName(user.getAttribute("name"));
+            post.setUserId(user.getUserId());
 
             return ResponseEntity.ok(postService.savePost(post));
 
@@ -147,6 +151,32 @@ public class PostController {
         }
 
         return ResponseEntity.ok("Comment deleted");
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserPosts(@AuthenticationPrincipal CustomOAuth2User user) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        try {
+            // Assume you can get MongoDB User ID from user details
+            String userId = user.getUserId(); // Or fetch from DB if needed
+            List<Post> posts = postService.getUserPosts(userId);
+            return ResponseEntity.ok(posts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllThePosts() {
+        try {
+            List<Post> posts = postService.getAllPosts(); // new method in service
+            return ResponseEntity.ok(posts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
+        }
     }
 
     @DeleteMapping("/{postId}")
