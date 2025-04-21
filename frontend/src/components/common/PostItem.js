@@ -1,63 +1,80 @@
 import React, { useState } from "react";
 import "./PostItem.css";
-import CommentModal from "./CommentModal";
-import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import axios from "axios";
 
-const PostItem = ({ post, userEmail }) => {
-  const [isLiked, setIsLiked] = useState(post.likedUserIds.includes(userEmail));
-  const [likeCount, setLikeCount] = useState(post.likedUserIds.length);
-  const [showComments, setShowComments] = useState(false);
+const PostItem = ({ post, setPosts, posts }) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newDescription, setNewDescription] = useState(post.description);
 
-  const handleLikeClick = async () => {
+  const handleDelete = async () => {
     try {
-      const response = await axios.post(
-        `http://localhost:8080/api/posts/${post.id}/like`,
-        {},
-        { withCredentials: true }
-      );
-
-      setIsLiked(!isLiked);
-      setLikeCount(response.data.likedUserIds.length);
+      await axios.delete(`http://localhost:8080/api/posts/${post.id}`, {
+        withCredentials: true,
+      });
+      const updatedPosts = posts.filter((p) => p.id !== post.id);
+      setPosts(updatedPosts);
     } catch (error) {
-      console.error("Error liking post:", error);
+      console.error("Delete failed:", error);
+    }
+  };
+
+  const handleEdit = async () => {
+    try {
+      await axios.put(`http://localhost:8080/api/posts/${post.id}`, {
+        description: newDescription,
+      }, {
+        withCredentials: true,
+      });
+
+      const updatedPosts = posts.map((p) =>
+        p.id === post.id ? { ...p, description: newDescription } : p
+      );
+      setPosts(updatedPosts);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Edit failed:", error);
     }
   };
 
   return (
     <div className="postItem">
+      <div className="postHeader">
+        <div className="three-dots" onClick={() => setShowMenu(!showMenu)}>
+          <BsThreeDotsVertical />
+          {showMenu && (
+            <div className="dropdown-menu">
+              <div onClick={() => setIsEditing(true)}>✏️ Edit Post</div>
+              <div onClick={handleDelete}>🗑️ Delete Post</div>
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="postImage">
-        {post.mediaUrls && post.mediaUrls.length > 0 && (
+        {post.mediaUrls?.length > 0 && (
           <img src={post.mediaUrls[0]} alt="Post" />
         )}
       </div>
 
       <div className="postContent">
-        <p className="postDescription">{post.description}</p>
-        <p className="postTime">
-          {new Date(post.createdAt).toLocaleString()}
-        </p>
-
-        <p className="likeCount">{likeCount} {likeCount === 1 ? "Like" : "Likes"}</p>
-
-        <div className="postActions">
-          <button onClick={handleLikeClick} className="likeBtn">
-            {isLiked ? <AiFillLike color="blue" /> : <AiOutlineLike />}
-          </button>
-          <button onClick={() => setShowComments(true)} className="commentBtn">
-            <FaRegComment />
-          </button>
-        </div>
+        {isEditing ? (
+          <div className="edit-section">
+            <textarea
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+            />
+            <button onClick={handleEdit}>✅ Save</button>
+            <button onClick={() => setIsEditing(false)}>❌ Cancel</button>
+          </div>
+        ) : (
+          <>
+            <p className="postDescription">{post.description}</p>
+            <p className="postTime">{new Date(post.createdAt).toLocaleString()}</p>
+          </>
+        )}
       </div>
-
-      {showComments && (
-        <CommentModal
-          postId={post.id}
-          onClose={() => setShowComments(false)}
-          userEmail={userEmail}
-        />
-      )}
     </div>
   );
 };

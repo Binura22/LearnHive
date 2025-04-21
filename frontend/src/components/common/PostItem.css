@@ -1,15 +1,32 @@
 .postItem {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.postHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.three-dots {
+  cursor: pointer;
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 30px;
+  right: 15px;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 4px;
+  z-index: 100;
+}
+
   .postImage img {
     width: 100%;
     height: auto;
