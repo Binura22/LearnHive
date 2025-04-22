@@ -8,12 +8,12 @@ const MainPage = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
 
+  // Fetch posts from the server
   useEffect(() => {
     axios.get("http://localhost:8080/api/posts/all", { withCredentials: true })
       .then(res => setPosts(res.data))
       .catch(err => console.error("Failed to fetch posts", err));
   }, []);
-  
 
   return (
     <div className="main-page">
@@ -25,6 +25,7 @@ const MainPage = () => {
           Create Post
         </button>
 
+        {/* Display posts with media rendering support */}
         <div className="post-feed">
           {posts.map(post => (
             <div key={post.id} className="post-card">
@@ -45,6 +46,7 @@ const MainPage = () => {
           ))}
         </div>
 
+        {/* Also include PostList component for additional functionality */}
         <PostList />
       </div>
     </div>
