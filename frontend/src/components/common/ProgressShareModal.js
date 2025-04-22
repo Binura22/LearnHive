@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { renderProgressImage, canvasToFile } from '../../utils/progressImageGenerator';
 import './ProgressShareModal.css';
 
 const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const canvasRef = useRef(null);
+  
+  // Ensure course object has required properties
+  const courseTitle = course?.title || 'this course';
+  const courseCategory = course?.category || 'Learning';
+
+  useEffect(() => {
+    if (isOpen && canvasRef.current) {
+      renderProgressImage(canvasRef.current, progress, courseTitle);
+    }
+  }, [isOpen, progress, courseTitle]);
 
   if (!isOpen) return null;
 
@@ -15,8 +27,12 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
     setSuccess('');
 
     try {
+      // Generate a progress image using canvas
+      const progressImage = await canvasToFile(canvasRef.current);
+      
       const formData = new FormData();
-      formData.append('description', description || `I've completed ${progress}% of ${course.title}! 🎉 #LearningProgress #${course.category}`);
+      formData.append('description', description || `I've completed ${progress}% of ${courseTitle}! 🎉 #LearningProgress #${courseCategory}`);
+      formData.append('media', progressImage);
       
       await axios.post('http://localhost:8080/api/posts/create', formData, {
         withCredentials: true,
@@ -39,13 +55,21 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
     <div className="modal-overlay">
       <div className="progress-share-modal">
         <h2>Share Your Progress</h2>
-        <p>You've completed {progress}% of {course.title}!</p>
+        <p>You've completed {progress}% of {courseTitle}!</p>
+        
+        {/* Hidden canvas to generate the progress image */}
+        <canvas 
+          ref={canvasRef} 
+          width={300} 
+          height={150} 
+          style={{ display: 'none' }}
+        />
         
         <form onSubmit={handleSubmit}>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder={`I've completed ${progress}% of ${course.title}! 🎉 #LearningProgress #${course.category}`}
+            placeholder={`I've completed ${progress}% of ${courseTitle}! 🎉 #LearningProgress #${courseCategory}`}
             rows={4}
           />
           
