@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getCourseById } from '../../services/api';
+import ProgressShareModal from '../common/ProgressShareModal';
 import './CourseDetail.css';
 
 const CourseDetail = () => {
@@ -14,6 +15,8 @@ const CourseDetail = () => {
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [showShareButton, setShowShareButton] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -72,9 +75,42 @@ const CourseDetail = () => {
     };
   }, [currentModuleIndex, course, showModules]);
 
+  const totalModules = course?.modules?.length || 1;
+  const progress = Math.round(((currentModuleIndex + 1) / totalModules) * 100);
+
+  const lastMilestoneRef = useRef(null);
+
+  const getMilestone = (progress) => {
+    if (progress >= 100) return 100;
+    if (progress >= 75) return 75;
+    if (progress >= 50) return 50;
+    return null;
+  };
+
+  useEffect(() => {
+    
+    const milestone = getMilestone(progress);
+  
+    if (milestone !== null && lastMilestoneRef.current !== milestone) {
+      lastMilestoneRef.current = milestone;
+      setShowShareButton(true);
+    } else {
+      setShowShareButton(false);
+    }
+  }, [progress]);
+  
+
+  
+
   const handleNext = () => {
     if (currentModuleIndex < course.modules.length - 1) {
-      setCurrentModuleIndex(prev => prev + 1);
+      console.log('Moving to next module...');
+      console.log('Current index before:', currentModuleIndex);
+      setCurrentModuleIndex(prev => {
+        const newIndex = prev + 1;
+        console.log('New index after:', newIndex);
+        return newIndex;
+      });
       setShowPdfPreview(false);
       setVideoLoading(true);
       setPdfLoading(true);
@@ -83,11 +119,22 @@ const CourseDetail = () => {
 
   const handlePrevious = () => {
     if (currentModuleIndex > 0) {
-      setCurrentModuleIndex(prev => prev - 1);
+      console.log('Moving to previous module...');
+      console.log('Current index before:', currentModuleIndex);
+      setCurrentModuleIndex(prev => {
+        const newIndex = prev - 1;
+        console.log('New index after:', newIndex);
+        return newIndex;
+      });
       setShowPdfPreview(false);
       setVideoLoading(true);
       setPdfLoading(true);
     }
+  };
+
+  const handleShareProgress = () => {
+    console.log('Share progress clicked');
+    setShowShareModal(true);
   };
 
   if (loading) {
@@ -147,12 +194,21 @@ const CourseDetail = () => {
             <div className="progress-bar">
               <div 
                 className="progress-fill"
-                style={{ width: `${((currentModuleIndex + 1) / course.modules.length) * 100}%` }}
+                style={{ width: `${progress}%` }}
               ></div>
             </div>
             <span className="progress-text">
-              Module {currentModuleIndex + 1} of {course.modules.length}
+              Progress: {progress}% (Module {currentModuleIndex + 1} of {totalModules})
             </span>
+            {showShareButton && (
+              <button 
+              className={`progress-share-btn ${showShareButton ? 'visible' : ''}`}
+              onClick={handleShareProgress}
+            >
+              Share Progress
+            </button>
+            
+            )}
           </div>
 
           <div className="module-title">
@@ -251,6 +307,13 @@ const CourseDetail = () => {
           </div>
         </div>
       )}
+
+      <ProgressShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        course={course}
+        progress={getMilestone(progress)}
+      />
     </div>
   );
 };
