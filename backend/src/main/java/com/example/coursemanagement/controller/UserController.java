@@ -65,6 +65,8 @@ public class UserController {
             @RequestParam(required = false) MultipartFile profileImage,
             @RequestParam(required = false) MultipartFile coverImage) {
         System.out.println("I made it to the updateProfile");
+        System.out.println("Email " + email);
+        System.out.println("Bio " + bio);
         try {
             User updatedUser = userService.updateUserProfile(email, bio, profileImage, coverImage);
             return ResponseEntity.ok(updatedUser);
