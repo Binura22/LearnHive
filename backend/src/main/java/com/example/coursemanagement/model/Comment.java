@@ -2,6 +2,7 @@ package com.example.coursemanagement.model;
 
 import org.springframework.data.annotation.Id;
 import java.util.Date;
+import java.util.UUID;
 
 public class Comment {
 
@@ -13,6 +14,8 @@ public class Comment {
 
     public Comment() {
         this.timestamp = new Date();
+        this.id = UUID.randomUUID().toString();
+        System.out.println("Created new comment with ID: " + this.id);
     }
 
     public String getId() {
@@ -45,5 +48,15 @@ public class Comment {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", text='" + text + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

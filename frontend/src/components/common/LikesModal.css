@@ -1,0 +1,9 @@
+.likes-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.like-item:hover {
+  background-color: #f5f5f5;
+}
