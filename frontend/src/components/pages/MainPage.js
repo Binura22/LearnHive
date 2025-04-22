@@ -8,7 +8,6 @@ const MainPage = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
 
-  // Fetch posts from the server
   useEffect(() => {
     axios.get("http://localhost:8080/api/posts/all", { withCredentials: true })
       .then(res => setPosts(res.data))
@@ -25,7 +24,7 @@ const MainPage = () => {
           Create Post
         </button>
 
-        {/* Display posts with media rendering support */}
+        {/* Display posts with media rendering support
         <div className="post-feed">
           {posts.map(post => (
             <div key={post.id} className="post-card">
@@ -44,9 +43,8 @@ const MainPage = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
-        {/* Also include PostList component for additional functionality */}
         <PostList />
       </div>
     </div>
