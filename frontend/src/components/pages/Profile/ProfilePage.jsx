@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getUserById, getFollowers, getFollowing, followUser, unfollowUser } from '../../services/api';
-import './ProfilePage.css'; // Optional if styling separately
+import { getUserById, getFollowers, getFollowing, followUser, unfollowUser } from '../../../services/api';
+import './ProfilePage.css';
 
 const ProfilePage = () => {
   const { userId } = useParams(); // Dynamic route param
@@ -74,6 +74,12 @@ const ProfilePage = () => {
             {isFollowing ? 'Unfollow' : 'Follow'}
           </button>
         )}
+        {isOwnProfile && (
+          <button onClick={() => window.location.href = `/profile/edit-profile`} className="edit-btn">
+            Edit Profile
+          </button>
+        )}
+
       </div>
     </div>
   );
