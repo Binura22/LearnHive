@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getUserById, getFollowers, getFollowing, followUser, unfollowUser } from '../../../services/api';
+import PostList from '../../common/PostList';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
@@ -81,6 +82,11 @@ const ProfilePage = () => {
         )}
 
       </div>
+      <div className="user-posts-section">
+        <h3>{isOwnProfile ? 'Your Posts' : `${profile.name}'s Posts`}</h3>
+        <PostList filterByUserId={profile.id} />
+      </div>
+
     </div>
   );
 };
