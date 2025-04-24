@@ -109,7 +109,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    // Optional: update bio, profile image, or cover image
+    // update bio, profile image, or cover image
     public User updateUserProfile(String email,
             String bio,
             MultipartFile profileImageFile,

@@ -13,8 +13,9 @@ import './App.css';
 import CreatePostPage from './components/pages/CreatePostPage';
 import NotificationsPage from './components/pages/NotificationsPage';
 import SinglePostPage from './components/pages/SinglePostPage';
-import ProfilePage from './components/pages/ProfilePage';
+import ProfilePage from './components/pages/Profile/ProfilePage';
 import Layout from './components/common/Layout';
+import EditProfilePage from './components/pages/Profile/EditProfilePage';
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           <Route path="/courses" element={<CourseList />} />
           <Route path="/courses/:courseId" element={<CourseDetail />} />
           <Route path="/profile/:userId" element={<ProfilePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path='/profile/edit-profile' element={<EditProfilePage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/post/:postId" element={<SinglePostPage />} />
         </Route>
