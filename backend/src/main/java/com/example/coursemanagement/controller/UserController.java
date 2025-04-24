@@ -31,6 +31,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Get user by id
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable String id) {
         try {
@@ -75,7 +76,7 @@ public class UserController {
         }
     }
 
-    // Optional: Delete user
+    // Delete user
     @DeleteMapping("/{email}")
     public ResponseEntity<String> deleteUser(@PathVariable String email) {
         try {

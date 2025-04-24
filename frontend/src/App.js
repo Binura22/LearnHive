@@ -31,7 +31,6 @@ function App() {
           <Route path="/courses/:courseId" element={<CourseDetail />} />
           <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path='/profile/edit-profile' element={<EditProfilePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/post/:postId" element={<SinglePostPage />} />
         </Route>
