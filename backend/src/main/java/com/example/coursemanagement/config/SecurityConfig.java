@@ -33,9 +33,7 @@ public class SecurityConfig {
                                 "/login",
                                 "/oauth2/**",
                                 "/api/auth/**",
-                                "/error",
-                                "/api/users/**",
-                                "/api/interactions/**")
+                                "/error")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form

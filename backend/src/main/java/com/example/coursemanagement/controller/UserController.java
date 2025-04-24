@@ -31,6 +31,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Get user by id
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable String id) {
         try {
@@ -65,6 +66,8 @@ public class UserController {
             @RequestParam(required = false) MultipartFile profileImage,
             @RequestParam(required = false) MultipartFile coverImage) {
         System.out.println("I made it to the updateProfile");
+        System.out.println("Email " + email);
+        System.out.println("Bio " + bio);
         try {
             User updatedUser = userService.updateUserProfile(email, bio, profileImage, coverImage);
             return ResponseEntity.ok(updatedUser);
@@ -73,7 +76,7 @@ public class UserController {
         }
     }
 
-    // Optional: Delete user
+    // Delete user
     @DeleteMapping("/{email}")
     public ResponseEntity<String> deleteUser(@PathVariable String email) {
         try {
