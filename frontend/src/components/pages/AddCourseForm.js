@@ -82,16 +82,16 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
     setError('');
 
     try {
-      // 1. Create the course
+      // Create the course
       const courseResponse = await addCourse(courseData);
       const courseId = courseResponse.data.id;
 
-      // 2. Upload course image if exists
+      // Upload course image if exists
       if (courseImage) {
         await uploadCourseImage(courseId, courseImage);
       }
 
-      // 3. Create modules with their files
+      // Create modules with their files
       for (const module of modules) {
         await addModule(
           courseId,

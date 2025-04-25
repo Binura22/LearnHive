@@ -1,5 +1,3 @@
-// src/services/api.js
-
 import axiosInstance, { fileUploadInstance } from './axiosInstance';
 
 // Login request

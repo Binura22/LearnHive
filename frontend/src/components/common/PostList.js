@@ -13,7 +13,7 @@ const PostList = ({ filterByUserId = null }) => {
   useEffect(() => {
     axios.defaults.withCredentials = true;
 
-    // Optional: Add request interceptor for debugging
+    // add request interceptor for debugging
     axios.interceptors.request.use(request => {
       console.log('Starting Request:', request.url);
       return request;
@@ -39,7 +39,7 @@ const PostList = ({ filterByUserId = null }) => {
           console.log(`Trying to authenticate with: ${endpoint}`);
           const response = await axios.get(endpoint, { withCredentials: true });
           if (response.data && response.data.email) {
-            console.log(`✅ Authentication successful with ${endpoint}:`, response.data.email);
+            console.log(` Authentication successful with ${endpoint}:`, response.data.email);
 
             // Store in both state and localStorage
             setUserEmail(response.data.email);
@@ -75,13 +75,13 @@ const PostList = ({ filterByUserId = null }) => {
 
     axios.get('http://localhost:8080/api/posts', { withCredentials: true })
       .then(response => {
-        console.log("✅ Posts fetched successfully:", response.data.length);
+        console.log(" Posts fetched successfully:", response.data.length);
         if (response.data.length > 0) {
           console.log("First post:", response.data[0]);
         }
         let fetchedPosts = response.data;
 
-        // If profile is being viewed, filter only that user's posts
+        // filter only that user's posts
         if (filterByUserId) {
           fetchedPosts = fetchedPosts.filter(post => post.userId === filterByUserId);
         }
@@ -90,9 +90,9 @@ const PostList = ({ filterByUserId = null }) => {
         setPostsError(null);
       })
       .catch(error => {
-        console.error("❌ Error fetching posts:", error);
+        console.error("Error fetching posts:", error);
 
-        // More detailed error logging
+        //  detailed error logging
         if (error.response) {
           setPostsError(`Failed to fetch posts: ${error.response.status}`);
         } else if (error.request) {
@@ -117,7 +117,7 @@ const PostList = ({ filterByUserId = null }) => {
 
   return (
     <div>
-      {/* Only show user email if we have it */}
+      {/* Only show user email */}
       {userEmail && (
         <div style={{ background: '#d4edda', color: '#155724', padding: '10px', margin: '10px 0', borderRadius: '4px' }}>
           <strong>Logged in as:</strong> {userEmail}
@@ -143,7 +143,7 @@ const PostList = ({ filterByUserId = null }) => {
           <PostItem
             key={post.id}
             post={post}
-            userEmail={userEmail} // Logged-in user's email (might be empty if auth failed)
+            userEmail={userEmail} // Logged-in user's email
           />
         ))
       ) : (

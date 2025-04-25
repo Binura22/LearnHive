@@ -37,7 +37,7 @@ const AdminCourseList = () => {
         const errorMessage = err.response?.data?.error || err.message || 'Failed to delete course';
         setError(`Failed to delete course: ${errorMessage}`);
         
-        // If unauthorized, redirect to login
+        // after unauthorized, redirect to login
         if (err.response?.status === 401 || err.response?.status === 403) {
           navigate('/login');
         }

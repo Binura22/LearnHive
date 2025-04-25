@@ -1,12 +1,11 @@
-// src/services/axiosInstance.js
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080', // Consistent port with backend
+  baseURL: 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true // Important for OAuth2
+  withCredentials: true // for OAuth2
 });
 
 // Intercept requests to add token dynamically
@@ -17,7 +16,7 @@ axiosInstance.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // Handle file uploads by setting the correct Content-Type
+    // Handle file uploads by setting the correct content type
     if (config.data instanceof FormData) {
       config.headers['Content-Type'] = 'multipart/form-data';
     }
@@ -29,7 +28,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add response interceptor for better error handling
+// for better error handling
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -42,7 +41,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// Create a new instance specifically for file uploads
+// Create a new instance for file uploads
 export const fileUploadInstance = axios.create({
   baseURL: 'http://localhost:8080',
   withCredentials: true,
