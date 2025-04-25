@@ -24,11 +24,10 @@ public class PostService {
     public List<Post> getUserPosts(String userId) {
         return postRepository.findByUserId(userId);
     }
-    
+
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
-    
 
     public void deletePost(String postId) {
         postRepository.deleteById(postId);
@@ -64,6 +63,22 @@ public class PostService {
         return null;
     }
 
+    public Post addReplyToComment(String postId, String commentId, Comment reply) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            for (Comment comment : post.getComments()) {
+                if (comment.getId().equals(commentId)) {
+                    if (reply.getId() == null || reply.getId().trim().isEmpty()) {
+                        reply.setId(UUID.randomUUID().toString());
+                    }
+                    comment.getReplies().add(reply);
+                    return postRepository.save(post);
+                }
+            }
+        }
+        return null;
+    }
 
     public Post getPostById(String postId) {
         return postRepository.findById(postId).orElse(null);

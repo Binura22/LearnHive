@@ -66,7 +66,6 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    // get current user's email (from HEAD)
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -76,12 +75,8 @@ public class AuthController {
             if (auth.getPrincipal() instanceof CustomOAuth2User) {
                 CustomOAuth2User customUser = (CustomOAuth2User) auth.getPrincipal();
                 response.put("email", customUser.getEmail());
-                response.put("userId", customUser.getUserId());
+                response.put("userId", customUser.getUserId()); // Ensure userId is included
                 response.put("name", customUser.getName());
-            } else {
-                OAuth2User oAuth2User = (OAuth2User) auth.getPrincipal();
-                String email = oAuth2User.getAttribute("email");
-                response.put("email", email);
             }
             return ResponseEntity.ok(response);
         }

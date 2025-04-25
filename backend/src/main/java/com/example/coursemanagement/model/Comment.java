@@ -3,6 +3,8 @@ package com.example.coursemanagement.model;
 import org.springframework.data.annotation.Id;
 import java.util.Date;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Comment {
 
@@ -11,6 +13,8 @@ public class Comment {
     private String userId;
     private String text;
     private Date timestamp;
+    private List<Comment> replies = new ArrayList<>();
+    private String userEmail;
 
     public Comment() {
         this.timestamp = new Date();
@@ -50,6 +54,22 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
+    public List<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
@@ -57,6 +77,8 @@ public class Comment {
                 ", userId='" + userId + '\'' +
                 ", text='" + text + '\'' +
                 ", timestamp=" + timestamp +
+                ", replies=" + replies +
+                ", userEmail='" + userEmail + '\'' +
                 '}';
     }
 }

@@ -9,30 +9,30 @@ const PostList = ({ filterByUserId = null }) => {
   const [postsError, setPostsError] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
 
-  // Configure axios defaults
+
   useEffect(() => {
     axios.defaults.withCredentials = true;
 
-    // Optional: Add request interceptor for debugging
+
     axios.interceptors.request.use(request => {
       console.log('Starting Request:', request.url);
       return request;
     });
   }, []);
 
-  // First attempt to check authentication status
+
   useEffect(() => {
     console.log("Checking authentication status...");
     setLoading(true);
 
-    // Try different potential URLs for the user endpoint
+
     const authEndpoints = [
       'http://localhost:8080/api/user/me',
       'http://localhost:8080/api/users/current',
       'http://localhost:8080/api/auth/user'
     ];
 
-    // Try each endpoint until one works
+
     const tryEndpoints = async () => {
       for (let endpoint of authEndpoints) {
         try {
@@ -41,7 +41,7 @@ const PostList = ({ filterByUserId = null }) => {
           if (response.data && response.data.email) {
             console.log(`✅ Authentication successful with ${endpoint}:`, response.data.email);
 
-            // Store in both state and localStorage
+
             setUserEmail(response.data.email);
             localStorage.setItem('userEmail', response.data.email);
 
@@ -53,7 +53,7 @@ const PostList = ({ filterByUserId = null }) => {
         }
       }
 
-      // If we get here, all endpoints failed - check localStorage
+
       const storedEmail = localStorage.getItem('userEmail');
       if (storedEmail) {
         console.log("Using email from localStorage:", storedEmail);
@@ -67,7 +67,7 @@ const PostList = ({ filterByUserId = null }) => {
     tryEndpoints();
   }, []);
 
-  // Fetch posts - proceed even if auth failed
+
   useEffect(() => {
     if (!authChecked) return;
 
@@ -81,7 +81,6 @@ const PostList = ({ filterByUserId = null }) => {
         }
         let fetchedPosts = response.data;
 
-        // If profile is being viewed, filter only that user's posts
         if (filterByUserId) {
           fetchedPosts = fetchedPosts.filter(post => post.userId === filterByUserId);
         }
@@ -92,7 +91,7 @@ const PostList = ({ filterByUserId = null }) => {
       .catch(error => {
         console.error("❌ Error fetching posts:", error);
 
-        // More detailed error logging
+
         if (error.response) {
           setPostsError(`Failed to fetch posts: ${error.response.status}`);
         } else if (error.request) {
@@ -106,7 +105,6 @@ const PostList = ({ filterByUserId = null }) => {
       });
   }, [authChecked]);
 
-  // Loading state
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '20px' }}>
@@ -117,14 +115,12 @@ const PostList = ({ filterByUserId = null }) => {
 
   return (
     <div>
-      {/* Only show user email if we have it */}
       {userEmail && (
         <div style={{ background: '#d4edda', color: '#155724', padding: '10px', margin: '10px 0', borderRadius: '4px' }}>
           <strong>Logged in as:</strong> {userEmail}
         </div>
       )}
 
-      {/* Posts error banner */}
       {postsError && (
         <div style={{ background: '#f8d7da', color: '#721c24', padding: '10px', margin: '10px 0', borderRadius: '4px' }}>
           <strong>Error:</strong> {postsError}
@@ -137,13 +133,12 @@ const PostList = ({ filterByUserId = null }) => {
         </div>
       )}
 
-      {/* Display posts */}
       {posts && posts.length > 0 ? (
         posts.map(post => (
           <PostItem
             key={post.id}
             post={post}
-            userEmail={userEmail} // Logged-in user's email (might be empty if auth failed)
+            userEmail={userEmail} 
           />
         ))
       ) : (

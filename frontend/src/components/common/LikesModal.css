@@ -4,6 +4,52 @@
   margin-bottom: 15px;
 }
 
+.likes-modal-content {
+  max-width: 400px;
+  position: relative;
+}
+
+.likes-modal-title {
+  margin-top: 0;
+  text-align: center;
+}
+
+.likes-modal-loading,
+.likes-modal-error,
+.likes-modal-empty {
+  text-align: center;
+}
+
+.like-item {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+}
+
 .like-item:hover {
   background-color: #f5f5f5;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3b5998;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.user-info .user-name {
+  font-weight: bold;
+}
+
+.user-info .user-link {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
 }

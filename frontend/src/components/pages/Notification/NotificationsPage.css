@@ -1,0 +1,155 @@
+.notifications-container {
+  max-width: 600px;
+  margin: 40px auto 0 auto;
+  padding: 24px 16px;
+  background: #f9fafe;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  min-height: 60vh;
+}
+
+.notifications-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #22223b;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.no-notifications {
+  text-align: center;
+  color: #888;
+  font-size: 1.1rem;
+  margin-top: 40px;
+}
+
+.notification-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 18px 20px 14px 20px;
+  margin-bottom: 18px;
+  transition: box-shadow 0.2s, background 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 5px solid #3b82f6;
+  cursor: pointer;
+}
+
+.notification-card.read {
+  background: #f3f4f6;
+  border-left: 5px solid #bdbdbd;
+  opacity: 0.8;
+}
+
+.notification-card:hover {
+  box-shadow: 0 6px 24px rgba(59,130,246,0.10);
+  background: #f0f7ff;
+}
+
+.notification-message {
+  font-size: 1.08rem;
+  color: #22223b;
+  font-weight: 500;
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.notification-message:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.notification-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.97rem;
+  color: #666;
+}
+
+.notification-time {
+  font-size: 0.93rem;
+  color: #888;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.notification-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 5px 13px;
+  font-size: 0.97rem;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  font-weight: 500;
+}
+
+.notification-btn.mark-read {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.notification-btn.mark-read:hover {
+  background: #2563eb;
+}
+
+.notification-btn.delete {
+  background: #f87171;
+  color: #fff;
+}
+
+.notification-btn.delete:hover {
+  background: #dc2626;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 24px 18px 18px 18px;
+  position: relative;
+  max-width: 600px;
+  width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .notifications-container {
+    max-width: 98vw;
+    padding: 10px 2vw;
+  }
+  .notification-card {
+    padding: 14px 10px 10px 10px;
+  }
+}
