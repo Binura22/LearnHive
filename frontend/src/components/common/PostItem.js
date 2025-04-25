@@ -10,7 +10,7 @@ const PostItem = ({ post, userEmail }) => {
   const [isLiked, setIsLiked] = useState(post.likedUserIds.includes(userEmail));
   const [likeCount, setLikeCount] = useState(post.likedUserIds.length);
   const [showComments, setShowComments] = useState(false);
-  const [showLikes, setShowLikes] = useState(false); // New state for likes modal
+  const [showLikes, setShowLikes] = useState(false);
   
   // Calculate comment count from post data
   const commentCount = post.comments ? post.comments.length : 0;
@@ -38,16 +38,15 @@ const PostItem = ({ post, userEmail }) => {
     console.log("Post Details:", {
       id: post.id,
       userName: post.userName,
-      userEmail: post.userEmail, // This is the original post owner's email
-      currentUserEmail: userEmail // This is the logged-in user's email
+      userEmail: post.userEmail, 
+      currentUserEmail: userEmail 
     });
   };
 
-  // Call this function when opening comments
+  // function call when opening comments
   const handleOpenComments = () => {
     verifyPostOwner();
     
-    // Make sure we have the latest user email from localStorage or API
     let latestUserEmail = userEmail;
     const storedEmail = localStorage.getItem('userEmail');
     
@@ -59,7 +58,7 @@ const PostItem = ({ post, userEmail }) => {
     setShowComments(true);
   };
 
-  // New function to toggle likes modal
+  // to toggle likes modal
   const toggleLikesModal = () => {
     setShowLikes(!showLikes);
   };

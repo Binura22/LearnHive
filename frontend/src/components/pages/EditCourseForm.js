@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getCourseById, updateCourse, updateModule, uploadCourseImage, deleteModule } from '../../services/api';
 import './EditCourseForm.css';
 
-// Module class to ensure consistent data structure
 class Module {
   constructor({ id, courseId, title, description, orderIndex, videoLink, pdfLink }) {
     this.id = id;
@@ -57,7 +56,6 @@ const EditCourseForm = () => {
         const courseData = response.data;
         setCourseData(courseData);
         
-        // Ensure modules have orderIndex set
         const modulesWithOrder = (courseData.modules || []).map((module, index) => ({
           ...module,
           orderIndex: typeof module.orderIndex === 'number' ? module.orderIndex : index
@@ -139,7 +137,7 @@ const EditCourseForm = () => {
       // First update the course
       const updatedCourse = await updateCourse(courseId, courseData);
 
-      // Then handle course image if it exists
+      // Then handle course image 
       if (courseImage) {
         const formData = new FormData();
         formData.append('file', courseImage);
@@ -148,7 +146,7 @@ const EditCourseForm = () => {
 
       // Then update each module
       for (const [index, module] of modules.entries()) {
-        if (!module.id) continue; // Skip modules without an ID
+        if (!module.id) continue; 
 
         const files = moduleFiles[index] || {};
         try {

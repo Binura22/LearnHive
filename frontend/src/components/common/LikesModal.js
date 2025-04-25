@@ -12,11 +12,11 @@ const LikesModal = ({ likedUserIds, onClose }) => {
       setLoading(true);
       
       try {
-        // For now, we'll just display the email addresses
-        // In a real application, you'd fetch user details from the backend
+        // display the email addresses
+
         setUsers(likedUserIds.map(email => ({
           email: email,
-          name: email.split('@')[0] // Simple name extraction from email
+          name: email.split('@')[0] // name extraction from email
         })));
         setLoading(false);
       } catch (error) {
