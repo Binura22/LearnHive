@@ -15,7 +15,7 @@ const LikesModal = ({ likedUserIds, onClose }) => {
         // display the email addresses
         setUsers(likedUserIds.map(email => ({
           email: email,
-          name: email.split('@')[0] // name extraction from email
+          name: email.split('@')[0] 
         })));
         setLoading(false);
       } catch (error) {
