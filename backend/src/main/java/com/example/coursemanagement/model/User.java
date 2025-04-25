@@ -38,7 +38,7 @@ public class User {
     private List<String> commentIds = new ArrayList<>();
 
     // Following system
-    private List<String> following = new ArrayList<>(); 
+    private List<String> following = new ArrayList<>();
     private List<String> followers = new ArrayList<>();
 
     // Getters and Setters

@@ -33,8 +33,12 @@ const LikesModal = ({ likedUserIds, onClose }) => {
   }, [likedUserIds]);
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '400px' }}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div 
+        className="modal-content" 
+        style={{ maxWidth: '400px' }} 
+        onClick={(e) => e.stopPropagation()}
+      >
         <h3 style={{ marginTop: 0, textAlign: 'center' }}>
           People who liked this post
         </h3>

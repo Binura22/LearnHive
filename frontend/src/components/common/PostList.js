@@ -92,7 +92,7 @@ const PostList = ({ filterByUserId = null }) => {
       .catch(error => {
         console.error("Error fetching posts:", error);
 
-        // detailed error logging
+// detailed error logging
         if (error.response) {
           setPostsError(`Failed to fetch posts: ${error.response.status}`);
         } else if (error.request) {
@@ -142,7 +142,7 @@ const PostList = ({ filterByUserId = null }) => {
             post={post}
             userEmail={userEmail} // Logged-in user's email
           />
-        ))
+))
       ) : (
         <div style={{ textAlign: 'center', padding: '20px' }}>
           <p>No posts available.</p>
