@@ -15,6 +15,15 @@ public class Comment {
     private Date timestamp;
     private List<Comment> replies = new ArrayList<>();
     private String userEmail;
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public Comment() {
         this.timestamp = new Date();
