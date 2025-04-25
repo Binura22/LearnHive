@@ -19,7 +19,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
     axios.get('http://localhost:8080/api/user/me', { withCredentials: true })
       .then(response => {
         const email = response.data.email;
-        console.log("✅ API returned user email:", email);
+        console.log(" API returned user email:", email);
         
         if (email && email !== currentUserEmail) {
           console.log("Updating current user email from API");

@@ -160,8 +160,8 @@ public class PostController {
         }
 
         try {
-            // Assume you can get MongoDB User ID from user details
-            String userId = user.getUserId(); // Or fetch from DB if needed
+            // get MongoDB User ID from user details
+            String userId = user.getUserId();
             List<Post> posts = postService.getUserPosts(userId);
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
@@ -172,7 +172,7 @@ public class PostController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllThePosts() {
         try {
-            List<Post> posts = postService.getAllPosts(); // new method in service
+            List<Post> posts = postService.getAllPosts(); 
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
