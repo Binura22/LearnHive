@@ -8,12 +8,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // 👇 Get the logged-in user ID from localStorage
-  const userId = localStorage.getItem('userId');
+
+  const userId = localStorage.getItem('userId'); 
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('userId'); // Clean up user ID too
+    localStorage.removeItem('userId');
     navigate('/login');
   };
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./PostItem.css";
 import CommentModal from "./CommentModal";
-import LikesModal from "./LikesModal"; // Import the new component
+import LikesModal from "./LikesModal"; 
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import axios from "axios";
@@ -10,12 +10,11 @@ const PostItem = ({ post, userEmail }) => {
   const [isLiked, setIsLiked] = useState(post.likedUserIds.includes(userEmail));
   const [likeCount, setLikeCount] = useState(post.likedUserIds.length);
   const [showComments, setShowComments] = useState(false);
-  const [showLikes, setShowLikes] = useState(false); // New state for likes modal
+  const [showLikes, setShowLikes] = useState(false);
   
-  // Calculate comment count from post data
+
   const commentCount = post.comments ? post.comments.length : 0;
 
-  // Handle Like/Unlike
   const handleLikeClick = async () => {
     console.log("Like button clicked for post:", post.id);
   
@@ -33,21 +32,20 @@ const PostItem = ({ post, userEmail }) => {
     }
   };
   
-  // Debug function to verify post's original owner
+
   const verifyPostOwner = () => {
     console.log("Post Details:", {
       id: post.id,
       userName: post.userName,
-      userEmail: post.userEmail, // This is the original post owner's email
-      currentUserEmail: userEmail // This is the logged-in user's email
+      userEmail: post.userEmail, 
+      currentUserEmail: userEmail 
     });
   };
 
-  // Call this function when opening comments
+
   const handleOpenComments = () => {
     verifyPostOwner();
-    
-    // Make sure we have the latest user email from localStorage or API
+
     let latestUserEmail = userEmail;
     const storedEmail = localStorage.getItem('userEmail');
     
@@ -59,7 +57,7 @@ const PostItem = ({ post, userEmail }) => {
     setShowComments(true);
   };
 
-  // New function to toggle likes modal
+
   const toggleLikesModal = () => {
     setShowLikes(!showLikes);
   };
@@ -79,7 +77,7 @@ const PostItem = ({ post, userEmail }) => {
         </p>
         <p className="postAuthor">Posted by: {post.userName}</p>
 
-        {/* Make both like count and comment count clickable */}
+
         <p className="likeCount">
           <span 
             onClick={toggleLikesModal} 
@@ -109,12 +107,12 @@ const PostItem = ({ post, userEmail }) => {
           postId={post.id}
           onClose={() => setShowComments(false)}
           userEmail={userEmail}
-          postOwnerEmail={post.userEmail}
+          postOwnerEmail={post.userEmail} 
           postOwnerName={post.userName}
         />
       )}
 
-      {/* Add the Likes Modal */}
+
       {showLikes && (
         <LikesModal
           likedUserIds={post.likedUserIds}

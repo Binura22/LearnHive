@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './CommentModal.css'; // Reusing the modal styling
+import './CommentModal.css'; 
 
 const LikesModal = ({ likedUserIds, onClose }) => {
   const [users, setUsers] = useState([]);
@@ -12,11 +12,10 @@ const LikesModal = ({ likedUserIds, onClose }) => {
       setLoading(true);
       
       try {
-        // For now, we'll just display the email addresses
-        // In a real application, you'd fetch user details from the backend
+
         setUsers(likedUserIds.map(email => ({
           email: email,
-          name: email.split('@')[0] // Simple name extraction from email
+          name: email.split('@')[0] 
         })));
         setLoading(false);
       } catch (error) {
@@ -36,8 +35,6 @@ const LikesModal = ({ likedUserIds, onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content" style={{ maxWidth: '400px' }}>
-        <button onClick={onClose} className="close-button">X</button>
-        
         <h3 style={{ marginTop: 0, textAlign: 'center' }}>
           People who liked this post
         </h3>

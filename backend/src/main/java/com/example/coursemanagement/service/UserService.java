@@ -155,7 +155,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-    
 
     public boolean isProfileCompleted(String email) {
         User user = findByEmail(email);
@@ -266,6 +265,10 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return userRepository.findAllById(user.getFollowing());
+    }
+
+    public List<User> getUsersByIds(List<String> userIds) {
+        return userRepository.findByIdIn(userIds);
     }
 
 }

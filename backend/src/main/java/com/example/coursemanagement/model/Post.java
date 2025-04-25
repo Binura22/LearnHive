@@ -15,9 +15,8 @@ public class Post {
     private String userName;
     private String description;
     private List<String> mediaUrls;
-    // Keep both fields for compatibility
-    private String userEmail; // Used for notifications and existing code
-    private String userId; // Used for new user ID-based functionality
+    private String userEmail;
+    private String userId;
     private long createdAt = System.currentTimeMillis();
 
     // for like & comment
