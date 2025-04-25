@@ -159,6 +159,7 @@ public class PostController {
         }
 
         try {
+            // get MongoDB User ID from user details
             String userId = user.getUserId();
             List<Post> posts = postService.getUserPosts(userId);
             return ResponseEntity.ok(posts);

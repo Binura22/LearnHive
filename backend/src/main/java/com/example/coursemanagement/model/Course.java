@@ -12,7 +12,7 @@ public class Course {
     private String title;
     private String description;
     private String imageUrl;
-    private int duration; // in hours
+    private int duration; 
     private String level; // beginner, intermediate, advanced
     private String category;
     private boolean published;
