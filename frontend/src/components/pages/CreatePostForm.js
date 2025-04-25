@@ -6,7 +6,7 @@ const CreatePostForm = () => {
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState(""); // ✅ New
+  const [successMsg, setSuccessMsg] = useState(""); 
 
   const handleFileChange = (e) => {
     setErrorMsg("");
@@ -38,7 +38,7 @@ const CreatePostForm = () => {
           setErrorMsg("Video must be 30 seconds or shorter.");
           setFiles([]);
         } else {
-          setFiles(videoFiles); // ✅ valid video
+          setFiles(videoFiles); //  valid video
         }
       };
 
@@ -51,7 +51,7 @@ const CreatePostForm = () => {
       return;
     }
 
-    setFiles(imageFiles); // ✅ valid images
+    setFiles(imageFiles); //  valid images
   };
 
   const handleSubmit = async (e) => {
@@ -74,7 +74,7 @@ const CreatePostForm = () => {
 
     try {
       await axios.post("http://localhost:8080/api/posts/create", formData, {
-        withCredentials: true, // ✅ keeps session
+        withCredentials: true, //  keeps session
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -82,7 +82,7 @@ const CreatePostForm = () => {
 
       setDescription("");
       setFiles([]);
-      setSuccessMsg("✅ Post uploaded successfully!");
+      setSuccessMsg(" Post uploaded successfully!");
     } catch (error) {
       console.error("Post creation failed", error);
       setErrorMsg("❌ Failed to upload post. Please try again.");

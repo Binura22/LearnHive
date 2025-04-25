@@ -28,7 +28,7 @@ public class AuthController {
         if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
             Object principal = auth.getPrincipal();
 
-            // Handle CustomOAuth2User (from one branch)
+            // Handle CustomOAuth2User 
             if (principal instanceof CustomOAuth2User) {
                 CustomOAuth2User customUser = (CustomOAuth2User) principal;
                 boolean isAdmin = customUser.getRole().equalsIgnoreCase("ADMIN");
@@ -41,7 +41,7 @@ public class AuthController {
                 response.put("redirectUrl", isAdmin ? "/admin/dashboard" : "/main");
                 return ResponseEntity.ok(response);
             } else {
-                // Handle generic OAuth2User (from other branch)
+                // Handle generic OAuth2User
                 boolean isAdmin = auth.getAuthorities().stream()
                         .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
@@ -66,7 +66,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    // get current user's email (from HEAD)
+    // get current user's email
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
