@@ -244,10 +244,11 @@ public class PostController {
                     comment.setUserId(post.getUserId());
                 }
                 if (comment.getUserEmail() == null || comment.getUserEmail().trim().isEmpty()) {
-                    comment.setUserEmail(post.getUserEmail());
+                    comment.setUserEmail(post.getUserId());
                 }
             }
-            postService.savePost(post);
+            
+            //postService.savePost(post);
         }
 
         return ResponseEntity.ok(post);
@@ -267,9 +268,10 @@ public class PostController {
         String commentText = payload.get("text");
 
         Comment comment = new Comment();
-        comment.setUserId(user.getName());
+        comment.setUserId(user.getUserId());
         comment.setUserEmail(user.getAttribute("email"));
         comment.setText(commentText);
+        comment.setUserName(user.getName());
 
         if (comment.getId() == null) {
             comment.setId(UUID.randomUUID().toString());
@@ -303,7 +305,7 @@ public class PostController {
         }
 
         Comment reply = new Comment();
-        reply.setUserId(user.getName());
+        reply.setUserId(user.getUserId());
         reply.setUserEmail(user.getAttribute("email"));
         reply.setText(replyText);
         // Ensure reply has an ID
