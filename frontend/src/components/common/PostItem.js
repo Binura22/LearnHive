@@ -42,10 +42,10 @@ const PostItem = ({ post, userEmail }) => {
     });
   };
 
-
+  // function call when opening comments
   const handleOpenComments = () => {
     verifyPostOwner();
-
+    
     let latestUserEmail = userEmail;
     const storedEmail = localStorage.getItem('userEmail');
     
@@ -57,7 +57,7 @@ const PostItem = ({ post, userEmail }) => {
     setShowComments(true);
   };
 
-
+  // to toggle likes modal
   const toggleLikesModal = () => {
     setShowLikes(!showLikes);
   };

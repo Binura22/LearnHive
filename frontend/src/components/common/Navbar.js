@@ -8,8 +8,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
 
-
-  const userId = localStorage.getItem('userId'); 
+  // get the logged-in user ID from localStorage
+  const userId = localStorage.getItem('userId');
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');

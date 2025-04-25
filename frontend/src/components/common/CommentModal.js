@@ -20,7 +20,10 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       try {
         const response = await axios.get('http://localhost:8080/api/user/me', { withCredentials: true });
         const email = response.data.email;
-        if (email) {
+        console.log(" API returned user email:", email);
+        
+        if (email && email !== currentUserEmail) {
+          console.log("Updating current user email from API");
           setCurrentUserEmail(email);
           localStorage.setItem('userEmail', email);
         }

@@ -1,6 +1,5 @@
-// components/common/Layout.js
 import React from 'react';
-import Navbar from './Navbar'; // adjust the path if needed
+import Navbar from './Navbar'; 
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {

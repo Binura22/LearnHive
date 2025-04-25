@@ -9,7 +9,7 @@ public class UserProfileDTO {
     private String profilePicture;
     private String bio;
     private List<String> socialLinks;
-    private List<String> postIds;          // Optional: could be actual PostDTOs later
+    private List<String> postIds;          
     private List<String> likedPostIds;
     private List<String> commentIds;
     private List<String> following;
@@ -121,6 +121,4 @@ public class UserProfileDTO {
         this.followers = followers;
     }
 
-    // Getters and Setters...
-    // (You can generate them with IDE tools or Lombok)
 }

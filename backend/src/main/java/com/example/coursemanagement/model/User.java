@@ -21,14 +21,14 @@ public class User {
     private String email;
     private String name;
     private String role; // ADMIN or USER
-    private String provider; // LOCAL, GOOGLE, etc.
-    private String providerId; // For OAuth providers (e.g., Google ID)
+    private String provider; // LOCAL, GOOGLE, github
+    private String providerId; // For OAuth providers
 
     // New fields for user profile
-    private String profileImage; // URL or base64
+    private String profileImage;
     private String bio;
     private String coverImage;
-    private List<String> socialLinks = new ArrayList<>(); // e.g., LinkedIn, GitHub
+    private List<String> socialLinks = new ArrayList<>(); // LinkedIn, GitHub
     private LocalDateTime registrationDate;
     private boolean profileCompleted;
 
@@ -38,8 +38,8 @@ public class User {
     private List<String> commentIds = new ArrayList<>();
 
     // Following system
-    private List<String> following = new ArrayList<>(); // users this user follows
-    private List<String> followers = new ArrayList<>(); // users who follow this user
+    private List<String> following = new ArrayList<>(); 
+    private List<String> followers = new ArrayList<>();
 
     // Getters and Setters
     public String getId() {

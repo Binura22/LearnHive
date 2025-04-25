@@ -11,12 +11,12 @@ public class Module {
     private String id;
     
     @Indexed
-    private String courseId; // Reference to the parent course
+    private String courseId;
     private String title;
     private String description;
     private String videoLink;
     private String pdfLink;
-    private int orderIndex; // To maintain module order within a course
+    private int orderIndex;
 
     // Constructors
     public Module() {}

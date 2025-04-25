@@ -34,7 +34,7 @@ const CourseDetail = () => {
     fetchCourse();
   }, [courseId]);
 
-  // Handle video loading when module changes
+  //handle video loading when module changes
   useEffect(() => {
     if (!course || !showModules) return;
 
@@ -65,7 +65,7 @@ const CourseDetail = () => {
     video.addEventListener('error', handleError);
     video.addEventListener('loadstart', handleLoadStart);
 
-    // Set the video source
+    //set the video source
     video.src = currentModule.videoLink;
 
     return () => {
