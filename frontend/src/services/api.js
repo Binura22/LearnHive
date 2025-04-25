@@ -1,4 +1,5 @@
 import axiosInstance, { fileUploadInstance } from './axiosInstance';
+import axios from 'axios';
 
 // Login request
 export const login = async (username, password) => {
@@ -89,7 +90,10 @@ export const getAdminDashboard = async () => {
 
 // Get a user by ID
 export const getUserById = async (userId) => {
-  return axiosInstance.get(`/api/users/${userId}`);
+  const response = await axios.get(`http://localhost:8080/api/users/${userId}`, {
+    withCredentials: true,
+  });
+  return response;
 };
 
 

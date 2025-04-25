@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.coursemanagement.model.User;
 import com.example.coursemanagement.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:4000", allowCredentials = "true")
 public class UserController {
 
     @Autowired
@@ -32,14 +38,13 @@ public class UserController {
     }
 
     // Get user by id
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable String id) {
-        try {
-            User user = userService.getUserById(id);
-            return ResponseEntity.ok(user);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable String userId) {
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            return ResponseEntity.status(404).body("User not found");
         }
+        return ResponseEntity.ok(user);
     }
 
     // Get user by provider ID
@@ -84,6 +89,17 @@ public class UserController {
             return ResponseEntity.ok("User deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found: " + e.getMessage());
+        }
+    }
+
+    // Get user details for multiple user IDs
+    @PostMapping("/details")
+    public ResponseEntity<?> getUserDetails(@RequestBody List<String> userIds) {
+        try {
+            List<User> users = userService.getUsersByIds(userIds);
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details");
         }
     }
 }

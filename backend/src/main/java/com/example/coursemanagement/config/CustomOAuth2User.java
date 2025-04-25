@@ -30,7 +30,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return user.getName(); 
+        return user != null ? user.getName() : null;
     }
 
     public String getEmail() {
@@ -49,5 +49,4 @@ public class CustomOAuth2User implements OAuth2User {
         return user;
     }
 
-    
 }

@@ -59,7 +59,6 @@ public class PostController {
             Post post = new Post();
             post.setDescription(description);
             post.setMediaUrls(urls);
-            // Set both fields for compatibility
             post.setUserEmail(user.getAttribute("email"));
             post.setUserName(user.getAttribute("name"));
             post.setUserId(user.getUserId());
@@ -172,7 +171,7 @@ public class PostController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllThePosts() {
         try {
-            List<Post> posts = postService.getAllPosts(); 
+            List<Post> posts = postService.getAllPosts();
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch posts");
@@ -195,6 +194,7 @@ public class PostController {
         }
 
         String userEmail = user.getAttribute("email");
+        String userName = user.getAttribute("name");
         Post post = postService.findById(postId);
 
         if (post == null) {
@@ -221,7 +221,7 @@ public class PostController {
             notification.setSenderEmail(userEmail);
             notification.setPostId(postId);
             notification.setType("like");
-            notification.setMessage(userEmail + " liked your post.");
+            notification.setMessage(userName + " liked your post.");
             notification.setRead(false);
             notification.setTimestamp(LocalDateTime.now());
             notificationRepository.save(notification);
@@ -240,9 +240,11 @@ public class PostController {
 
         if (post.getComments() != null) {
             for (Comment comment : post.getComments()) {
-                if (comment.getId() == null || comment.getId().trim().isEmpty()) {
-                    comment.setId(UUID.randomUUID().toString());
-                    System.out.println("Fixed missing ID for comment in getPostById: " + comment.getText());
+                if (comment.getUserId() == null || comment.getUserId().trim().isEmpty()) {
+                    comment.setUserId(post.getUserId());
+                }
+                if (comment.getUserEmail() == null || comment.getUserEmail().trim().isEmpty()) {
+                    comment.setUserEmail(post.getUserEmail());
                 }
             }
             postService.savePost(post);
@@ -266,6 +268,7 @@ public class PostController {
 
         Comment comment = new Comment();
         comment.setUserId(user.getName());
+        comment.setUserEmail(user.getAttribute("email"));
         comment.setText(commentText);
 
         if (comment.getId() == null) {
@@ -280,13 +283,60 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
 
-        if (!updatedPost.getUserEmail().equals(user.getAttribute("email"))) {
+        return ResponseEntity.ok(updatedPost);
+    }
+
+    @PostMapping("/{postId}/comment/{commentId}/reply")
+    public ResponseEntity<?> replyToComment(
+            @PathVariable String postId,
+            @PathVariable String commentId,
+            @RequestBody Map<String, String> payload,
+            @AuthenticationPrincipal CustomOAuth2User user) {
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        String replyText = payload.get("text");
+        if (replyText == null || replyText.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Reply text cannot be empty");
+        }
+
+        Comment reply = new Comment();
+        reply.setUserId(user.getName());
+        reply.setUserEmail(user.getAttribute("email"));
+        reply.setText(replyText);
+        // Ensure reply has an ID
+        if (reply.getId() == null) {
+            reply.setId(UUID.randomUUID().toString());
+        }
+
+        Post post = postService.getPostById(postId);
+        String originalCommentUserId = null;
+        String originalCommentUserEmail = null;
+        if (post != null && post.getComments() != null) {
+            for (Comment comment : post.getComments()) {
+                if (comment.getId().equals(commentId)) {
+                    originalCommentUserId = comment.getUserId();
+                    originalCommentUserEmail = comment.getUserId();
+                    break;
+                }
+            }
+        }
+
+        Post updatedPost = postService.addReplyToComment(postId, commentId, reply);
+
+        if (updatedPost == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post or comment not found");
+        }
+
+        if (originalCommentUserId != null && !originalCommentUserId.equals(user.getName())) {
             Notification notification = new Notification();
-            notification.setRecipientEmail(updatedPost.getUserEmail());
+            notification.setRecipientEmail(originalCommentUserEmail);
             notification.setSenderEmail(user.getAttribute("email"));
             notification.setPostId(postId);
-            notification.setType("comment");
-            notification.setMessage(user.getAttribute("email") + " commented on your post.");
+            notification.setType("reply");
+            notification.setMessage(user.getAttribute("name") + " replied to your comment.");
             notification.setRead(false);
             notification.setTimestamp(LocalDateTime.now());
             notificationRepository.save(notification);
@@ -303,6 +353,7 @@ public class PostController {
 
         int postsProcessed = 0;
         int commentsRepaired = 0;
+        int emailsRepaired = 0;
 
         List<Post> allPosts = postService.getAllPosts();
 
@@ -316,6 +367,12 @@ public class PostController {
                         commentsRepaired++;
                         postModified = true;
                     }
+                    if ((comment.getUserEmail() == null || comment.getUserEmail().trim().isEmpty())
+                            && post.getUserEmail() != null) {
+                        comment.setUserEmail(post.getUserEmail());
+                        emailsRepaired++;
+                        postModified = true;
+                    }
                 }
             }
 
@@ -326,7 +383,7 @@ public class PostController {
         }
 
         return ResponseEntity.ok("Repair complete: Fixed " + commentsRepaired +
-                " comments across " + postsProcessed + " posts");
+                " comment IDs and " + emailsRepaired + " comment emails across " + postsProcessed + " posts");
     }
 
 }
