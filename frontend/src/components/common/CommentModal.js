@@ -10,7 +10,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
   const [currentUserEmail, setCurrentUserEmail] = useState(userEmail || "");
   const [currentUserName, setCurrentUserName] = useState("");
   const [isPostOwner, setIsPostOwner] = useState(false);
-
+  const loggedUserId = localStorage.getItem("userId");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
   const [replyLoading, setReplyLoading] = useState(false);
@@ -37,6 +37,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
         if (storedEmail) setCurrentUserEmail(storedEmail);
         const storedName = localStorage.getItem('userName');
         if (storedName) setCurrentUserName(storedName);
+
       }
     };
 
@@ -73,7 +74,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       setError("Failed to post comment. Please try again.");
     }
   };
-
+  console.log("Comments", comments)
   const handleReplySubmit = async (commentId) => {
     if (!replyText.trim()) return;
     setReplyLoading(true);
@@ -108,7 +109,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
           <div>
             <div className="comment-header">
               <a href={`/profile/${encodeURIComponent(reply.userId)}`} className="comment-user">
-                {reply.userId}
+                {reply.userName}
               </a>
             </div>
             <div className="comment-text">{reply.text}</div>
@@ -133,7 +134,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
                 <div style={{ flex: 1 }}>
                   <div className="comment-header">
                     <a href={`/profile/${encodeURIComponent(c.userId)}`} className="comment-user">
-                      {c.userId}
+                      {c.userName}
                     </a>
                     {(currentUserEmail === c.userEmail || isPostOwner) && (
                       <button className="delete-btn" onClick={() => console.log("Delete comment")}>
