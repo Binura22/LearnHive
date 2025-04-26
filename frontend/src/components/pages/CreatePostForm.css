@@ -1,27 +1,105 @@
 .create-post-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .create-post-form textarea {
-    width: 100%;
-    padding: 10px;
-    resize: vertical;
-  }
-  
-  .create-post-form input[type="file"] {
-    padding: 5px;
-  }
-  
-  .create-post-form button {
-    align-self: flex-start;
-    padding: 8px 16px;
-    background-color: #1976d2;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 30px auto;
+  padding: 24px;
+  max-width: 600px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.create-post-form textarea {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  resize: vertical;
+  min-height: 100px;
+  transition: border 0.3s ease;
+}
+
+.create-post-form textarea:focus {
+  border-color: #1976d2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.create-post-form input[type="file"] {
+  border: 1px dashed #ccc;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.create-post-form input[type="file"]:hover {
+  border-color: #1976d2;
+}
+
+.create-post-form button {
+  padding: 10px 18px;
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-post-form button:hover {
+  background-color: #125aa3;
+}
+
+.media-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.media-preview img,
+.media-preview video {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.success-message {
+  color: #388e3c;
+  font-weight: 500;
+}
+
+.media-container {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+}
+
+.media-container img,
+.media-container video {
+  border-radius: 10px;
+}.remove-button {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  padding: 2px 6px;
+  cursor: pointer;
+  display: none;
+}
+
+.media-container:hover .remove-button {
+  display: block;
+}

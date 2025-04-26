@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './MainPage.css';
-import { useNavigate } from 'react-router-dom';
-import PostList from '../common/PostList';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./MainPage.css";
+import { useNavigate } from "react-router-dom";
+import PostList from "../common/PostList";
 
 const MainPage = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const [activeMenuId, setActiveMenuId] = useState(null);
+  const [editStates, setEditStates] = useState({});
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/posts/all", { withCredentials: true })
-      .then(res => setPosts(res.data))
-      .catch(err => console.error("Failed to fetch posts", err));
+    axios
+      .get("http://localhost:8080/api/posts/all", { withCredentials: true })
+      .then((res) => setPosts(res.data))
+      .catch((err) => console.error("Failed to fetch posts", err));
   }, []);
 
   return (
@@ -20,7 +23,10 @@ const MainPage = () => {
         <h1>Welcome to LearnHive</h1>
         <p>Start your learning journey today!</p>
 
-        <button onClick={() => navigate("/create-post")} className="create-post-btn">
+        <button
+          onClick={() => navigate("/create-post")}
+          className="create-post-btn"
+        >
           Create Post
         </button>
 
