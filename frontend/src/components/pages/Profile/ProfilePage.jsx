@@ -11,8 +11,8 @@ import PostList from "../../common/PostList";
 import "./ProfilePage.css";
 
 const ProfilePage = () => {
-  const { userId } = useParams(); // <-- userId is extracted from the URL
-  const loggedInEmail = localStorage.getItem("username");
+  const { userId } = useParams();
+  const loggedInUserId = localStorage.getItem("userId");
   const [profile, setProfile] = useState(null);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
@@ -20,7 +20,7 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await getUserById(userId); // Ensure this function calls the correct API endpoint
+      const res = await getUserById(userId);
       setProfile(res.data);
       console.log(res.data);
 
@@ -30,16 +30,18 @@ const ProfilePage = () => {
       ]);
       setFollowers(followerRes.data);
       setFollowing(followingRes.data);
-
+      console.log("followersres", followerRes.data)
       const isUserFollowing = followerRes.data.some(
-        (user) => user.userId === loggedInEmail
+        (user) => user.id === loggedInUserId
       );
       setIsFollowing(isUserFollowing);
     } catch (err) {
       console.error("Error loading profile:", err);
     }
   };
-
+  console.log("Profile ", profile)
+  console.log("Followers", followers)
+  console.log("followings", following)
   const handleFollowToggle = async () => {
     const loggedInUserId = localStorage.getItem("userId");
     try {
@@ -61,7 +63,7 @@ const ProfilePage = () => {
 
   if (!profile) return <div>Loading profile...</div>;
 
-  const isOwnProfile = profile.email === loggedInEmail;
+  const isOwnProfile = profile.id === loggedInUserId;
 
   return (
     <div className="profile-page">

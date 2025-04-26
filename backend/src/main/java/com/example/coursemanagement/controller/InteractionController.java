@@ -1,5 +1,6 @@
 package com.example.coursemanagement.controller;
 
+import com.example.coursemanagement.dto.FollowRequest;
 import com.example.coursemanagement.model.User;
 import com.example.coursemanagement.service.UserService;
 
@@ -48,14 +49,20 @@ public class InteractionController {
 
     // Follow a user
     @PostMapping("/follow")
-    public ResponseEntity<?> followUser(@RequestParam String followerId, @RequestParam String followingId) {
+    public ResponseEntity<?> followUser(@RequestBody FollowRequest followRequest) {
+        String followerId = followRequest.getFollowerId();
+        String followingId = followRequest.getFollowingId();
+        System.out.println("followerid "+followerId + "followingid " +followingId);
         userService.followUser(followerId, followingId);
         return ResponseEntity.ok("Followed user.");
     }
 
     // Unfollow a user
     @DeleteMapping("/follow")
-    public ResponseEntity<?> unfollowUser(@RequestParam String followerId, @RequestParam String followingId) {
+    public ResponseEntity<?> unfollowUser(@RequestBody FollowRequest followRequest) {
+        String followerId = followRequest.getFollowerId();
+        String followingId = followRequest.getFollowingId();
+        System.out.println("followerid "+followerId + "followingid " +followingId);
         userService.unfollowUser(followerId, followingId);
         return ResponseEntity.ok("Unfollowed user.");
     }

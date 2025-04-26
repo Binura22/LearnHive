@@ -104,7 +104,7 @@ const PostList = ({ filterByUserId = null }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [authChecked]);
+  }, [authChecked, filterByUserId]);
 
   if (loading) {
     return (
