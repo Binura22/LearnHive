@@ -213,8 +213,20 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
   return (
     <div className="postItem">
+      <div className="postHeader">
+        <div className="three-dots" onClick={() => setShowMenu(!showMenu)}>
+          <BsThreeDotsVertical />
+          {showMenu && (
+            <div className="dropdown-menu">
+              <div onClick={() => setIsEditing(true)}>✏️ Edit Post</div>
+              <div onClick={handleDelete}>🗑️ Delete Post</div>
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="postImage">
-        {post.mediaUrls && post.mediaUrls.length > 0 && (
+        {post.mediaUrls?.length > 0 && (
           <img src={post.mediaUrls[0]} alt="Post" />
         )}
       </div>
