@@ -501,6 +501,56 @@ public class PostController {
         return ResponseEntity.ok(updatedPost);
     }
 
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> updatePost(
+            @PathVariable String postId,
+            @RequestBody Map<String, String> payload,
+            @AuthenticationPrincipal CustomOAuth2User user) {
+
+        System.out.println("Update Post Request:");
+        System.out.println("Post ID: " + postId);
+        System.out.println("User: " + (user != null ? user.getUserId() : "null"));
+        System.out.println("Payload: " + payload);
+
+        if (user == null) {
+            System.out.println("Error: User not authenticated");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        String description = payload.get("description");
+        if (description == null || description.trim().isEmpty()) {
+            System.out.println("Error: Description is empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Description cannot be empty");
+        }
+
+        try {
+            Post post = postService.getPostById(postId);
+            if (post == null) {
+                System.out.println("Error: Post not found with ID: " + postId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+            }
+
+            System.out.println("Post owner ID: " + post.getUserId());
+            System.out.println("Current user ID: " + user.getUserId());
+
+            if (!post.getUserId().equals(user.getUserId())) {
+                System.out.println("Error: User is not the post owner");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only edit your own posts");
+            }
+
+            post.setDescription(description);
+            Post updatedPost = postService.savePost(post);
+            System.out.println("Post updated successfully");
+
+            return ResponseEntity.ok(updatedPost);
+        } catch (Exception e) {
+            System.err.println("Error updating post: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating the post: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/repair-comments")
     public ResponseEntity<?> repairCommentIds(@AuthenticationPrincipal CustomOAuth2User user) {
         if (user == null) {
