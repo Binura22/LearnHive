@@ -55,7 +55,7 @@ const EditProfilePage = () => {
       console.error('Update failed:', err);
     }
   };
-
+  console.log("FormData", formData)
   return (
     <div className="edit-profile-page">
       <h2>Edit Profile</h2>
