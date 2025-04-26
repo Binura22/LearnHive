@@ -97,4 +97,28 @@ public class PostService {
         return null;
     }
 
+    public Post updateComment(String postId, String commentId, String updatedText) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+
+            for (Comment comment : post.getComments()) {
+                if (comment.getId().equals(commentId)) {
+                    comment.setText(updatedText);
+                    return postRepository.save(post);
+                }
+
+                if (comment.getReplies() != null) {
+                    for (Comment reply : comment.getReplies()) {
+                        if (reply.getId().equals(commentId)) {
+                            reply.setText(updatedText);
+                            return postRepository.save(post);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 }
