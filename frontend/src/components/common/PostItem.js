@@ -43,17 +43,8 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
   const handleLikeClick = async () => {
     try {
-      const newIsLiked = !isLiked;
-      setIsLiked(newIsLiked);
-      
-      const newLikeCount = newIsLiked ? likeCount + 1 : likeCount - 1;
-      setLikeCount(newLikeCount);
-      
-      if (newIsLiked) {
-        setLikedUserIds(prev => [...prev, userEmail]);
-      } else {
-        setLikedUserIds(prev => prev.filter(email => email !== userEmail));
-      }
+      const likeButton = document.querySelector('.likeBtn');
+      if (likeButton) likeButton.style.opacity = '0.7';
       
       const response = await axios.post(
         `http://localhost:8080/api/posts/${post.id}/like`,
@@ -61,27 +52,32 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
         { withCredentials: true }
       );
       
-      const updatedPost = await axios.get(
-        `http://localhost:8080/api/posts/${post.id}`, 
-        { withCredentials: true }
-      );
-      
-
-      const updatedLikedUserIds = updatedPost.data.likedUserIds || [];
-      setLikedUserIds(updatedLikedUserIds);
-      setIsLiked(updatedLikedUserIds.includes(userEmail));
-      setLikeCount(updatedLikedUserIds.length);
-      
-
-      setModalKey(Date.now());
-      
-      console.log("Like operation completed. Updated liked users:", updatedLikedUserIds);
+      if (response.data) {
+        console.log("Like response from server:", response.data);
+        
+        const serverLikeCount = response.data.likedCount;
+        const serverIsLiked = response.data.isLiked;
+        
+        setIsLiked(serverIsLiked);
+        setLikeCount(serverLikeCount);
+        
+        if (serverIsLiked) {
+          setLikedUserIds(prev => {
+            const newArray = [...prev];
+            if (!newArray.includes(userEmail)) {
+              newArray.push(userEmail);
+            }
+            return newArray;
+          });
+        } else {
+          setLikedUserIds(prev => prev.filter(id => id !== userEmail));
+        }
+      }
     } catch (error) {
-
-      console.error("Error liking post:", error);
-      setIsLiked(!isLiked); 
-      const revertedLikeCount = isLiked ? likeCount + 1 : likeCount - 1;
-      setLikeCount(revertedLikeCount);
+      console.error("Error toggling like:", error);
+    } finally {
+      const likeButton = document.querySelector('.likeBtn');
+      if (likeButton) likeButton.style.opacity = '1';
     }
   };
 
@@ -110,26 +106,24 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
   const openLikesModal = async () => {
     try {
-
+      setShowLikes(true);
+      
       const response = await axios.get(
         `http://localhost:8080/api/posts/${post.id}`, 
         { withCredentials: true }
       );
       
-
-      const freshLikedUserIds = response.data.likedUserIds || [];
+      let freshLikedUserIds = response.data.likedUserIds || [];
+      
+      freshLikedUserIds = freshLikedUserIds.filter(id => id);
+      
       setLikedUserIds(freshLikedUserIds);
       setLikeCount(freshLikedUserIds.length);
-      
-
       setModalKey(Date.now());
-      setShowLikes(true);
       
       console.log("Opening likes modal with fresh data:", freshLikedUserIds);
     } catch (error) {
       console.error("Error fetching updated post data:", error);
-
-      setShowLikes(true);
     }
   };
 
@@ -139,7 +133,6 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     setShowMenu(!showMenu);
   };
   
-  // post delete
   const handleDeletePost = async (e) => {
     e.stopPropagation();
     
@@ -306,10 +299,15 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
           <button 
             onClick={handleLikeClick} 
             className="likeBtn"
-            style={{ transition: 'transform 0.2s ease' }} 
+            style={{ 
+              transition: 'transform 0.2s ease',
+              backgroundColor: isLiked ? '#f0f8ff' : 'transparent',
+              borderRadius: '50%',
+              padding: '8px'
+            }} 
           >
             {isLiked ? 
-              <AiFillLike color="blue" size={22} /> : 
+              <AiFillLike color="#1877f2" size={22} /> : 
               <AiOutlineLike size={22} />
             }
           </button>
@@ -333,7 +331,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
         <LikesModal
           key={`modal-${modalKey}`}
           postId={post.id}
-          likedUserIds={likedUserIds}
+          likedUserIds={likedUserIds.filter(id => id)}
           currentUserEmail={userEmail}
           currentUserName={currentUserName}
           onClose={() => setShowLikes(false)}
