@@ -28,8 +28,18 @@ public class LearningPlanController {
         return ResponseEntity.ok(plans);
     }
 
+    @GetMapping("/plan/{planId}")
+    public ResponseEntity<LearningPlan> getLearningPlanById(@PathVariable String planId) {
+        LearningPlan plan = learningPlanService.getLearningPlanById(planId);
+        if (plan == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(plan);
+    }
+
     @PutMapping("/{planId}")
-    public ResponseEntity<LearningPlan> updateLearningPlan(@PathVariable String planId, @Validated @RequestBody LearningPlan learningPlan) {
+    public ResponseEntity<LearningPlan> updateLearningPlan(@PathVariable String planId,
+            @Validated @RequestBody LearningPlan learningPlan) {
         LearningPlan updated = learningPlanService.updateLearningPlan(planId, learningPlan);
         if (updated == null) {
             return ResponseEntity.notFound().build();

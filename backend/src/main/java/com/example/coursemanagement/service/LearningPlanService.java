@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+//import java.util.Optional;
 
 @Service
 public class LearningPlanService {
@@ -15,7 +15,6 @@ public class LearningPlanService {
     @Autowired
     private LearningPlanRepository learningPlanRepository;
 
-    
     public LearningPlan createLearningPlan(LearningPlan learningPlan) {
         if (learningPlan == null) {
             throw new IllegalArgumentException("LearningPlan cannot be null");
@@ -24,13 +23,15 @@ public class LearningPlanService {
         learningPlan.setUpdatedAt(LocalDateTime.now());
         return learningPlanRepository.save(learningPlan);
     }
-    
-    
+
     public List<LearningPlan> getLearningPlansByUserId(String userId) {
         return learningPlanRepository.findByUserId(userId);
     }
 
-    
+    public LearningPlan getLearningPlanById(String planId) {
+        return learningPlanRepository.findById(planId).orElse(null);
+    }
+
     public LearningPlan updateLearningPlan(String planId, LearningPlan updatedPlan) {
         LearningPlan existingPlan = learningPlanRepository.findById(planId)
                 .orElseThrow(() -> new RuntimeException("Learning Plan not found with id: " + planId));
@@ -45,7 +46,6 @@ public class LearningPlanService {
         return learningPlanRepository.save(existingPlan);
     }
 
-    
     public void deleteLearningPlan(String planId) {
         LearningPlan plan = learningPlanRepository.findById(planId)
                 .orElseThrow(() -> new RuntimeException("Learning Plan not found with id: " + planId));

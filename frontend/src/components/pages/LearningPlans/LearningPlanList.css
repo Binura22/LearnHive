@@ -1,0 +1,135 @@
+.learning-plan-list {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 25px;
+}
+
+.learning-plan-list h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.plan-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.plan-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s;
+  animation: slideIn 0.5s ease forwards;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.plan-card h3 {
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.plan-card p {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.loading,
+.no-plans {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 18px;
+  color: #777;
+}
+
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.create-button,
+.view-button,
+.edit-button,
+.delete-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.create-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.view-button {
+  background-color: #007bff;
+  color: white;
+  margin-right: 8px;
+}
+
+.edit-button {
+  background-color: #ffc107;
+  color: black;
+  margin-right: 8px;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.card-actions {
+  margin-top: 12px;
+  display: flex;
+}
+
+.create-button:hover {
+  background-color: #218838;
+}
+
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    margin-top: 20px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+
+.empty-box-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
