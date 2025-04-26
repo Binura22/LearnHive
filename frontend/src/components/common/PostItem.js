@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./PostItem.css";
 import CommentModal from "./CommentModal";
-import LikesModal from "./LikesModal"; 
+import LikesModal from "./LikesModal";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
-import { FiMoreVertical } from "react-icons/fi"; 
+import { FiMoreVertical } from "react-icons/fi";
 import axios from "axios";
 
 const PostItem = ({ post, userEmail, onPostDelete }) => {
@@ -14,31 +14,31 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   const [showComments, setShowComments] = useState(false);
   const [showLikes, setShowLikes] = useState(false);
   const [modalKey, setModalKey] = useState(Date.now());
-  const [showMenu, setShowMenu] = useState(false); 
-  const [isDeleting, setIsDeleting] = useState(false); 
+  const [showMenu, setShowMenu] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedDescription, setEditedDescription] = useState(post.description); 
-  const [isUpdating, setIsUpdating] = useState(false); 
-  
-  const currentUserName = localStorage.getItem('userName') || userEmail?.split('@')[0] || "User";
+  const [editedDescription, setEditedDescription] = useState(post.description);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const currentUserName =
+    localStorage.getItem("userName") || userEmail?.split("@")[0] || "User";
   const loggedUserId = localStorage.getItem("userId");
-  
+
   // check current user == post owner
   const isPostOwner = post.userId === loggedUserId;
-  
 
   useEffect(() => {
     const handleClickOutside = () => setShowMenu(false);
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  
+
   useEffect(() => {
     setLikedUserIds(post.likedUserIds || []);
     setIsLiked(post.likedUserIds?.includes(userEmail));
     setLikeCount(post.likedUserIds?.length || 0);
   }, [post, userEmail]);
-  
+
   const commentCount = post.comments ? post.comments.length : 0;
 
   const handleLikeClick = async () => {
@@ -85,22 +85,22 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     console.log("Post Details:", {
       id: post.id,
       userName: post.userName,
-      userEmail: post.userEmail, 
-      currentUserEmail: userEmail 
+      userEmail: post.userEmail,
+      currentUserEmail: userEmail,
     });
   };
 
   const handleOpenComments = () => {
     verifyPostOwner();
-    
+
     let latestUserEmail = userEmail;
-    const storedEmail = localStorage.getItem('userEmail');
-    
+    const storedEmail = localStorage.getItem("userEmail");
+
     if (storedEmail && (!userEmail || userEmail !== storedEmail)) {
       console.log("Using more recent email from localStorage:", storedEmail);
       latestUserEmail = storedEmail;
     }
-    
+
     setShowComments(true);
   };
 
@@ -109,7 +109,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
       setShowLikes(true);
       
       const response = await axios.get(
-        `http://localhost:8080/api/posts/${post.id}`, 
+        `http://localhost:8080/api/posts/${post.id}`,
         { withCredentials: true }
       );
       
@@ -127,7 +127,6 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     }
   };
 
-
   const handleMenuClick = (e) => {
     e.stopPropagation();
     setShowMenu(!showMenu);
@@ -135,14 +134,18 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   
   const handleDeletePost = async (e) => {
     e.stopPropagation();
-    
-    if (window.confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
+
+    if (
+      window.confirm(
+        "Are you sure you want to delete this post? This action cannot be undone."
+      )
+    ) {
       setIsDeleting(true);
       try {
         await axios.delete(`http://localhost:8080/api/posts/${post.id}`, {
-          withCredentials: true
+          withCredentials: true,
         });
-        
+
         if (onPostDelete) {
           onPostDelete(post.id);
         }
@@ -161,31 +164,31 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     setIsEditing(true);
     setShowMenu(false);
   };
-  
+
   const handleUpdatePost = async () => {
     if (!editedDescription.trim()) {
       alert("Post description cannot be empty");
       return;
     }
-    
+
     setIsUpdating(true);
     try {
       console.log("Updating post with ID:", post.id);
       console.log("New description:", editedDescription);
-      
+
       const response = await axios.put(
         `http://localhost:8080/api/posts/${post.id}`,
         { description: editedDescription },
         { withCredentials: true }
       );
-      
+
       console.log("Update response:", response.data);
-      
+
       post.description = editedDescription;
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating post:", error);
-      
+
       if (error.response) {
         console.error("Response data:", error.response.data);
         console.error("Response status:", error.response.status);
@@ -197,7 +200,6 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
       setIsUpdating(false);
     }
   };
-  
 
   const handleCancelEdit = () => {
     setEditedDescription(post.description);
@@ -207,35 +209,36 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   return (
     <div className="postItem">
       <div className="postImage">
-        {post.mediaUrls && post.mediaUrls.length > 0 && (
-          <img src={post.mediaUrls[0]} alt="Post" />
-        )}
+        {post.mediaUrls?.length > 0 &&
+          post.mediaUrls.map((url, index) => (
+            <img key={index} src={url} alt={`Post ${index + 1}`} />
+          ))}
       </div>
 
       <div className="postContent">
         <div className="postHeader">
           <p className="postAuthor">Posted by: {post.userName}</p>
-          
+
           {isPostOwner && (
             <div className="post-options">
-              <button 
+              <button
                 className="options-btn"
                 onClick={handleMenuClick}
                 disabled={isDeleting || isUpdating}
               >
                 <FiMoreVertical size={20} />
               </button>
-              
+
               {showMenu && (
-                <div className="options-dropdown" onClick={e => e.stopPropagation()}>
-                  <button 
-                    className="edit-option" 
-                    onClick={handleEditPost}
-                  >
+                <div
+                  className="options-dropdown"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button className="edit-option" onClick={handleEditPost}>
                     Edit Post
                   </button>
-                  <button 
-                    className="delete-option" 
+                  <button
+                    className="delete-option"
                     onClick={handleDeletePost}
                     disabled={isDeleting}
                   >
@@ -246,7 +249,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
             </div>
           )}
         </div>
-        
+
         {isEditing ? (
           <div className="edit-post-container">
             <textarea
@@ -257,14 +260,14 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
               rows={4}
             />
             <div className="edit-post-buttons">
-              <button 
+              <button
                 className="update-post-btn"
                 onClick={handleUpdatePost}
                 disabled={isUpdating}
               >
                 {isUpdating ? "Updating..." : "Update Post"}
               </button>
-              <button 
+              <button
                 className="cancel-edit-btn"
                 onClick={handleCancelEdit}
                 disabled={isUpdating}
@@ -276,28 +279,28 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
         ) : (
           <p className="postDescription">{post.description}</p>
         )}
-        
-        <p className="postTime">
-          {new Date(post.createdAt).toLocaleString()}
-        </p>
+
+        <p className="postTime">{new Date(post.createdAt).toLocaleString()}</p>
 
         <p className="likeCount">
-          <span 
-            onClick={openLikesModal} 
-            style={{ cursor: 'pointer', color: '#3b5998' }}
+          <span
+            onClick={openLikesModal}
+            style={{ cursor: "pointer", color: "#3b5998" }}
           >
             {likeCount} {likeCount === 1 ? "Like" : "Likes"}
-          </span> &bull; <span
+          </span>{" "}
+          &bull;{" "}
+          <span
             onClick={handleOpenComments}
-            style={{ cursor: 'pointer', color: '#3b5998' }}
+            style={{ cursor: "pointer", color: "#3b5998" }}
           >
             {commentCount} {commentCount === 1 ? "Comment" : "Comments"}
           </span>
         </p>
 
         <div className="postActions">
-          <button 
-            onClick={handleLikeClick} 
+          <button
+            onClick={handleLikeClick}
             className="likeBtn"
             style={{ 
               transition: 'transform 0.2s ease',
@@ -322,7 +325,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
           postId={post.id}
           onClose={() => setShowComments(false)}
           userEmail={userEmail}
-          postOwnerEmail={post.userEmail} 
+          postOwnerEmail={post.userEmail}
           postOwnerName={post.userName}
         />
       )}

@@ -131,3 +131,27 @@ export const getFollowing = async (userId) => {
   return axiosInstance.get(`/api/interactions/${userId}/following`);
 };
 
+
+// Learning Plan operations
+
+export const createLearningPlan = async (learningPlanData) => {
+  return axiosInstance.post('/api/learning-plans', learningPlanData);
+};
+
+export const getLearningPlansByUserId = async (userId) => {
+  return axiosInstance.get(`/api/learning-plans/${userId}`);
+};
+
+export const getLearningPlanById = async (id) => {
+  return axiosInstance.get(`/api/learning-plans/plan/${id}`);
+};
+
+export const updateLearningPlan = async (learningPlanId, updatedData) => {
+  return axiosInstance.put(`/api/learning-plans/${learningPlanId}`, updatedData);
+};
+
+export const deleteLearningPlan = async (learningPlanId) => {
+  return axiosInstance.delete(`/api/learning-plans/${learningPlanId}`);
+};
+
+
