@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 import java.util.ArrayList;
-import com.example.coursemanagement.model.Comment;
+//import com.example.coursemanagement.model.Comment;
 
 @Document(collection = "posts")
 public class Post {
