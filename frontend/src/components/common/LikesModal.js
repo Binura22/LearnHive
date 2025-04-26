@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './CommentModal.css'; 
 
-const LikesModal = ({ likedUserIds, onClose }) => {
+const LikesModal = ({ postId, likedUserIds = [], currentUserEmail, currentUserName, onClose }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,25 +12,83 @@ const LikesModal = ({ likedUserIds, onClose }) => {
       setLoading(true);
       
       try {
-        // display the email addresses
-        setUsers(likedUserIds.map(email => ({
-          email: email,
-          name: email.split('@')[0] 
-        })));
-        setLoading(false);
+        console.log("Fetching details for liked users:", likedUserIds);
+        
+        if (!likedUserIds || likedUserIds.length === 0) {
+          setUsers([]);
+          setLoading(false);
+          return;
+        }
+        
+        const processedUsers = likedUserIds.map(userId => {
+          if (userId === currentUserEmail) {
+            return {
+              id: userId,
+              email: currentUserEmail,
+              name: currentUserName || currentUserEmail.split('@')[0]
+            };
+          }
+          
+          return {
+            id: userId,
+            email: userId,
+            name: userId.split('@')[0]
+          };
+        });
+        
+        console.log("Processed user data:", processedUsers);
+        setUsers(processedUsers);
       } catch (error) {
         console.error("Error fetching user details:", error);
-        setError("Failed to load who liked this post");
+        setError("Failed to load user information");
+      } finally {
         setLoading(false);
       }
     };
-
-    if (likedUserIds && likedUserIds.length > 0) {
-      fetchUserDetails();
-    } else {
-      setLoading(false);
-    }
-  }, [likedUserIds]);
+    
+    fetchUserDetails();
+  }, [likedUserIds, currentUserEmail, currentUserName]);
+  
+  useEffect(() => {
+    if (!postId) return;
+    
+    const fetchFreshLikes = async () => {
+      setLoading(true);
+      try {
+        console.log("Fetching fresh post data for likes with postId:", postId);
+        const response = await axios.get(
+          `http://localhost:8080/api/posts/${postId}`, 
+          { withCredentials: true }
+        );
+        
+        const freshLikedUserIds = response.data.likedUserIds || [];
+        console.log("Received fresh liked users data:", freshLikedUserIds);
+        
+        const processedUsers = freshLikedUserIds.map(userId => {
+          if (userId === currentUserEmail) {
+            return {
+              id: userId,
+              email: currentUserEmail,
+              name: currentUserName || currentUserEmail.split('@')[0]
+            };
+          }
+          return {
+            id: userId,
+            email: userId,
+            name: userId.split('@')[0]
+          };
+        });
+        
+        setUsers(processedUsers);
+      } catch (error) {
+        console.error("Error fetching fresh likes data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchFreshLikes();
+  }, [postId, currentUserEmail, currentUserName]);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -51,40 +109,46 @@ const LikesModal = ({ likedUserIds, onClose }) => {
           <p style={{ textAlign: 'center' }}>No likes yet</p>
         ) : (
           <div className="likes-list">
-            {users.map((user, index) => (
-              <div 
-                key={index} 
-                className="like-item" 
-                style={{
-                  padding: '8px',
-                  borderBottom: '1px solid #eee',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
+            {users.map((user, index) => {
+              const displayName = user.name || user.email?.split('@')[0] || "User";
+              const firstLetter = displayName.charAt(0).toUpperCase();
+              
+              return (
                 <div 
-                  className="user-avatar" 
+                  key={user.id || user.email || index} 
+                  className="like-item" 
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: '#3b5998',
-                    color: 'white',
+                    padding: '8px',
+                    borderBottom: '1px solid #eee',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: '10px',
-                    fontSize: '14px'
+                    backgroundColor: user.email === currentUserEmail ? '#f0f8ff' : 'transparent'
                   }}
                 >
-                  {user.name.charAt(0).toUpperCase()}
+                  <div 
+                    className="user-avatar" 
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      backgroundColor: user.email === currentUserEmail ? '#4169e1' : '#3b5998',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: '10px',
+                      fontSize: '14px'
+                    }}
+                  >
+                    {firstLetter}
+                  </div>
+                  <div className="user-info">
+                    <div style={{ fontWeight: 'bold' }}>{displayName}</div>
+                    <div style={{ fontSize: '12px', color: '#777' }}>{user.email}</div>
+                  </div>
                 </div>
-                <div className="user-info">
-                  <div style={{ fontWeight: 'bold' }}>{user.name}</div>
-                  <div style={{ fontSize: '12px', color: '#777' }}>{user.email}</div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
