@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllCourses, deleteCourse } from '../../services/api';
+import { getAllCourses, deleteCourse } from '../../../services/api';
 import AddCourseForm from './AddCourseForm';
 import './AdminCourseList.css';
 

@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PostItem from './PostItem';
 
-const PostList = ({ filterByUserId = null }) => {
+const PostList = ({ posts: propPosts, filterByUserId = null }) => {
   const [posts, setPosts] = useState([]);
   const [userEmail, setUserEmail] = useState('');
   const [loading, setLoading] = useState(true);
   const [postsError, setPostsError] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-
 
   const handlePostDelete = (deletedPostId) => {
     console.log("Post deleted:", deletedPostId);
@@ -69,8 +68,19 @@ const PostList = ({ filterByUserId = null }) => {
   useEffect(() => {
     if (!authChecked) return;
 
-    console.log("Fetching posts...");
+    // If posts are provided as props, use them directly
+    if (propPosts) {
+      let filteredPosts = [...propPosts];
+      if (filterByUserId) {
+        filteredPosts = filteredPosts.filter(post => post.userId === filterByUserId);
+      }
+      setPosts(filteredPosts);
+      setLoading(false);
+      return;
+    }
 
+    // Otherwise fetch posts from the API
+    console.log("Fetching posts...");
     axios.get('http://localhost:8080/api/posts', { withCredentials: true })
       .then(response => {
         console.log(" Posts fetched successfully:", response.data.length);
@@ -100,49 +110,29 @@ const PostList = ({ filterByUserId = null }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [authChecked, filterByUserId]);
+  }, [authChecked, propPosts, filterByUserId]);
 
   if (loading) {
-    return (
-      <div style={{ textAlign: 'center', padding: '20px' }}>
-        <p>Loading posts...</p>
-      </div>
-    );
+    return <div>Loading posts...</div>;
+  }
+
+  if (postsError) {
+    return <div className="error-message">{postsError}</div>;
   }
 
   return (
-    <div>
-      {userEmail && (
-        <div style={{ background: '#d4edda', color: '#155724', padding: '10px', margin: '10px 0', borderRadius: '4px' }}>
-          <strong>Logged in as:</strong> {userEmail}
-        </div>
-      )}
-
-      {postsError && (
-        <div style={{ background: '#f8d7da', color: '#721c24', padding: '10px', margin: '10px 0', borderRadius: '4px' }}>
-          <strong>Error:</strong> {postsError}
-          <button
-            onClick={() => window.location.reload()}
-            style={{ marginLeft: '10px', padding: '4px 8px' }}
-          >
-            Try Again
-          </button>
-        </div>
-      )}
-
-      {posts && posts.length > 0 ? (
+    <div className="post-list">
+      {posts.length === 0 ? (
+        <div className="no-posts">No posts available</div>
+      ) : (
         posts.map(post => (
           <PostItem
             key={post.id}
             post={post}
             userEmail={userEmail}
-            onPostDelete={handlePostDelete} 
+            onDelete={handlePostDelete}
           />
         ))
-      ) : (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-          <p>No posts available.</p>
-        </div>
       )}
     </div>
   );
