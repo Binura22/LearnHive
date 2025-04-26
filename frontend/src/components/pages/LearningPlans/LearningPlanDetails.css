@@ -1,0 +1,93 @@
+.learning-plan-details {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.loading,
+.no-plan {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  color: #555;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+h3 {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  color: #34495e;
+}
+
+p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  transition: box-shadow 0.3s;
+}
+
+li:hover {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.view-course-button {
+    display: inline-block;
+    margin-left: 1rem;
+    padding: 0.3rem 0.8rem;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    vertical-align: middle;
+}
+
+.view-course-button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+
+@media (max-width: 600px) {
+  .learning-plan-details {
+      padding: 1.2rem;
+  }
+
+  h2 {
+      font-size: 1.5rem;
+  }
+
+  h3 {
+      font-size: 1.2rem;
+  }
+
+  .view-course-button {
+      width: 100%;
+      padding: 0.6rem;
+  }
+}

@@ -16,10 +16,27 @@ import SinglePostPage from './components/pages/Notification/SinglePostPage';
 import ProfilePage from './components/pages/Profile/ProfilePage';
 import Layout from './components/common/Layout';
 import EditProfilePage from './components/pages/Profile/EditProfilePage';
+import LearningPlanForm from './components/pages/LearningPlans/LearningPlanForm';
+import LearningPlanList from './components/pages/LearningPlans/LearningPlanList';
+import UpdateLearningPlanForm from './components/pages/LearningPlans/UpdateLearningPlanForm';
+import { ToastContainer, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LearningPlanDetails from './components/pages/LearningPlans/LearningPlanDetails';
 
 function App() {
   return (
     <Router>
+      <ToastContainer 
+        position="top-right" 
+        autoClose={3000} 
+        hideProgressBar={false} 
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+        transition={Slide}
+      />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
@@ -33,6 +50,10 @@ function App() {
           <Route path="/profile/edit-profile" element={<EditProfilePage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/post/:postId" element={<SinglePostPage />} />
+          <Route path="/create-learning-plan" element={<LearningPlanForm />} />
+          <Route path="/learning-plans" element={<LearningPlanList />} />
+          <Route path="/learning-plans/:id/edit" element={<UpdateLearningPlanForm />} />
+          <Route path="/learning-plans/:id" element={<LearningPlanDetails />} />
         </Route>
         {/* Admin routes */}
         <Route path="/admin/dashboard" element={
