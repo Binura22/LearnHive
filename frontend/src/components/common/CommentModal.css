@@ -83,8 +83,19 @@
 
 .comment-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+}
+
+.comment-user-info {
+    display: flex;
+    align-items: center;
+}
+
+.comment-time {
+    font-size: 12px;
+    color: #888;
+    margin-left: 8px;
 }
 
 .comment-user {
@@ -181,6 +192,16 @@
     font-size: 14px;
     margin-right: 10px;
     background: var(--avatar-color, #2563eb); 
+}
+
+.reply-header {
+    margin-bottom: 4px;
+}
+
+.reply-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
 }
 
 .single-post-reply .comment-header {
