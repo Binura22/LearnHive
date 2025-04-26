@@ -45,10 +45,10 @@ function SinglePostPage({ postId: propPostId }) {
       {replies.map((reply, idx) => (
         <div key={reply.id || idx} className="single-post-comment single-post-reply">
           <div className="single-post-comment-avatar">
-            {reply.userId ? reply.userId.charAt(0).toUpperCase() : "U"}
+            {reply.userName ? reply.userName.charAt(0).toUpperCase() : "U"}
           </div>
           <div>
-            <div className="single-post-comment-user">{reply.userId}</div>
+            <div className="single-post-comment-user">{reply.userName || "Unknown User"}</div>
             <div className="single-post-comment-text">{reply.text}</div>
           </div>
         </div>
@@ -106,10 +106,10 @@ function SinglePostPage({ postId: propPostId }) {
           post.comments.map((comment, index) => (
             <div key={comment.id || index} className="single-post-comment">
               <div className="single-post-comment-avatar">
-                {comment.userId ? comment.userId.charAt(0).toUpperCase() : "U"}
+                {comment.userName ? comment.userName.charAt(0).toUpperCase() : "U"}
               </div>
               <div style={{ flex: 1 }}>
-                <div className="single-post-comment-user">{comment.userId}</div>
+                <div className="single-post-comment-user">{comment.userName || "Unknown User"}</div>
                 <div className="single-post-comment-text">{comment.text}</div>
                 <span
                   className="single-post-reply-btn"
