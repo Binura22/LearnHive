@@ -10,6 +10,11 @@ const PostList = ({ filterByUserId = null }) => {
   const [authChecked, setAuthChecked] = useState(false);
 
 
+  const handlePostDelete = (deletedPostId) => {
+    console.log("Post deleted:", deletedPostId);
+    setPosts(posts.filter(post => post.id !== deletedPostId));
+  };
+
   useEffect(() => {
     axios.defaults.withCredentials = true;
 
@@ -19,18 +24,15 @@ const PostList = ({ filterByUserId = null }) => {
     });
   }, []);
 
-
   useEffect(() => {
     console.log("Checking authentication status...");
     setLoading(true);
-
 
     const authEndpoints = [
       'http://localhost:8080/api/user/me',
       'http://localhost:8080/api/users/current',
       'http://localhost:8080/api/auth/user'
     ];
-
 
     const tryEndpoints = async () => {
       for (let endpoint of authEndpoints) {
@@ -39,7 +41,6 @@ const PostList = ({ filterByUserId = null }) => {
           const response = await axios.get(endpoint, { withCredentials: true });
           if (response.data && response.data.email) {
             console.log(` Authentication successful with ${endpoint}:`, response.data.email);
-
 
             setUserEmail(response.data.email);
             localStorage.setItem('userEmail', response.data.email);
@@ -51,7 +52,6 @@ const PostList = ({ filterByUserId = null }) => {
           console.log(`Failed with ${endpoint}:`, error.message);
         }
       }
-
 
       const storedEmail = localStorage.getItem('userEmail');
       if (storedEmail) {
@@ -65,7 +65,6 @@ const PostList = ({ filterByUserId = null }) => {
 
     tryEndpoints();
   }, []);
-
 
   useEffect(() => {
     if (!authChecked) return;
@@ -136,9 +135,10 @@ const PostList = ({ filterByUserId = null }) => {
           <PostItem
             key={post.id}
             post={post}
-            userEmail={userEmail} 
+            userEmail={userEmail}
+            onPostDelete={handlePostDelete} 
           />
-))
+        ))
       ) : (
         <div style={{ textAlign: 'center', padding: '20px' }}>
           <p>No posts available.</p>
