@@ -237,9 +237,11 @@ public class PostController {
         }
     }
 
+
     @DeleteMapping("/{postId}")
-    public void deletePost(@PathVariable String postId) {
+    public ResponseEntity<Void> deletePost(@PathVariable String postId) {
         postService.deletePost(postId);
+        return ResponseEntity.noContent().build();
     }
 
     // like, unlike
