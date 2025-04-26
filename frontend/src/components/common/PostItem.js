@@ -312,7 +312,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
             {isLiked ? 
               <AiFillLike color="#1877f2" size={22} /> : 
               <AiOutlineLike size={22} />
-            )}
+            }
           </button>
           <button onClick={handleOpenComments} className="commentBtn">
             <FaRegComment />
