@@ -1,209 +1,183 @@
 .main-page {
-  min-height: 100vh;
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.navbar {
-  background-color: var(--background-color-light);
-  padding: 1rem 2rem;
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.navbar-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.nav-links a {
-  color: var(--text-color-primary);
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
-  transition: var(--transition);
-}
-
-.nav-links a:hover {
-  background-color: var(--background-color-dark);
-  text-decoration: none;
-}
-
-.logout-button {
-  background-color: var(--error-color);
-  color: white;
-}
-
-.main-content {
-  flex: 1;
   padding: 2rem;
+  color: #333;
 }
 
+/* Loading Spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Welcome Section */
 .welcome-section {
   text-align: center;
-  margin-bottom: 3rem;
+  height: 25vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 5px;
+  margin-bottom: 2rem;
 }
 
 .welcome-section h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: var(--secondary-color);
+  color: #2c3e50;
 }
 
 .welcome-section p {
   font-size: 1.2rem;
-  color: var(--text-color-secondary);
-  max-width: 600px;
-  margin: 0 auto;
+  color: #666;
+  margin-bottom: 2rem;
 }
 
+.welcome-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.create-post-btn,
+
+.create-post-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.explore-courses-btn {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.create-post-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.explore-courses-btn:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+}
+
+/* Featured Courses Section */
 .featured-courses {
+  margin-bottom: 3rem;
+}
+
+.featured-courses h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.courses-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  margin-top: 2rem;
 }
 
 .course-card {
-  background-color: var(--background-color-light);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
 .course-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
 }
 
-.course-card h3 {
-  color: var(--secondary-color);
-  margin-bottom: 1rem;
+.course-image {
+  height: 200px;
+  overflow: hidden;
 }
 
-.course-card p {
-  color: var(--text-color-secondary);
-  margin-bottom: 1.5rem;
-}
-
-.view-course-button {
-  background-color: var(--primary-color);
-  color: white;
+.course-image img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/*Post*/
-.create-post-btn {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.course-info {
+  padding: 1.5rem;
 }
 
-.post-feed {
+.course-info h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.course-info p {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.course-meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 1rem;
+  font-size: 0.9rem;
 }
 
-.post-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 8px;
-  width: 320px;
+.course-meta span {
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  background-color: #f0f0f0;
+  color: #666;
 }
 
-.media-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+/* Recent Posts Section */
+.recent-posts {
+  margin-bottom: 3rem;
 }
 
-.media-container img,
-.media-container video {
-  max-width: 100%;
-  border-radius: 8px;
+.recent-posts h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
 }
 
-
-.error-message {
-  color: red;
-  margin-bottom: 10px;
-  font-weight: bold;
-  background: #ffe0e0;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.post-header {
-  display: flex;
-  justify-content: flex-end;
-  position: relative;
-}
-
-.menu-toggle {
-  cursor: pointer;
-  font-size: 1.5rem;
-  padding: 0.2rem 0.5rem;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 1.8rem;
-  right: 0.5rem;
-  background: #fff;
-  border: 1px solid #ccc;
-  z-index: 10;
-  border-radius: 4px;
-  padding: 0.5rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-}
-
-.dropdown-menu div {
-  padding: 0.3rem 0.5rem;
-  cursor: pointer;
-}
-
-.dropdown-menu div:hover {
-  background-color: #eee;
-}
-
-
-
+/* Responsive Design */
 @media (max-width: 768px) {
-  .navbar {
+  .main-page {
     padding: 1rem;
   }
 
-  .nav-links {
-    gap: 1rem;
+  .welcome-section {
+    padding: 2rem 1rem;
   }
 
   .welcome-section h1 {
     font-size: 2rem;
   }
 
-  .welcome-section p {
-    font-size: 1rem;
+  .welcome-actions {
+    flex-direction: column;
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr;
   }
 } 

@@ -254,51 +254,63 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
 
-        String userEmail = user.getAttribute("email");
-        String userName = user.getAttribute("name");
-        Post post = postService.findById(postId);
+        try {
+            String userEmail = user.getAttribute("email");
+            String userName = user.getAttribute("name");
+            Post post = postService.findById(postId);
 
-        if (post == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
-        }
-
-        List<String> likedUsers = post.getLikedUserIds();
-
-        boolean isLiked = false;
-
-        if (likedUsers.contains(userEmail)) {
-            likedUsers.remove(userEmail);
-        } else {
-            likedUsers.add(userEmail);
-            isLiked = true;
-        }
-
-        post.setLikedUserIds(likedUsers);
-        postService.savePost(post);
-
-        if (isLiked && !post.getUserEmail().equals(userEmail)) {
-            try {
-                Notification notification = new Notification();
-                notification.setRecipientEmail(post.getUserEmail());
-                notification.setSenderEmail(userEmail);
-                notification.setPostId(postId);
-                notification.setType("like");
-                notification.setMessage(userName + " liked your post.");
-                notification.setRead(false);
-                notification.setTimestamp(LocalDateTime.now());
-                notificationRepository.save(notification);
-                System.out.println("Like notification created for: " + post.getUserEmail());
-            } catch (Exception e) {
-                System.err.println("Failed to create like notification: " + e.getMessage());
-                e.printStackTrace();
+            if (post == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
             }
-        }
 
-        return ResponseEntity.ok().body(Map.of(
-                "success", true,
-                "message", "Like status updated",
-                "likedCount", likedUsers.size(),
-                "isLiked", isLiked));
+            List<String> likedUsers = post.getLikedUserIds();
+            if (likedUsers == null) {
+                likedUsers = new ArrayList<>();
+                post.setLikedUserIds(likedUsers);
+            }
+
+            boolean isLiked = false;
+
+            if (likedUsers.contains(userEmail)) {
+                likedUsers.remove(userEmail);
+            } else {
+                likedUsers.add(userEmail);
+                isLiked = true;
+            }
+
+            post.setLikedUserIds(likedUsers);
+            postService.savePost(post);
+
+            if (isLiked && !post.getUserEmail().equals(userEmail)) {
+                try {
+                    Notification notification = new Notification();
+                    notification.setRecipientEmail(post.getUserEmail());
+                    notification.setSenderEmail(userEmail);
+                    notification.setPostId(postId);
+                    notification.setType("like");
+                    notification.setMessage(userName + " liked your post.");
+                    notification.setRead(false);
+                    notification.setTimestamp(LocalDateTime.now());
+                    notificationRepository.save(notification);
+                    System.out.println("Like notification created for: " + post.getUserEmail());
+                } catch (Exception e) {
+                    System.err.println("Failed to create like notification: " + e.getMessage());
+                }
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Like status updated");
+            response.put("likedCount", likedUsers.size());
+            response.put("isLiked", isLiked);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error processing like operation: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update like status: " + e.getMessage());
+        }
     }
 
     // get comments to a post
