@@ -237,16 +237,6 @@ public class PostController {
         }
     }
 
-    @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable String postId, @RequestBody Post updatedPost) {
-        Post post = postService.getPostById(postId);
-        if (post == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        post.setDescription(updatedPost.getDescription());
-        return ResponseEntity.ok(postService.savePost(post));
-    }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable String postId) {
