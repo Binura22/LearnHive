@@ -7,51 +7,53 @@ import PostList from "../common/PostList";
 const MainPage = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  const [activeMenuId, setActiveMenuId] = useState(null);
-  const [editStates, setEditStates] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/posts/all", { withCredentials: true })
-      .then((res) => setPosts(res.data))
-      .catch((err) => console.error("Failed to fetch posts", err));
-  }, []);
+    const fetchData = async () => {
+      try {
+        // Fetch posts
+        const postsResponse = await axios.get("http://localhost:8080/api/posts/all", { 
+          withCredentials: true 
+        });
+        const sortedPosts = postsResponse.data.sort((postA, postB) => 
+          new Date(postB.createdAt) - new Date(postA.createdAt)
+        );
+        setPosts(sortedPosts);
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+        setLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);  
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading content...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="main-page">
-      <div className="main-content">
+      <div className="welcome-section">
         <h1>Welcome to LearnHive</h1>
-        <p>Start your learning journey today!</p>
+        <p>Your platform for professional growth and skill sharing</p>
+        <div className="welcome-actions">
+          <button onClick={() => navigate("/create-post")} className="create-post-btn">
+            Share Your Knowledge
+          </button>
+        </div>
+      </div>
 
-        <button
-          onClick={() => navigate("/create-post")}
-          className="create-post-btn"
-        >
-          Create Post
-        </button>
-
-        {/* Display posts with media rendering support
-        <div className="post-feed">
-          {posts.map(post => (
-            <div key={post.id} className="post-card">
-              <p>{post.description}</p>
-              <div className="media-container">
-                {post.mediaUrls.map((url, index) => {
-                  if (url.match(/\.(mp4|webm|ogg)$/i)) {
-                    return (
-                      <video key={index} controls width="300" height="200">
-                        <source src={url} />
-                      </video>
-                    );
-                  }
-                  return <img key={index} src={url} alt="post" width="300" />;
-                })}
-              </div>
-            </div>
-          ))}
-        </div> */}
-
-        <PostList />
+      <div className="recent-posts">
+        <PostList posts={posts} />
       </div>
     </div>
   );

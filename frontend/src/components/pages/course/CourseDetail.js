@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCourseById } from '../../services/api';
-import ProgressShareModal from '../common/ProgressShareModal';
+import { getCourseById } from '../../../services/api';
+import ProgressShareModal from '../../common/ProgressShareModal';
 import './CourseDetail.css';
 
 const CourseDetail = () => {
