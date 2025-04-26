@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addCourse, addModule, uploadCourseImage } from '../../services/api';
+import { addCourse, addModule, uploadCourseImage } from '../../../services/api';
 import './AddCourseForm.css';
 
 const AddCourseForm = ({ onClose, onCourseAdded }) => {

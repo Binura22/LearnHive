@@ -43,26 +43,26 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
   const handleLikeClick = async () => {
     try {
-      const likeButton = document.querySelector(".likeBtn");
-      if (likeButton) likeButton.style.opacity = "0.7";
-
+      const likeButton = document.querySelector('.likeBtn');
+      if (likeButton) likeButton.style.opacity = '0.7';
+      
       const response = await axios.post(
         `http://localhost:8080/api/posts/${post.id}/like`,
         {},
         { withCredentials: true }
       );
-
+      
       if (response.data) {
         console.log("Like response from server:", response.data);
-
+        
         const serverLikeCount = response.data.likedCount;
         const serverIsLiked = response.data.isLiked;
-
+        
         setIsLiked(serverIsLiked);
         setLikeCount(serverLikeCount);
-
+        
         if (serverIsLiked) {
-          setLikedUserIds((prev) => {
+          setLikedUserIds(prev => {
             const newArray = [...prev];
             if (!newArray.includes(userEmail)) {
               newArray.push(userEmail);
@@ -70,14 +70,14 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
             return newArray;
           });
         } else {
-          setLikedUserIds((prev) => prev.filter((id) => id !== userEmail));
+          setLikedUserIds(prev => prev.filter(id => id !== userEmail));
         }
       }
     } catch (error) {
       console.error("Error toggling like:", error);
     } finally {
-      const likeButton = document.querySelector(".likeBtn");
-      if (likeButton) likeButton.style.opacity = "1";
+      const likeButton = document.querySelector('.likeBtn');
+      if (likeButton) likeButton.style.opacity = '1';
     }
   };
 
@@ -107,20 +107,20 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   const openLikesModal = async () => {
     try {
       setShowLikes(true);
-
+      
       const response = await axios.get(
         `http://localhost:8080/api/posts/${post.id}`,
         { withCredentials: true }
       );
-
+      
       let freshLikedUserIds = response.data.likedUserIds || [];
-
-      freshLikedUserIds = freshLikedUserIds.filter((id) => id);
-
+      
+      freshLikedUserIds = freshLikedUserIds.filter(id => id);
+      
       setLikedUserIds(freshLikedUserIds);
       setLikeCount(freshLikedUserIds.length);
       setModalKey(Date.now());
-
+      
       console.log("Opening likes modal with fresh data:", freshLikedUserIds);
     } catch (error) {
       console.error("Error fetching updated post data:", error);
@@ -131,7 +131,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     e.stopPropagation();
     setShowMenu(!showMenu);
   };
-
+  
   const handleDeletePost = async (e) => {
     e.stopPropagation();
 
@@ -302,16 +302,15 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
           <button
             onClick={handleLikeClick}
             className="likeBtn"
-            style={{
-              transition: "transform 0.2s ease",
-              backgroundColor: isLiked ? "#f0f8ff" : "transparent",
-              borderRadius: "50%",
-              padding: "8px",
-            }}
+            style={{ 
+              transition: 'transform 0.2s ease',
+              backgroundColor: isLiked ? '#f0f8ff' : 'transparent',
+              borderRadius: '50%',
+              padding: '8px'
+            }} 
           >
-            {isLiked ? (
-              <AiFillLike color="#1877f2" size={22} />
-            ) : (
+            {isLiked ? 
+              <AiFillLike color="#1877f2" size={22} /> : 
               <AiOutlineLike size={22} />
             )}
           </button>
@@ -335,7 +334,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
         <LikesModal
           key={`modal-${modalKey}`}
           postId={post.id}
-          likedUserIds={likedUserIds.filter((id) => id)}
+          likedUserIds={likedUserIds.filter(id => id)}
           currentUserEmail={userEmail}
           currentUserName={currentUserName}
           onClose={() => setShowLikes(false)}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCourseById, updateCourse, updateModule, uploadCourseImage, deleteModule } from '../../services/api';
+import { getCourseById, updateCourse, updateModule, uploadCourseImage, deleteModule } from '../../../services/api';
 import './EditCourseForm.css';
 
 class Module {

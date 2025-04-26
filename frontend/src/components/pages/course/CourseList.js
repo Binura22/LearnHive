@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllCourses } from '../../services/api';
+import { getAllCourses } from '../../../services/api';
 import './CourseList.css';
 
 const CourseList = () => {
