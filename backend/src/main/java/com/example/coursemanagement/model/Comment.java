@@ -28,7 +28,7 @@ public class Comment {
     public Comment() {
         this.timestamp = new Date();
         this.id = UUID.randomUUID().toString();
-        System.out.println("Created new comment with ID: " + this.id);
+        //System.out.println("Created new comment with ID: " + this.id);
     }
 
     public String getId() {

@@ -46,6 +46,7 @@ const Navbar = () => {
         <div className="nav-links">
           <Link to="/main" className="nav-link">Home</Link>
           <Link to="/courses" className="nav-link">Courses</Link>
+          <Link to="/learning-plans" className="nav-link">My Learning Plans</Link>
           {/* Dynamic Profile Link */}
           <Link to={userId ? `/profile/${userId}` : "/profile"} className="nav-link">Profile</Link>
           <div className="notification-bell">
