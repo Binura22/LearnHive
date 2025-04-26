@@ -116,7 +116,9 @@ export const followUser = async (userId, targetUserId) => {
 
 // Unfollow another user
 export const unfollowUser = async (userId, targetUserId) => {
-  return axiosInstance.delete(`/api/interactions/unfollow`, { userId, targetUserId });
+  return axiosInstance.delete(`/api/interactions/follow`, { 
+    data: {userId, targetUserId }
+  });
 };
 
 // Get followers

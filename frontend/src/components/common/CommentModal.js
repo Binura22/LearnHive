@@ -104,7 +104,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       {replies.map((reply, idx) => (
         <div key={reply.id || idx} className="single-post-reply">
           <div className="user-avatar">
-            {reply.userId.charAt(0).toUpperCase()}
+            {reply.userName?.charAt(0).toUpperCase()}
           </div>
           <div>
             <div className="comment-header">
@@ -129,7 +129,7 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
             comments.map((c, index) => (
               <div key={c.id || index} className="comment-item">
                 <div className="user-avatar">
-                  {c.userId.charAt(0).toUpperCase()}
+                  {c.userName?.charAt(0).toUpperCase()}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div className="comment-header">
