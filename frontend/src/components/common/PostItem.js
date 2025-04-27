@@ -147,6 +147,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
         });
 
         if (onPostDelete) {
+          console.log("Calling onPostDelete with ID:", post.id);
           onPostDelete(post.id);
         }
       } catch (error) {
