@@ -68,7 +68,7 @@ const PostList = ({ posts: propPosts, filterByUserId = null }) => {
   useEffect(() => {
     if (!authChecked) return;
 
-    // If posts are provided as props, use them directly
+
     if (propPosts) {
       let filteredPosts = [...propPosts];
       if (filterByUserId) {
@@ -79,7 +79,6 @@ const PostList = ({ posts: propPosts, filterByUserId = null }) => {
       return;
     }
 
-    // Otherwise fetch posts from the API
     console.log("Fetching posts...");
     axios.get('http://localhost:8080/api/posts', { withCredentials: true })
       .then(response => {
@@ -130,7 +129,7 @@ const PostList = ({ posts: propPosts, filterByUserId = null }) => {
             key={post.id}
             post={post}
             userEmail={userEmail}
-            onDelete={handlePostDelete}
+            onPostDelete={handlePostDelete}  
           />
         ))
       )}
