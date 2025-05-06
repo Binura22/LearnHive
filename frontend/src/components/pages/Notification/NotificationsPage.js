@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./NotificationsPage.css";
 import SinglePostPage from "./SinglePostPage"; 
+import { ThemeContext } from '../../../contexts/ThemeContext';
+import { getModalContentStyle } from '../../../components/common/ModalStyles';
 
 function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [modalPostId, setModalPostId] = useState(null); 
+  const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
 
   const fetchNotifications = async () => {
@@ -89,7 +92,6 @@ function NotificationsPage() {
         ))
       )}
 
-
       {modalPostId && (
         <div
           className="modal-overlay"
@@ -97,7 +99,14 @@ function NotificationsPage() {
         >
           <div
             className="modal-content"
-            style={{ maxWidth: 600, width: "95%", maxHeight: "90vh", overflowY: "auto", position: "relative" }}
+            style={{
+              ...getModalContentStyle(darkMode),
+              maxWidth: 600,
+              width: "95%", 
+              maxHeight: "90vh", 
+              overflowY: "auto", 
+              position: "relative"
+            }}
             onClick={e => e.stopPropagation()}
           >
             <button

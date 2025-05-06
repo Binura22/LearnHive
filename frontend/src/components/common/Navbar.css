@@ -89,3 +89,139 @@
   border-radius: 50%;
 }
 
+.user-menu-container {
+  position: relative;
+  margin-left: 10px;
+}
+
+.avatar-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.avatar-button:hover {
+  background-color: var(--background-color-dark);
+}
+
+.navbar-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.me-text {
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--background-color-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  min-width: 180px;
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  margin-top: 8px;
+  overflow: visible;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: var(--text-color-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  position: relative;
+}
+
+.dropdown-item:hover {
+  background-color: var(--background-color-dark);
+}
+
+.dropdown-item span {
+  margin-left: 10px;
+}
+
+.theme-item {
+  position: relative;
+}
+
+.submenu-arrow {
+  position: absolute;
+  right: 16px;
+}
+
+.theme-dropdown {
+  position: absolute;
+  right: 100%;
+  top: 0;
+  background-color: var(--background-color-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  min-width: 120px;
+  box-shadow: var(--shadow-md);
+  z-index: 1001;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  color: var(--text-color-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+}
+
+.theme-option:hover {
+  background-color: var(--background-color-dark);
+}
+
+.theme-option span {
+  margin-left: 10px;
+}
+
+.theme-option.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.theme-toggle-btn {
+  display: none;
+}
+

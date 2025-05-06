@@ -1,13 +1,14 @@
 .postItem {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 16px;
+    background-color: var(--background-color-light);
+    border-radius: 10px;
+    padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     width: 100%;
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .postImage img {
@@ -20,40 +21,118 @@
     margin-top: 12px;
 }
 
+.postAuthor {
+    display: none; 
+}
+
 .postDescription {
+    color: var(--text-color-primary);
+    margin-bottom: 15px;
+    line-height: 1.5;
     font-size: 16px;
-    margin-bottom: 8px;
-    color: #333;
 }
 
 .postTime {
-    font-size: 12px;
-    color: gray;
-    margin-bottom: 8px;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
 }
 
 .likeCount {
-    font-size: 14px;
-    margin-bottom: 8px;
-    color: #444;
+    color: var(--text-color-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.likeCount span {
+    color: #4a90e2;
+    padding: 3px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.likeCount span:hover {
+    background-color: rgba(74, 144, 226, 0.1);
+    text-decoration: underline;
 }
 
 .postActions {
     display: flex;
     gap: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+    padding-top: 10px;
 }
 
 .postActions button {
-    background: none;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 50%;
+    padding: 10px;
     border: none;
     cursor: pointer;
     font-size: 20px;
-    padding: 4px;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    margin-right: 5px;
 }
 
 .postActions button:hover {
+    background-color: rgba(0, 0, 0, 0.07);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.postActions button.likeBtn {
+    position: relative;
+    overflow: visible;
+}
+
+.likeBtn,
+.commentBtn {
+    position: relative;
+}
+
+.likeBtn::after,
+.commentBtn::after {
+    position: absolute;
+    bottom: -25px;
+    font-size: 11px;
+    background-color: #555;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.likeBtn::after {
+    content: "Like";
+    left: 10px;
+}
+
+.commentBtn::after {
+    content: "Comment";
+    left: 50px;
+}
+
+.likeBtn:hover::after,
+.commentBtn:hover::after {
+    opacity: 1;
+}
+
+.likeBtn svg {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.likeBtn:hover svg {
     transform: scale(1.2);
+}
+
+.likeBtn svg[color="#1877f2"] {
+    filter: drop-shadow(0 0 2px rgba(24, 119, 242, 0.3));
 }
 
 .postHeader {
@@ -85,8 +164,8 @@
     position: absolute;
     right: 0;
     top: 100%;
-    background: white;
-    border: 1px solid #ddd;
+    background: var(--background-color-light);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 100;
@@ -179,4 +258,138 @@
 .update-post-btn:disabled, .cancel-edit-btn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+}
+
+.post-author-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.post-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: transform 0.2s ease;
+}
+
+.post-avatar:hover {
+    transform: scale(1.1);
+}
+
+.post-author-name {
+    font-weight: bold;
+    font-size: 15px;
+    color: var(--text-color-primary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.post-author-name:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+
+.dark-theme .postItem {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.dark-theme .likeCount {
+    color: #a0aec0;
+}
+
+.dark-theme .likeCount span {
+    color: #63b3ed !important;
+}
+
+.dark-theme .likeCount span:hover {
+    background-color: rgba(99, 179, 237, 0.15);
+}
+
+
+.dark-theme .postActions {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .postActions button {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+}
+
+.dark-theme .postActions button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .postActions button.likeBtn {
+    position: relative;
+    overflow: visible;
+}
+
+
+.dark-theme .postActions button.likeBtn[style*="background-color: rgb(240, 248, 255)"] {
+    background-color: rgba(24, 119, 242, 0.2) !important;
+}
+
+.dark-theme .likeBtn svg {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dark-theme .likeBtn:hover svg {
+    transform: scale(1.2);
+}
+
+
+.dark-theme .likeBtn svg[color="#1877f2"] {
+    filter: drop-shadow(0 0 3px rgba(24, 119, 242, 0.5));
+}
+
+
+.dark-theme .postActions {
+    position: relative;
+}
+
+.dark-theme .likeBtn::after,
+.dark-theme .commentBtn::after {
+    position: absolute;
+    bottom: -25px;
+    font-size: 11px;
+    background-color: #2d3748;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.dark-theme .likeBtn::after {
+    content: "Like";
+    left: 10px;
+}
+
+.dark-theme .commentBtn::after {
+    content: "Comment";
+    left: 50px;
+}
+
+.dark-theme .likeBtn:hover::after,
+.dark-theme .commentBtn:hover::after {
+    opacity: 1;
+}
+
+
+.dark-theme .postActions {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 15px;
+    padding-top: 10px;
 }
