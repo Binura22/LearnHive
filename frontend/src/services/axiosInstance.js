@@ -5,10 +5,10 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true // for OAuth2
+  withCredentials: true 
 });
 
-// Intercept requests to add token dynamically
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // Handle file uploads by setting the correct content type
+
     if (config.data instanceof FormData) {
       config.headers['Content-Type'] = 'multipart/form-data';
     }
@@ -28,12 +28,11 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// for better error handling
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized access
       localStorage.removeItem('authToken');
       window.location.href = '/login';
     }
@@ -41,7 +40,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// Create a new instance for file uploads
+
 export const fileUploadInstance = axios.create({
   baseURL: 'http://localhost:8080',
   withCredentials: true,
@@ -50,7 +49,7 @@ export const fileUploadInstance = axios.create({
   }
 });
 
-// Add the same interceptors to the file upload instance
+
 fileUploadInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
