@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./PostItem.css";
 import CommentModal from "./CommentModal";
 import LikesModal from "./LikesModal";
@@ -218,7 +219,14 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
       <div className="postContent">
         <div className="postHeader">
-          <p className="postAuthor">Posted by: {post.userName}</p>
+          <div className="post-author-container">
+            <div className="user-avatar post-avatar">
+              {post.userName && post.userName.charAt(0).toUpperCase()}
+            </div>
+            <Link to={`/profile/${post.userId}`} className="post-author-name">
+              {post.userName}
+            </Link>
+          </div>
 
           {isPostOwner && (
             <div className="post-options">

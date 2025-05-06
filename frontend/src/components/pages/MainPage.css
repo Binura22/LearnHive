@@ -1,183 +1,916 @@
+
 .main-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  color: #333;
+  width: 100%;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
 }
 
-/* Loading Spinner */
+
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
-  gap: 1rem;
+  height: 60vh;
 }
 
 .loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--primary-color);
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
   animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Welcome Section */
-.welcome-section {
-  text-align: center;
-  height: 25vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border-radius: 5px;
-  margin-bottom: 2rem;
+
+.welcome-banner {
+  background: linear-gradient(135deg, var(--primary-color), #3178c6);
+  color: white;
+  padding: 40px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
 }
 
-.welcome-section h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #2c3e50;
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 0;
 }
 
-.welcome-section p {
+.welcome-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.welcome-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.welcome-text h1 {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-text p {
   font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  line-height: 1.6;
 }
 
 .welcome-actions {
+  padding: 20px 0;
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  align-items: center;
 }
-
-.create-post-btn,
 
 .create-post-btn {
-  background-color: #3498db;
-  color: white;
-}
-
-.explore-courses-btn {
-  background-color: #2ecc71;
-  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  color: var(--primary-color);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .create-post-btn:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.explore-courses-btn:hover {
-  background-color: #27ae60;
-  transform: translateY(-2px);
-}
 
-/* Featured Courses Section */
-.featured-courses {
-  margin-bottom: 3rem;
-}
-
-.featured-courses h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
-}
-
-.courses-grid {
+.three-column-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: 250px minmax(0, 1fr) 300px;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  min-height: calc(100vh - 200px);
 }
 
-.course-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  cursor: pointer;
+
+.left-sidebar {
+  position: sticky;
+  top: 80px;
+  height: auto; 
+  overflow-y: visible;
+  align-self: flex-start;
 }
 
-.course-card:hover {
-  transform: translateY(-5px);
+
+.left-sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar {
+  display: none; 
 }
 
-.course-image {
-  height: 200px;
-  overflow: hidden;
+
+.right-sidebar {
+  position: sticky;
+  top: 80px;
+  height: auto;
+  overflow-y: visible; 
+  align-self: flex-start;
 }
 
-.course-image img {
+
+.main-content {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  overflow-y: visible; 
+  padding-bottom: 40px;
 }
 
-.course-info {
-  padding: 1.5rem;
+/* Sidebar Section */
+.sidebar-section {
+  background-color: var(--background-color-light);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.course-info h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  color: #2c3e50;
+.sidebar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--text-color-primary);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 8px;
 }
 
-.course-info p {
-  color: #666;
-  margin-bottom: 1rem;
-  line-height: 1.4;
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.course-meta {
+.sidebar-menu li {
+  margin-bottom: 8px;
+}
+
+.sidebar-link {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--text-color-primary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: var(--background-color-dark);
+  color: var(--primary-color);
+  transform: translateX(5px);
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li {
+  margin-bottom: 8px;
+}
+
+.category-link {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--text-color-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.category-link:hover {
+  background-color: var(--background-color-dark);
+  color: var(--primary-color);
+}
+
+/* Promo Box */
+.promo-box {
+  background-color: var(--background-color-light);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.promo-box h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: var(--text-color-primary);
+  font-weight: 600;
+}
+
+.promo-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.promo-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.promo-content h4 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--text-color-primary);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.rating-text {
+  margin-left: 5px;
+  color: var(--text-color-secondary);
   font-size: 0.9rem;
 }
 
-.course-meta span {
-  padding: 0.3rem 0.8rem;
-  border-radius: 15px;
-  background-color: #f0f0f0;
-  color: #666;
+.view-course-btn, .premium-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  width: 100%;
 }
 
-/* Recent Posts Section */
+.view-course-btn:hover, .premium-btn:hover {
+  background-color: var(--primary-color-dark);
+  transform: translateY(-2px);
+}
+
+.trending-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.trending-list li {
+  margin-bottom: 12px;
+}
+
+.trending-list a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.trending-list a:hover {
+  color: var(--primary-color);
+}
+
+.premium-features {
+  margin: 10px 0;
+}
+
+.premium-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: var(--text-color-secondary);
+}
+
+.premium-btn {
+  margin-top: 15px;
+  background: linear-gradient(135deg, #4a90e2, #2563eb);
+}
+
+
+.page-content {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+
+.features-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.feature-box {
+  background-color: var(--background-color-light);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.feature-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.feature-icon {
+  width: 54px;
+  height: 54px;
+  background-color: rgba(74, 144, 226, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--primary-color);
+}
+
+.feature-box h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: var(--text-color-primary);
+}
+
+.feature-box p {
+  color: var(--text-color-secondary);
+  line-height: 1.6;
+}
+
+/* Content Section */
+.content-section {
+  margin-top: 0;
+}
+
+.section-header {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color-primary);
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.line-decoration {
+  height: 4px;
+  width: 60px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+
 .recent-posts {
-  margin-bottom: 3rem;
+  margin-top: 20px;
 }
 
-.recent-posts h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
+
+@media (max-width: 1100px) {
+  .three-column-layout {
+    grid-template-columns: 200px minmax(0, 1fr) 250px;
+  }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .main-page {
-    padding: 1rem;
-  }
-
-  .welcome-section {
-    padding: 2rem 1rem;
-  }
-
-  .welcome-section h1 {
-    font-size: 2rem;
-  }
-
-  .welcome-actions {
+@media (max-width: 992px) {
+  .welcome-content {
     flex-direction: column;
+    text-align: center;
+  }
+  
+  .welcome-text h1 {
+    font-size: 2.4rem;
+  }
+  
+  .welcome-actions {
+    justify-content: center;
+    margin-top: 24px;
   }
 
-  .courses-grid {
+  .three-column-layout {
     grid-template-columns: 1fr;
   }
-} 
+  
+  .left-sidebar, .right-sidebar {
+    position: static;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-section, .promo-box {
+    margin-bottom: 15px;
+  }
+  
+  .sidebar-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .sidebar-link {
+    padding: 8px 12px;
+  }
+  
+  .category-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .category-link {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-text h1 {
+    font-size: 2rem;
+  }
+  
+  .feature-box {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .welcome-banner {
+    padding: 30px 15px;
+  }
+  
+  .welcome-text h1 {
+    font-size: 1.8rem;
+  }
+  
+  .welcome-text p {
+    font-size: 1rem;
+  }
+  
+  .feature-box {
+    min-height: auto;
+  }
+  
+  .page-content {
+    padding: 20px 15px;
+  }
+}
+
+
+.dark-theme .feature-box {
+  background-color: var(--background-color-dark);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .feature-icon {
+  background-color: rgba(90, 156, 240, 0.15);
+}
+
+.dark-theme .welcome-banner {
+  background: linear-gradient(135deg, #3a7bd5, #3a6073);
+}
+
+
+.dark-theme .sidebar-section {
+  background-color: var(--background-color-dark);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.dark-theme .sidebar-link {
+  background-color: transparent !important;
+  color: var(--text-color-primary);
+  border-left: 2px solid transparent;
+}
+
+
+.dark-theme .sidebar-menu li a {
+  background-color: #1a1a1a !important;
+  color: white;
+}
+
+
+.dark-theme .sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--primary-color);
+  border-left: 2px solid var(--primary-color);
+}
+
+
+.dark-theme .sidebar-link svg {
+  color: var(--primary-color);
+}
+
+
+.dark-theme .sidebar-link span {
+  color: var(--text-color-primary);
+}
+
+
+.dark-theme .sidebar-menu li {
+  margin-bottom: 5px;
+}
+
+
+.dark-theme .sidebar-menu .sidebar-link {
+  background-color: var(--background-color-dark) !important;
+}
+
+
+.dark-theme .category-list .category-link {
+  background-color: var(--background-color-dark);
+}
+
+.dark-theme .category-list .category-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .sidebar-title {
+  border-bottom-color: var(--primary-color);
+  color: var(--text-color-primary);
+}
+
+.dark-theme .promo-box {
+  background-color: var(--background-color-dark);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .category-link {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .category-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--primary-color);
+}
+
+.dark-theme .trending-list a {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .trending-list a:hover {
+  color: var(--primary-color);
+}
+
+.dark-theme .view-course-btn, 
+.dark-theme .premium-btn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.dark-theme .premium-btn {
+  background: linear-gradient(135deg, #5a9cf0, #3a7cd0);
+}
+
+.dark-theme .promo-box h3,
+.dark-theme .promo-content h4,
+.dark-theme .sidebar-title {
+  color: var(--text-color-primary);
+}
+
+/* Dark Mode Adjustments - Fix sidebar links and buttons */
+.dark-theme .sidebar-section,
+.dark-theme .promo-box {
+  background-color: #1a1a1a !important; /* Force dark background */
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Fix direct link styling for navigation buttons */
+.dark-theme .sidebar-link,
+.dark-theme a.sidebar-link,
+.dark-theme .sidebar-menu li a,
+.dark-theme .category-link,
+.dark-theme .trending-list a {
+  background-color: transparent !important; /* Remove any background */
+  color: #e0e0e0 !important; /* Light text for dark background */
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+/* Common hover effect for all links and buttons */
+.dark-theme .sidebar-link:hover,
+.dark-theme a.sidebar-link:hover,
+.dark-theme .category-link:hover,
+.dark-theme .trending-list a:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important; /* Light background on hover */
+  color: var(--primary-color) !important; /* Primary color text on hover */
+  transform: translateX(5px);
+  border-left: 2px solid var(--primary-color);
+}
+
+/* Force correct icon colors */
+.dark-theme .sidebar-link svg,
+.dark-theme .trending-list a svg,
+.dark-theme .premium-feature svg {
+  color: var(--primary-color) !important;
+}
+
+/* Fix promo buttons */
+.dark-theme .view-course-btn, 
+.dark-theme .premium-btn {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border: none;
+}
+
+.dark-theme .premium-btn {
+  background: linear-gradient(135deg, #5a9cf0, #3a7cd0) !important;
+}
+
+/* Fix promo button hover effects */
+.dark-theme .view-course-btn:hover, 
+.dark-theme .premium-btn:hover {
+  background-color: var(--primary-color-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Fix text colors in dark mode */
+.dark-theme .sidebar-title,
+.dark-theme .promo-box h3,
+.dark-theme .promo-content h4 {
+  color: #f0f0f0 !important;
+}
+
+.dark-theme .sidebar-link span,
+.dark-theme .category-link,
+.dark-theme .premium-feature span {
+  color: #e0e0e0 !important;
+}
+
+/* Fix heading underline */
+.dark-theme .sidebar-title {
+  border-bottom-color: var(--primary-color);
+}
+
+/* Fix for navigation buttons in dark mode - target exact issue */
+.dark-theme .sidebar-section .sidebar-menu li a.sidebar-link {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.dark-theme .sidebar-section .sidebar-menu li a.sidebar-link:hover {
+  background-color: #2a2a2a !important;
+  color: var(--primary-color) !important;
+  transform: translateX(5px);
+}
+
+/* Remove any competing styles */
+.dark-theme .sidebar-menu li a {
+  background-color: transparent !important;
+}
+
+/* Ensure the link spans get proper styling */
+.dark-theme .sidebar-link span {
+  color: #e0e0e0 !important;
+}
+
+/* Fix white backgrounds in sidebar navigation in dark mode */
+.dark-theme .sidebar-section {
+  background-color: #1a1a1a !important;
+}
+
+.dark-theme .sidebar-section .sidebar-menu li {
+  background-color: #1a1a1a !important;
+}
+
+.dark-theme .sidebar-section .sidebar-menu li a.sidebar-link {
+  background-color: #222222 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: #e0e0e0 !important;
+  width: 100% !important;
+}
+
+.dark-theme .category-list li a.category-link {
+  background-color: #222222 !important;
+  border-radius: 8px !important;
+  color: #e0e0e0 !important;
+}
+
+/* Fix hover states */
+.dark-theme .sidebar-section .sidebar-menu li a.sidebar-link:hover,
+.dark-theme .category-list li a.category-link:hover {
+  background-color: #333333 !important;
+  color: var(--primary-color) !important;
+}
+
+/* Override any other styles */
+.dark-theme .sidebar-section *,
+.dark-theme .sidebar-menu *,
+.dark-theme .sidebar-link * {
+  box-shadow: none !important;
+}
+
+/* Fix all sidebar elements in dark mode */
+.dark-theme .sidebar-section .sidebar-menu li a.sidebar-link,
+.dark-theme .sidebar-section .category-list li a.category-link,
+.dark-theme .right-sidebar .promo-box .trending-list li a {
+  background-color: #222222 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: #e0e0e0 !important;
+  width: 100% !important;
+  border: none !important;
+}
+
+/* Specific fix for trending topics container */
+.dark-theme .promo-box.trending-topics {
+  background-color: #1a1a1a !important;
+}
+
+/* Fix hover states for all sidebar links */
+.dark-theme .sidebar-section .sidebar-menu li a.sidebar-link:hover,
+.dark-theme .sidebar-section .category-list li a.category-link:hover,
+.dark-theme .right-sidebar .promo-box .trending-list li a:hover {
+  background-color: #333333 !important;
+  color: var(--primary-color) !important;
+  transform: translateX(5px);
+}
+
+/* Make icons in trending list have same style as sidebar icons */
+.dark-theme .trending-list a svg {
+  color: var(--primary-color) !important;
+}
+
+/* Ensure proper padding for trending links */
+.dark-theme .trending-list li a {
+  padding: 8px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* COMPLETE FIX: Target exactly the problematic elements with high specificity */
+.dark-theme .sidebar-section ul.sidebar-menu li a.sidebar-link,
+.dark-theme .sidebar-section ul.category-list li a.category-link,
+.dark-theme .right-sidebar .trending-list li a {
+  background-color: #222222 !important;
+  background: #222222 !important; /* Double-enforce background */
+  color: #e0e0e0 !important;
+  border-radius: 8px !important;
+  width: 100% !important;
+  display: block !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Target inner spans to prevent white backgrounds */
+.dark-theme .sidebar-section ul.sidebar-menu li a.sidebar-link *,
+.dark-theme .sidebar-section ul.category-list li a.category-link *,
+.dark-theme .right-sidebar .trending-list li a * {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Fix even more specifically for nested elements */
+.dark-theme .sidebar-section ul.sidebar-menu li a.sidebar-link span,
+.dark-theme .sidebar-section ul.category-list li a.category-link span,
+.dark-theme .right-sidebar .trending-list li a span {
+  color: #e0e0e0 !important;
+  background: transparent !important;
+}
+
+
+.dark-theme .sidebar-section,
+.dark-theme .sidebar-section * {
+  background-image: none !important;
+}
+
+
+.dark-theme .right-sidebar .trending-list li {
+  background-color: transparent !important;
+}
+
+
+.dark-theme .sidebar-section:nth-child(2) .category-list li a.category-link {
+  background: #222222 !important;
+  background-color: #222222 !important;
+  color: #e0e0e0 !important;
+  border-radius: 8px !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: block !important;
+}
+
+.dark-theme .sidebar-section:nth-child(2) ul.category-list li a.category-link:hover {
+  background: #333333 !important;
+  background-color: #333333 !important;
+  color: var(--primary-color) !important;
+  transform: translateX(5px);
+}
+
+
+html body .dark-theme .sidebar-section ul.category-list li a.category-link {
+  background-color: #222222 !important;
+  background: #222222 !important;
+}
+
+
+.dark-theme .category-list li a.category-link svg {
+  color: var(--primary-color) !important;
+  fill: var(--primary-color) !important;
+}
+
+
+.dark-theme .sidebar-section:nth-child(2) {
+  background-color: #1a1a1a !important;
+}
+
+.dark-theme .category-list {
+  background-color: #1a1a1a !important;
+}
+
+.dark-theme .category-list li {
+  background-color: #1a1a1a !important;
+  margin-bottom: 10px !important;
+}
+
+.dark-theme .category-list li a,
+.dark-theme .category-list li a.category-link,
+.dark-theme .sidebar-section:nth-child(2) .category-list li a {
+  display: block !important;
+  background-color: #222222 !important;
+  background: #222222 !important;
+  color: #e0e0e0 !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+.dark-theme .category-list li a[href="#"]:not(:empty) {
+  background-color: #222222 !important;
+  background: #222222 !important;
+}
+
+/* Override any link styling in the browsers */
+.dark-theme .category-list li a:link,
+.dark-theme .category-list li a:visited,
+.dark-theme .category-list li a:hover,
+.dark-theme .category-list li a:active {
+  background-color: #222222 !important;
+  background: #222222 !important;
+  color: #e0e0e0 !important;
+}
+
+
+.dark-theme .sidebar-section:nth-child(2) *,
+.dark-theme .category-list *,
+.dark-theme .category-list li *,
+.dark-theme .category-list li a * {
+  background-color: transparent !important;
+}
