@@ -13,17 +13,21 @@
 }
 
 .modal-content {
-    background: white;
+    background-color: var(--background-color-light) !important;
+    color: var(--text-color-primary) !important;
     padding: 20px;
     border-radius: 12px;
     width: 90%;
     max-width: 500px;
     max-height: 80vh;
     overflow-y: auto;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
 }
 
 .modal-content h3 {
     margin-top: 0;
+    color: var(--text-color-primary);
 }
 
 .modal-content textarea {
@@ -33,12 +37,14 @@
     padding: 8px;
     border-radius: 6px;
     resize: none;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color-light);
+    color: var(--text-color-primary);
 }
 
 .modal-content button {
     margin-top: 10px;
-    background-color: #0066ff;
+    background-color: var(--primary-color);
     color: white;
     padding: 8px 12px;
     border: none;
@@ -47,7 +53,7 @@
 }
 
 .modal-content button:hover {
-    background-color: #004ecc;
+    background-color: var(--primary-color-hover);
 }
 
 .comment-list {
@@ -58,7 +64,7 @@
     display: flex;
     align-items: flex-start;
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .user-avatar {
@@ -94,14 +100,14 @@
 
 .comment-time {
     font-size: 12px;
-    color: #888;
+    color: var(--text-color-secondary);
     margin-left: 8px;
 }
 
 .comment-user {
     font-weight: bold;
     font-size: 14px;
-    color: #2563eb;
+    color: var(--link-color);
     margin-right: 8px;
     cursor: pointer;
     text-decoration: none;
@@ -113,14 +119,14 @@
 
 .comment-text {
     font-size: 14px;
-    color: #333;
+    color: var(--text-color-primary);
     margin-top: 4px;
     line-height: 1.5;
 }
 
 .single-post-reply-btn {
     margin-top: 6px;
-    color: #2563eb;
+    color: var(--link-color);
     font-size: 13px;
     cursor: pointer;
     text-decoration: none;
@@ -137,7 +143,7 @@
 
 .single-post-reply-form button {
     margin-top: 6px;
-    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
     color: white;
     border: none;
     border-radius: 6px;
@@ -148,7 +154,7 @@
 }
 
 .single-post-reply-form button:hover {
-    background: linear-gradient(135deg, #4f46e5, #2563eb); 
+    background: linear-gradient(135deg, var(--primary-color-dark), var(--primary-color)); 
     transform: scale(1.05); 
 }
 
@@ -158,28 +164,28 @@
 }
 
 .single-post-reply-form .cancel-btn {
-    background: #f0f0f0; 
-    color: #333; 
-    border: 1px solid #ccc; 
+    background: var(--background-color-light); 
+    color: var(--text-color-primary); 
+    border: 1px solid var(--border-color); 
     margin-left: 8px;
 }
 
 .single-post-reply-form .cancel-btn:hover {
-    background: #e0e0e0;
-    color: #000; 
+    background: var(--background-color-hover);
+    color: var(--text-color-primary-hover); 
 }
 
 .single-post-replies {
     margin-left: 50px;
     margin-top: 8px;
-    border-left: 2px solid #e0e7ff;
+    border-left: 2px solid var(--border-color-light);
     padding-left: 12px;
 }
 
 .single-post-reply {
     display: flex;
     align-items: flex-start;
-    background: #f9f9f9;
+    background: var(--background-color-light);
     border-radius: 8px;
     margin-bottom: 8px;
     padding: 8px 12px;
@@ -212,20 +218,20 @@
 .single-post-reply .comment-user {
     font-weight: bold;
     font-size: 14px;
-    color: #2563eb;
+    color: var(--link-color);
     margin-bottom: 4px;
 }
 
 .single-post-reply .comment-text {
     font-size: 14px;
-    color: #333;
+    color: var(--text-color-primary);
     line-height: 1.5;
 }
 
 .delete-btn {
     background: none;
     border: none;
-    color: #ff4d4d;
+    color: var(--danger-color);
     font-size: 12px;
     cursor: pointer;
     margin-left: 8px;
@@ -246,31 +252,34 @@
     width: 100%;
     padding: 10px;
     border-radius: 6px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     resize: vertical;
     font-size: 14px;
+    background-color: var(--background-color-light);
+    color: var(--text-color-primary);
 }
 
 .comment-form button {
     margin-top: 10px;
     padding: 8px 16px;
-    background: linear-gradient(135deg, #2563eb, #4f46e5); 
-    color: white;
+    background-color: var(--primary-color) !important; 
+    color: white !important;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .comment-form button:hover {
-    background: linear-gradient(135deg, #4f46e5, #2563eb); 
+    background-color: #2980b9 !important; 
     transform: scale(1.05); 
 }
 
 .comment-form button:focus {
     outline: none; 
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
 
 .single-post-comment {
     display: flex;
@@ -282,7 +291,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #3b5998;
+    background: var(--avatar-color-dark);
     color: white;
     display: flex;
     align-items: center;
@@ -300,18 +309,45 @@
 
 single-post-comment-text {
     font-size: 14px;
-    color: #333;
+    color: var(--text-color-primary);
 }
 
 .single-post-loading {
     text-align: center;
     font-size: 16px;
-    color: #555;
+    color: var(--text-color-secondary);
 }
 
 .single-post-no-comments {
     text-align: center;
     font-size: 15px;
-    color: #777;
+    color: var(--text-color-secondary);
 }
+
+
+.dark-theme .comment-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 0;
+    margin-bottom: 5px;
+}
+
+.dark-theme .single-post-reply {
+    background-color: var(--background-color-dark);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+}
+
+.dark-theme .single-post-replies {
+    border-left: 2px solid var(--primary-color);
+    margin-left: 40px;
+    padding-left: 15px;
+    margin-top: 10px;
+}
+
+
+.dark-theme .modal-content textarea,
+.dark-theme .comment-form textarea {
+    background-color: var(--background-color-dark) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color-primary) !important;
 }

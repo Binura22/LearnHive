@@ -39,6 +39,7 @@
 
 :root {
   --primary-color: #4a90e2;
+  --primary-color-dark: #2980b9; 
   --secondary-color: #2c3e50;
   --background-color-light: #ffffff;
   --background-color-dark: #f5f5f5;
@@ -52,6 +53,32 @@
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+
+
+  --modal-background: #ffffff;
+  --modal-text-color: #333333;
+  --modal-border-color: #e0e0e0;
+}
+
+
+.dark-theme {
+  --primary-color: #5a9cf0; 
+  --primary-color-dark: #3a7cd0; 
+  --secondary-color: #6ab0f3;
+  --background-color-light: #1a1a1a;
+  --background-color-dark: #121212;
+  --text-color-primary: #f0f0f0;
+  --text-color-secondary: #c0c0c0;
+  --border-color: #444444;
+  --error-color: #ff6b6b;
+  --error-background: #5c2b2b;
+  --success-color: #4ade80;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+
+  --modal-background: #242424;
+  --modal-text-color: #f0f0f0;
+  --modal-border-color: #444444;
 }
 
 * {
@@ -102,4 +129,40 @@ a:hover {
   .container {
     padding: 0 0.5rem;
   }
+}
+
+
+.modal-overlay {
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background-color: var(--background-color-light) !important;
+  color: var(--text-color-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.modal-content textarea, 
+.modal-content input {
+  background-color: var(--background-color-light) !important;
+  color: var(--text-color-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Force dark mode on all modals */
+.dark-theme .modal-overlay .modal-content,
+.dark-theme [class*="modal-content"],
+.dark-theme [class*="modal-body"],
+.dark-theme [class*="modal-header"] {
+  background-color: var(--background-color-light) !important;
+  color: var(--text-color-primary) !important;
+}
+
+.dark-theme .modal-overlay input,
+.dark-theme .modal-overlay textarea,
+.dark-theme [class*="modal"] input,
+.dark-theme [class*="modal"] textarea {
+  background-color: var(--background-color-light) !important;
+  color: var(--text-color-primary) !important;
+  border-color: var(--border-color) !important;
 }

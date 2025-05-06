@@ -1,133 +1,99 @@
 import React, { useState, useEffect } from 'react';
+import './LikesModal.css';
 import axios from 'axios';
-import './CommentModal.css'; 
 
-const LikesModal = ({ postId, likedUserIds = [], currentUserEmail, currentUserName, onClose }) => {
+const LikesModal = ({ postId, likedUserIds, currentUserEmail, currentUserName, onClose }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
   useEffect(() => {
-    const processLikes = async () => {
-      setLoading(true);
-      setError(null);
-      
+    const fetchLikedUsers = async () => {
       try {
-        console.log("Raw likes data:", likedUserIds);
+        const response = await axios.get(`http://localhost:8080/api/posts/${postId}`, {
+          withCredentials: true
+        });
         
-        if (!likedUserIds || likedUserIds.length === 0) {
-          setUsers([]);
-          setLoading(false);
-          return;
+        if (!response.data || !response.data.likedUserIds) {
+          throw new Error("Couldn't fetch post data");
         }
         
-        const processedUsers = likedUserIds.map(user => {
-          if (!user) {
-            console.warn("Found null or undefined user in likes data");
-            return null;
-          }
-          
-          if (typeof user === 'object' && user.email) {
-            return {
-              id: user.id || user.email,
-              email: user.email,
-              name: user.name || user.email.split('@')[0]
-            };
-          } 
-          else if (typeof user === 'string' && user.includes('@')) {
-            if (user === currentUserEmail) {
-              return {
-                id: user,
-                email: user,
-                name: currentUserName || user.split('@')[0]
-              };
-            }
-            return {
-              id: user,
-              email: user,
-              name: user.split('@')[0]
-            };
-          } 
-          else if (typeof user === 'string') {
-            return {
-              id: user,
-              email: user + "@user.id",
-              name: "User " + user.substring(0, 5) 
-            };
-          }
-          
-          console.warn("Unhandled user data:", user);
-          return null;
-        }).filter(Boolean);
+        const likedEmails = response.data.likedUserIds.filter(email => email);
         
-        console.log("Processed user data:", processedUsers);
-        setUsers(processedUsers);
-      } catch (error) {
-        console.error("Error processing likes:", error);
-        setError(`Failed to load user information: ${error.message}`);
+        const userDetails = [];
+        
+        for (const email of likedEmails) {
+          try {
+            console.log("Looking up user ID for email:", email);
+            
+            const userResponse = await axios.get(
+              `http://localhost:8080/api/user/profile?email=${encodeURIComponent(email)}`,
+              { withCredentials: true }
+            );
+            
+            if (userResponse.data && userResponse.data.id) {
+              userDetails.push({
+                name: userResponse.data.name || email.split('@')[0],
+                email: email,
+                userId: userResponse.data.id  
+              });
+              console.log("Found user ID:", userResponse.data.id);
+            } else {
+              console.log("No user ID found in response");
+              if (email === currentUserEmail && localStorage.getItem('userId')) {
+                userDetails.push({
+                  name: localStorage.getItem('userName') || email.split('@')[0],
+                  email: email,
+                  userId: localStorage.getItem('userId')
+                });
+              } else {
+                userDetails.push({
+                  name: email.split('@')[0],
+                  email: email,
+                  userId: null
+                });
+              }
+            }
+          } catch (err) {
+            console.error("Error fetching user details for", email, err);
+            userDetails.push({
+              name: email.split('@')[0],
+              email: email,
+              userId: null
+            });
+          }
+        }
+        
+        setUsers(userDetails);
+      } catch (err) {
+        console.error('Error in fetchLikedUsers:', err);
+        setError('Failed to load users who liked this post');
       } finally {
         setLoading(false);
       }
     };
 
-    processLikes();
-  }, [likedUserIds, currentUserEmail, currentUserName]);
-  
-  useEffect(() => {
-    if (!postId) return;
-    
-    const fetchFreshLikes = async () => {
-      try {
-        console.log("Fetching fresh post data for postId:", postId);
-        const response = await axios.get(
-          `http://localhost:8080/api/posts/${postId}`, 
-          { withCredentials: true }
-        );
-        
-        if (response.data && response.data.likedUserIds) {
-          const freshLikedUserIds = response.data.likedUserIds || [];
-          console.log("Received fresh liked users data:", freshLikedUserIds);
-        }
-      } catch (error) {
-        console.error("Error fetching fresh likes data:", error);
-      }
-    };
-    
-    fetchFreshLikes();
-  }, [postId]);
+    if (postId && likedUserIds && likedUserIds.length > 0) {
+      fetchLikedUsers();
+    } else {
+      setLoading(false);
+    }
+  }, [postId, likedUserIds, currentUserEmail]);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div 
-        className="modal-content" 
-        style={{ maxWidth: '400px' }} 
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 style={{ marginTop: 0, textAlign: 'center' }}>
-          People who liked this post
-        </h3>
+      <div className="modal-content likes-modal-content" onClick={(e) => e.stopPropagation()}>
+        <h3 className="likes-modal-title">People who liked this post</h3>
         
         {loading ? (
-          <p style={{ textAlign: 'center' }}>Loading...</p>
+          <p className="likes-modal-loading">Loading...</p>
         ) : error ? (
           <div>
-            <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>
-            <button 
-              onClick={onClose}
-              style={{
-                padding: '8px 16px',
-                background: '#f3f4f6',
-                border: '1px solid #d1d5db',
-                borderRadius: '4px',
-                display: 'block',
-                margin: '10px auto'
-              }}
-            >
-              Close
-            </button>
+            <p className="likes-modal-error">{error}</p>
+            <button onClick={onClose}>Close</button>
           </div>
         ) : users.length === 0 ? (
-          <p style={{ textAlign: 'center' }}>No likes yet</p>
+          <p className="likes-modal-empty">No likes yet</p>
         ) : (
           <div className="likes-list">
             {users.map((user, index) => {
@@ -137,37 +103,37 @@ const LikesModal = ({ postId, likedUserIds = [], currentUserEmail, currentUserNa
               
               return (
                 <div 
-                  key={user.id || user.email || index} 
-                  className="like-item" 
-                  style={{
-                    padding: '8px',
-                    borderBottom: index < users.length - 1 ? '1px solid #eee' : 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: user.email === currentUserEmail ? '#f0f8ff' : 'transparent'
-                  }}
+                  key={user.userId || user.email || index} 
+                  className="like-item"
                 >
-                  <div 
-                    className="user-avatar" 
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      backgroundColor: user.email === currentUserEmail ? '#4169e1' : '#3b5998',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginRight: '10px',
-                      fontSize: '14px'
-                    }}
-                  >
-                    {firstLetter}
-                  </div>
+                  {user.userId ? (
+                    <a 
+                      href={`/profile/${encodeURIComponent(user.userId)}`} 
+                      className="user-avatar"
+                    >
+                      {firstLetter}
+                    </a>
+                  ) : (
+                    <div className="user-avatar">
+                      {firstLetter}
+                    </div>
+                  )}
+                  
                   <div className="user-info">
-                    <div style={{ fontWeight: 'bold' }}>{displayName}</div>
-                    <div style={{ fontSize: '12px', color: '#777' }}>
-                      {user.email && user.email.includes('@user.id') ? 'User ID: ' + user.id : user.email}
+                    {user.userId ? (
+                      <a 
+                        href={`/profile/${encodeURIComponent(user.userId)}`} 
+                        className="comment-user"
+                      >
+                        {displayName}
+                      </a>
+                    ) : (
+                      <div className="user-name-no-link">
+                        {displayName}
+                      </div>
+                    )}
+                    <div className="user-email">
+                      {user.email}
                     </div>
                   </div>
                 </div>
