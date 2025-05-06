@@ -7,35 +7,49 @@
 .likes-modal-content {
   max-width: 400px;
   position: relative;
+  background-color: var(--background-color-light);
+  color: var(--text-color-primary);
 }
 
 .likes-modal-title {
   margin-top: 0;
   text-align: center;
+  color: var(--text-color-primary);
 }
 
 .likes-modal-loading,
 .likes-modal-error,
 .likes-modal-empty {
   text-align: center;
+  color: var(--text-color-secondary);
 }
 
 .like-item {
   padding: 8px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
+  background-color: var(--background-color-light);
 }
 
 .like-item:hover {
-  background-color: #f5f5f5;
+  background-color: var(--background-color-dark);
+}
+
+.dark-theme .like-item {
+  border-bottom-color: var(--border-color);
+  margin-bottom: 2px;
+}
+
+.dark-theme .like-item:hover {
+  background-color: rgba(255,255,255,0.05);
 }
 
 .user-avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #3b5998;
+  background-color: var(--primary-color);
   color: white;
   display: flex;
   align-items: center;
@@ -44,12 +58,64 @@
   font-size: 14px;
 }
 
+.user-avatar-link {
+  text-decoration: none;
+}
+
+.dark-theme .user-avatar {
+  background-color: var(--primary-color);
+}
+
+
+a.user-avatar {
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+a.user-avatar:hover {
+  transform: scale(1.1);
+}
+
 .user-info .user-name {
   font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-decoration: none;
+  color: var(--text-color-primary);
+}
+
+.user-info .user-name:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
 }
 
 .user-info .user-link {
-  color: #2563eb;
+  color: var(--primary-color);
   text-decoration: underline;
   cursor: pointer;
+}
+
+.user-info .comment-user {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--primary-color);
+  margin-right: 8px;
+  cursor: pointer !important;
+  text-decoration: none;
+}
+
+.user-info .comment-user:hover {
+  text-decoration: underline;
+}
+
+.user-info .user-name-no-link {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--text-color-primary);
+}
+
+.user-email {
+  font-size: 12px;
+  color: var(--text-color-secondary);
 }
