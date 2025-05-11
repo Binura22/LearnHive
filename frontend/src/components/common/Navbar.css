@@ -16,6 +16,34 @@
   margin: 0 auto;
 }
 
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-brand .navbar-search {
+  width: 300px;
+}
+
+.nav-brand .search-bar-container {
+  margin: 0;
+}
+
+.nav-brand .search-bar {
+  background-color: var(--background-color-dark);
+  border: 1px solid var(--border-color);
+}
+
+.nav-brand .search-input {
+  background-color: transparent;
+  color: var(--text-color-primary);
+}
+
+.nav-brand .search-input::placeholder {
+  color: var(--text-color-secondary);
+}
+
 .nav-brand img {
   width: 120px;
   height: 100px;
