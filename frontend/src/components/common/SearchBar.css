@@ -8,19 +8,21 @@
   position: relative;
   display: flex;
   align-items: center;
-  background-color: #f5f5f5;
-  border-radius: 8px;
+  background-color: var(--background-color-light);
+  border-radius: var(--border-radius);
   padding: 8px 16px;
-  transition: all 0.3s ease;
+  transition: var(--transition);
+  border: 1px solid var(--border-color);
 }
 
 .search-bar:focus-within {
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-color-light);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--primary-color);
 }
 
 .search-icon {
-  color: #666;
+  color: var(--text-color-secondary);
   margin-right: 8px;
 }
 
@@ -28,21 +30,21 @@
   flex: 1;
   border: none;
   background: none;
-  font-size: 16px;
-  color: #333;
+  font-size: 14px;
+  color: var(--text-color-primary);
   outline: none;
   width: 100%;
 }
 
 .search-input::placeholder {
-  color: #999;
+  color: var(--text-color-secondary);
 }
 
 .search-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #3498db;
+  border: 2px solid var(--border-color);
+  border-top: 2px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-left: 8px;

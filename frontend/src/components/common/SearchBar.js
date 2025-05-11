@@ -6,7 +6,7 @@ const SearchBar = ({ onSearch, placeholder = "Search courses...", className = ""
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // debounce search to avoid too many API calls
+  //debounce search to avoid too many API calls
   const debouncedSearch = useCallback(
     (term) => {
       const timer = setTimeout(() => {
@@ -36,13 +36,7 @@ const SearchBar = ({ onSearch, placeholder = "Search courses...", className = ""
     <div className={`search-bar-container ${className}`}>
       <div className="search-bar">
         <Search size={18} className="search-icon" />
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={searchTerm}
-          onChange={handleChange}
-          className="search-input"
-        />
+        <input type="text" placeholder={placeholder} value={searchTerm} onChange={handleChange} className="search-input"/>
         {isLoading && <div className="search-spinner"></div>}
       </div>
     </div>
