@@ -6,7 +6,7 @@ const SearchBar = ({ onSearch, placeholder = "Search courses...", className = ""
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Debounce search to avoid too many API calls
+  // debounce search to avoid too many API calls
   const debouncedSearch = useCallback(
     (term) => {
       const timer = setTimeout(() => {
