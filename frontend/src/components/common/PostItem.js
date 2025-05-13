@@ -7,6 +7,7 @@ import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import axios from "axios";
+import { getUserById } from "../../services/api";
 
 const PostItem = ({ post, userEmail, onPostDelete }) => {
   const [likedUserIds, setLikedUserIds] = useState(post.likedUserIds || []);
@@ -20,6 +21,8 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedDescription, setEditedDescription] = useState(post.description);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [authorProfileImage, setAuthorProfileImage] = useState(null);
+
 
   const currentUserName =
     localStorage.getItem("userName") || userEmail?.split("@")[0] || "User";
@@ -40,28 +43,46 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     setLikeCount(post.likedUserIds?.length || 0);
   }, [post, userEmail]);
 
+  useEffect(() => {
+    const fetchAuthorData = async () => {
+      try {
+        const response = await getUserById(post.userId);
+        if (response.data && response.data.profileImage) {
+          setAuthorProfileImage(response.data.profileImage);
+        }
+      } catch (error) {
+        console.error("Failed to fetch author data:", error);
+      }
+    };
+
+    if (post.userId) {
+      fetchAuthorData();
+    }
+  }, [post.userId]);
+
+
   const commentCount = post.comments ? post.comments.length : 0;
 
   const handleLikeClick = async () => {
     try {
       const likeButton = document.querySelector('.likeBtn');
       if (likeButton) likeButton.style.opacity = '0.7';
-      
+
       const response = await axios.post(
         `http://localhost:8080/api/posts/${post.id}/like`,
         {},
         { withCredentials: true }
       );
-      
+
       if (response.data) {
         console.log("Like response from server:", response.data);
-        
+
         const serverLikeCount = response.data.likedCount;
         const serverIsLiked = response.data.isLiked;
-        
+
         setIsLiked(serverIsLiked);
         setLikeCount(serverLikeCount);
-        
+
         if (serverIsLiked) {
           setLikedUserIds(prev => {
             const newArray = [...prev];
@@ -108,20 +129,20 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   const openLikesModal = async () => {
     try {
       setShowLikes(true);
-      
+
       const response = await axios.get(
         `http://localhost:8080/api/posts/${post.id}`,
         { withCredentials: true }
       );
-      
+
       let freshLikedUserIds = response.data.likedUserIds || [];
-      
+
       freshLikedUserIds = freshLikedUserIds.filter(id => id);
-      
+
       setLikedUserIds(freshLikedUserIds);
       setLikeCount(freshLikedUserIds.length);
       setModalKey(Date.now());
-      
+
       console.log("Opening likes modal with fresh data:", freshLikedUserIds);
     } catch (error) {
       console.error("Error fetching updated post data:", error);
@@ -132,7 +153,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     e.stopPropagation();
     setShowMenu(!showMenu);
   };
-  
+
   const handleDeletePost = async (e) => {
     e.stopPropagation();
 
@@ -220,9 +241,12 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
       <div className="postContent">
         <div className="postHeader">
           <div className="post-author-container">
-            <div className="user-avatar post-avatar">
-              {post.userName && post.userName.charAt(0).toUpperCase()}
-            </div>
+            <img
+              src={authorProfileImage || "/default-profile.png"}
+              alt={post.userName}
+              className="user-avatar post-avatar"
+            />
+
             <Link to={`/profile/${post.userId}`} className="post-author-name">
               {post.userName}
             </Link>
@@ -311,15 +335,15 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
           <button
             onClick={handleLikeClick}
             className="likeBtn"
-            style={{ 
+            style={{
               transition: 'transform 0.2s ease',
               backgroundColor: isLiked ? '#f0f8ff' : 'transparent',
               borderRadius: '50%',
               padding: '8px'
-            }} 
+            }}
           >
-            {isLiked ? 
-              <AiFillLike color="#1877f2" size={22} /> : 
+            {isLiked ?
+              <AiFillLike color="#1877f2" size={22} /> :
               <AiOutlineLike size={22} />
             }
           </button>
