@@ -188,35 +188,31 @@
   object-fit: contain;
   border-radius: 6px;
   border: 1px solid #eee;
-  position: relative;
 }
 
 .remove-image-btn {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  background-color: #ff4444;
-  color: white;
+  top: 10px;
+  right: 10px;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0;
   cursor: pointer;
-  transition: all 0.2s ease;
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.remove-image-btn:hover {
-  background-color: #cc0000;
-  transform: scale(1.1);
 }
 
 .remove-image-btn svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 3px;
+  width: 24px;
+  height: 24px;
+  color: #ff4444;
+  background-color: white;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.remove-image-btn:hover svg {
+  color: #cc0000;
+  transform: scale(1.1);
 }
