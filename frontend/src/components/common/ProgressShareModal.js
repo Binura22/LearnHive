@@ -83,7 +83,35 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
     setError('');
     setSuccess('');
 
-    
+    try {
+      const formData = new FormData();
+      
+      // Enhance description with emoji and hashtags
+      const finalDescription = `${selectedType.emoji} ${description || selectedType.template(progress, courseTitle)} #${courseCategory.replace(/\s+/g, '')}`;
+      formData.append('description', finalDescription);
+      
+      if (file) {
+        formData.append('media', file);
+      } else {
+        const progressImage = await canvasToFile(canvasRef.current);
+        formData.append('media', progressImage);
+      }
+      
+      await axios.post('http://localhost:8080/api/posts/create', formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setSuccess('✅ Progress shared successfully!');
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to share progress:', error);
+      setError('❌ Failed to share progress. Please try again.');
+    }
   };
 
   if (!isOpen) return null;
