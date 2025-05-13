@@ -69,14 +69,45 @@
   opacity: 0.9;
 }
 
+.file-upload-section {
+  margin: 15px 0;
+}
+
+.file-upload-section label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.media-preview {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.remove-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-button:hover {
+  background: #cc0000;
+}
+
 .error-message {
-  color: #dc3545;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  color: #ff4444;
+  margin: 10px 0;
 }
 
 .success-message {
-  color: #28a745;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-} 
+  color: #00C851;
+  margin: 10px 0;
+}

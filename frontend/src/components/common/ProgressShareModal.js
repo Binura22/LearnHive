@@ -5,6 +5,8 @@ import './ProgressShareModal.css';
 
 const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
   const [description, setDescription] = useState('');
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const canvasRef = useRef(null);
@@ -19,7 +21,28 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
     }
   }, [isOpen, progress, courseTitle]);
 
-  if (!isOpen) return null;
+  const handleFileChange = (e) => {
+    setError('');
+    setSuccess('');
+    
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    // Check if file is image
+    if (!selectedFile.type.startsWith('image/')) {
+      setError('Please upload an image file');
+      return;
+    }
+
+    setFile(selectedFile);
+    setPreviewUrl(URL.createObjectURL(selectedFile));
+  };
+
+  const handleRemoveMedia = () => {
+    setFile(null);
+    setPreviewUrl('');
+    setError('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,12 +50,19 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
     setSuccess('');
 
     try {
-      // Generate a progress image using canvas
-      const progressImage = await canvasToFile(canvasRef.current);
-      
       const formData = new FormData();
+      
+      // Add description or default text
       formData.append('description', description || `I've completed ${progress}% of ${courseTitle}! 🎉 #LearningProgress #${courseCategory}`);
-      formData.append('media', progressImage);
+      
+      // Add either the user's photo or the generated progress image
+      if (file) {
+        formData.append('media', file);
+      } else {
+        // Generate a progress image using canvas if no file is uploaded
+        const progressImage = await canvasToFile(canvasRef.current);
+        formData.append('media', progressImage);
+      }
       
       await axios.post('http://localhost:8080/api/posts/create', formData, {
         withCredentials: true,
@@ -41,15 +71,21 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
         },
       });
 
-      setSuccess('Progress shared successfully!');
+      setSuccess('✅ Progress shared successfully!');
+      setFile(null);
+      setPreviewUrl('');
+      setDescription('');
+      
       setTimeout(() => {
         onClose();
       }, 2000);
     } catch (error) {
       console.error('Failed to share progress:', error);
-      setError('Failed to share progress. Please try again.');
+      setError('❌ Failed to share progress. Please try again.');
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
@@ -73,6 +109,30 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
             rows={4}
           />
           
+          <div className="file-upload-section">
+            <label>
+              Add a photo (optional):
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </label>
+            
+            {previewUrl && (
+              <div className="media-preview">
+                <img src={previewUrl} alt="Preview" width="150" />
+                <button
+                  type="button"
+                  className="remove-button"
+                  onClick={handleRemoveMedia}
+                >
+                  &times;
+                </button>
+              </div>
+            )}
+          </div>
+          
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
           
@@ -86,4 +146,4 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
   );
 };
 
-export default ProgressShareModal; 
+export default ProgressShareModal;
