@@ -104,7 +104,7 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
       fileInputRef.current.value = '';
     }
   };
-  
+
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
@@ -124,18 +124,18 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
 
     try {
       const formData = new FormData();
-      
+
       // Enhance description with emoji and hashtags
       const finalDescription = `${selectedType.emoji} ${description || selectedType.template(progress, courseTitle)} #${courseCategory.replace(/\s+/g, '')}`;
       formData.append('description', finalDescription);
-      
+
       if (file) {
         formData.append('media', file);
       } else {
         const progressImage = await canvasToFile(canvasRef.current);
         formData.append('media', progressImage);
       }
-      
+
       await axios.post('http://localhost:8080/api/posts/create', formData, {
         withCredentials: true,
         headers: {
@@ -160,18 +160,18 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
       <div className="progress-share-modal">
         <h2>Share Your Progress</h2>
         <p>You've completed {progress}% of {courseTitle}!</p>
-        
-        <canvas 
-          ref={canvasRef} 
-          width={300} 
-          height={150} 
+
+        <canvas
+          ref={canvasRef}
+          width={300}
+          height={150}
           style={{ display: 'none' }}
         />
-        
+
         <form onSubmit={handleSubmit}>
           <div className="progress-type-selector">
             <label>Progress Type:</label>
-            <select 
+            <select
               value={selectedType.id}
               onChange={(e) => handleTypeChange(e.target.value)}
             >
@@ -182,15 +182,15 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
               ))}
             </select>
           </div>
-          
+
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder={selectedType.template(progress, courseTitle)}
             rows={4}
           />
-          
-          <div 
+
+          <div
             className={`file-upload-container ${isDragging ? 'dragging' : ''} ${previewUrl ? 'has-preview' : ''}`}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragEnter}
@@ -205,7 +205,7 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
               onChange={handleFileChange}
               style={{ display: 'none' }}
             />
-            
+
             {!previewUrl ? (
               <div className="upload-prompt">
                 <FiUpload className="upload-icon" />
@@ -218,18 +218,25 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
                 <button
                   type="button"
                   className="remove-image-btn"
-                  onClick={handleRemoveMedia}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFile(null);
+                    setPreviewUrl('');
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = '';
+                    }
+                  }}
                   aria-label="Remove image"
                 >
-                  <FiX />
+                  <FiX size={18} />
                 </button>
               </div>
             )}
           </div>
-          
+
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
-          
+
           <div className="modal-buttons">
             <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
             <button type="submit" className="submit-btn">Share Progress</button>
