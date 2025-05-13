@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAllCourses, deleteCourse } from '../../../services/api';
 import SearchBar from '../../common/SearchBar';
 import AddCourseForm from './AddCourseForm';
+import BackButton from '../../common/BackButton';
 import './AdminCourseList.css';
 
 const AdminCourseList = () => {
@@ -73,6 +74,7 @@ const AdminCourseList = () => {
   return (
     <div className="admin-course-list">
       <div className="header">
+        <BackButton />
         <h1>Manage Courses</h1>
         <button className="add-course-btn" onClick={() => setShowAddCourse(true)}>
           Add New Course
