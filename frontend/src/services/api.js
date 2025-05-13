@@ -29,6 +29,10 @@ export const addCourse = async (courseData) => {
   return axiosInstance.post('/api/courses', courseData);
 };
 
+export const getAdminCourses = async () => {
+  return axiosInstance.get('/api/admin/courses');
+};
+
 export const updateCourse = async (id, updatedCourse) => {
   return axiosInstance.put(`/api/courses/${id}`, updatedCourse);
 };
@@ -72,8 +76,6 @@ export const addModule = async (courseId, moduleData, videoFile, pdfFile) => {
   }
 };
 
-
-
 export const updateModule = async (moduleId, formData) => {
   return fileUploadInstance.put(`/api/courses/modules/${moduleId}`, formData);
 };
@@ -87,7 +89,6 @@ export const getAdminDashboard = async () => {
   return axiosInstance.get('/api/dashboard');
 };
 
-
 // Get a user by ID
 export const getUserById = async (userId) => {
   const response = await axios.get(`http://localhost:8080/api/users/${userId}`, {
@@ -95,7 +96,6 @@ export const getUserById = async (userId) => {
   });
   return response;
 };
-
 
 // Update profile with optional images
 export const updateProfile = async (email, bio, profileImage, coverImage) => {
@@ -107,7 +107,6 @@ export const updateProfile = async (email, bio, profileImage, coverImage) => {
 
   return fileUploadInstance.put('/api/users/update', formData);
 };
-
 
 // Follow another user
 export const followUser = async (userId, targetUserId) => {
@@ -131,9 +130,7 @@ export const getFollowing = async (userId) => {
   return axiosInstance.get(`/api/interactions/${userId}/following`);
 };
 
-
 // Learning Plan operations
-
 export const createLearningPlan = async (learningPlanData) => {
   return axiosInstance.post('/api/learning-plans', learningPlanData);
 };
@@ -152,6 +149,10 @@ export const updateLearningPlan = async (learningPlanId, updatedData) => {
 
 export const deleteLearningPlan = async (learningPlanId) => {
   return axiosInstance.delete(`/api/learning-plans/${learningPlanId}`);
+};
+
+export const getAdminLearningPlans = async () => {
+  return axiosInstance.get('/api/admin/learning-plans');
 };
 
 
