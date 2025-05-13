@@ -55,29 +55,35 @@ const EditProfilePage = () => {
       console.error('Update failed:', err);
     }
   };
-  console.log("FormData", formData)
+
   return (
-    <div className="edit-profile-page">
-      <h2>Edit Profile</h2>
-      <form onSubmit={handleSubmit} className="edit-form" encType="multipart/form-data">
-        <label>Bio:</label>
-        <textarea
-          name="bio"
-          value={formData.bio}
-          onChange={handleChange}
-          placeholder="Tell us something about you..."
-        />
+    <div className="edit-profile-container">
+      <div className="profile-card">
+        <h2>Edit Your Profile</h2>
+        <form onSubmit={handleSubmit} className="edit-form" encType="multipart/form-data">
+          <div className="cover-section">
+            {preview.coverImage && <div className="cover-preview" style={{ backgroundImage: `url(${preview.coverImage})` }} />}
+            <input type="file" name="coverImage" accept="image/*" onChange={handleFileChange} />
+          </div>
 
-        <label>Profile Image:</label>
-        {preview.profileImage && <img src={preview.profileImage} alt="Profile Preview" className="preview-image" />}
-        <input type="file" name="profileImage" accept="image/*" onChange={handleFileChange} />
+          <div className="profile-section">
+            {preview.profileImage && <img src={preview.profileImage} alt="Profile" className="profile-preview" />}
+            <input type="file" name="profileImage" accept="image/*" onChange={handleFileChange} />
+          </div>
 
-        <label>Cover Image:</label>
-        {preview.coverImage && <div className="cover-preview" style={{ backgroundImage: `url(${preview.coverImage})` }} />}
-        <input type="file" name="coverImage" accept="image/*" onChange={handleFileChange} />
+          <label htmlFor="bio">Bio</label>
+          <textarea
+            id="bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            placeholder="Tell us something about you..."
+            className="bio-input"
+          />
 
-        <button type="submit" className="save-btn">Save Changes</button>
-      </form>
+          <button type="submit" className="save-btn">Save Changes</button>
+        </form>
+      </div>
     </div>
   );
 };
