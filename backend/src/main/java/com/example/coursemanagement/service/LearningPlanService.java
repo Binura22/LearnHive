@@ -28,6 +28,10 @@ public class LearningPlanService {
         return learningPlanRepository.findByUserId(userId);
     }
 
+    public List<LearningPlan> getAllLearningPlans() {
+        return learningPlanRepository.findAll();
+    }
+
     public LearningPlan getLearningPlanById(String planId) {
         return learningPlanRepository.findById(planId).orElse(null);
     }
