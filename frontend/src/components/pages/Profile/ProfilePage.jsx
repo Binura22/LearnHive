@@ -9,6 +9,7 @@ import {
 } from "../../../services/api";
 import PostList from "../../common/PostList";
 import "./ProfilePage.css";
+import UserListModal from "../../common/UserListModal";
 
 const ProfilePage = () => {
   const { userId } = useParams();
@@ -17,6 +18,9 @@ const ProfilePage = () => {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+
 
   const fetchProfile = async () => {
     try {
@@ -85,9 +89,14 @@ const ProfilePage = () => {
         <p className="bio">{profile.bio || "No bio yet."}</p>
 
         <div className="follow-stats">
-          <span>{followers.length} Followers</span>
-          <span>{following.length} Following</span>
+          <button className="follow-stats-btn" onClick={() => setShowFollowers(true)}>
+            {followers.length} Followers
+          </button>
+          <button className="follow-stats-btn" onClick={() => setShowFollowing(true)}>
+            {following.length} Following
+          </button>
         </div>
+
 
         {!isOwnProfile && (
           <button onClick={handleFollowToggle} className="follow-btn">
@@ -103,6 +112,22 @@ const ProfilePage = () => {
           </button>
         )}
       </div>
+      {showFollowers && (
+        <UserListModal
+          title="Followers"
+          users={followers}
+          onClose={() => setShowFollowers(false)}
+        />
+      )}
+
+      {showFollowing && (
+        <UserListModal
+          title="Following"
+          users={following}
+          onClose={() => setShowFollowing(false)}
+        />
+      )}
+
       <div className="user-posts-section">
         <h3>{isOwnProfile ? "Your Posts" : `${profile.name}'s Posts`}</h3>
         <PostList filterByUserId={profile.id} />
