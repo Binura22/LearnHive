@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider } from './contexts/ThemeContext';
 import Login from './components/common/Login';
 import MainPage from './components/pages/MainPage';
-import AdminDashboard from './components/pages/AdminDashboard';
-import AdminCourseList from './components/pages/course/AdminCourseList';
-import EditCourseForm from './components/pages/course/EditCourseForm';
+import AdminDashboard from './components/admin/AdminDashboard';
+import AdminCourseList from './components/admin/course/AdminCourseList';
+import EditCourseForm from './components/admin/course/EditCourseForm';
 import AuthCheck from './services/AuthCheck';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import CourseList from './components/pages/course/CourseList';
@@ -23,7 +23,7 @@ import UpdateLearningPlanForm from './components/pages/LearningPlans/UpdateLearn
 import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LearningPlanDetails from './components/pages/LearningPlans/LearningPlanDetails';
-import Analytics from './components/pages/Analytics';
+import Analytics from './components/admin/analytics/Analytics';
 
 function App() {
   return (

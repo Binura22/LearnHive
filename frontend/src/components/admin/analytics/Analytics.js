@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../services/axiosInstance';
+import axiosInstance from '../../../services/axiosInstance';
+import BackButton from '../../common/BackButton';
 import './Analytics.css';
 
 const Analytics = () => {
@@ -8,7 +9,7 @@ const Analytics = () => {
   useEffect(() => {
     axiosInstance.get('/api/admin/analytics')
       .then(response => setAnalytics(response.data))
-      .catch(() => setAnalytics({})); // fallback if needed
+      .catch(() => setAnalytics({})); 
   }, []);
 
   if (!analytics) {
@@ -17,8 +18,10 @@ const Analytics = () => {
 
   return (
     <div className="analytics-container">
-      <h1>User Analytics</h1>
-
+      <div className="header">
+        <BackButton />
+        <h1>Analytics Dashboard</h1>
+      </div>
       <div className="analytics-grid">
         <div className="analytics-card">
           <h3>Total Users</h3>
