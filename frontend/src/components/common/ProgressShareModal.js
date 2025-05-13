@@ -96,6 +96,15 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
     }
   };
 
+  const handleRemoveMedia = (e) => {
+    e.stopPropagation();
+    setFile(null);
+    setPreviewUrl('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+  
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
@@ -209,11 +218,8 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
                 <button
                   type="button"
                   className="remove-image-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setFile(null);
-                    setPreviewUrl('');
-                  }}
+                  onClick={handleRemoveMedia}
+                  aria-label="Remove image"
                 >
                   <FiX />
                 </button>
