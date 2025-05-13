@@ -1,8 +1,10 @@
 package com.example.coursemanagement.controller;
 
 import com.example.coursemanagement.model.Course;
+import com.example.coursemanagement.model.LearningPlan;
 import com.example.coursemanagement.service.CourseService;
 import com.example.coursemanagement.service.UserService;
+import com.example.coursemanagement.service.LearningPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LearningPlanService learningPlanService;
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
@@ -62,6 +67,29 @@ public class AdminController {
             System.err.println("Error in analytics endpoint: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error fetching analytics: " + e.getMessage());
+        }
+    }
+
+    // admin analytics endpoints
+    @GetMapping("/courses")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Course>> getAllCourses() {
+        try {
+            List<Course> courses = courseService.getAllCourses();
+            return ResponseEntity.ok(courses);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/learning-plans")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<LearningPlan>> getAllLearningPlans() {
+        try {
+            List<LearningPlan> plans = learningPlanService.getAllLearningPlans();
+            return ResponseEntity.ok(plans);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 }
