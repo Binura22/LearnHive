@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import "./CreatePostForm.css";
 
@@ -8,6 +8,7 @@ const CreatePostForm = () => {
   const [previewUrls, setPreviewUrls] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const fileInputRef = useRef(null); // Add this ref
 
   const handleFileChange = (e) => {
     setErrorMsg("");
@@ -86,6 +87,11 @@ const CreatePostForm = () => {
     setFiles(updatedFiles);
     setPreviewUrls(updatedPreviews);
 
+    // Reset the file input to allow selecting the same file again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+
     // Reset error if now valid
     if (updatedFiles.every(f => f.type.startsWith("image/")) && updatedFiles.length <= 3) {
       setErrorMsg("");
@@ -121,6 +127,10 @@ const CreatePostForm = () => {
       setPreviewUrls([]);
       setErrorMsg("");
       setSuccessMsg("✅ Post uploaded successfully!");
+      // Reset file input after successful submission
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     } catch (error) {
       console.error("Post creation failed", error);
       setErrorMsg("❌ Failed to upload post. Please try again.");
@@ -139,6 +149,7 @@ const CreatePostForm = () => {
 
       <input
         type="file"
+        ref={fileInputRef} // Add ref to the file input
         accept="image/*,video/*"
         multiple
         onChange={handleFileChange}
