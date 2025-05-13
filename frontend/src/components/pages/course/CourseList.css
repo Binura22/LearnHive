@@ -1,6 +1,7 @@
 .course-list-container {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem;
 }
 
 .course-list-container h1 {
@@ -104,6 +105,43 @@
 .error-message {
   color: var(--error-color);
   margin-bottom: 1rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--background-color-light);
+  border-radius: var(--border-radius);
+  margin: 2rem 0;
+}
+
+.no-results p {
+  color: var(--text-color-secondary);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.search-container {
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+.search-container .course-search {
+  width: 100%;
+}
+
+.search-container .search-bar {
+  background-color: var(--background-color-light);
+  border: 1px solid var(--border-color);
+}
+
+.search-container .search-input {
+  background-color: transparent;
+  color: var(--text-color-primary);
+}
+
+.search-container .search-input::placeholder {
+  color: var(--text-color-secondary);
 }
 
 @media (max-width: 768px) {
