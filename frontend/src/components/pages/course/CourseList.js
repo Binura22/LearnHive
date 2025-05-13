@@ -58,8 +58,9 @@ const CourseList = () => {
 
   return (
     <div className="course-list-container">
-      <h1>Available Courses</h1>
+      
       <div className="search-container">
+        <h1>Available Courses</h1>
         <SearchBar onSearch={handleSearch} placeholder="Search courses..." className="course-search"/>
       </div>
       {filteredCourses.length === 0 ? (
