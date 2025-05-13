@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { FiUpload, FiX } from 'react-icons/fi';
 import axios from 'axios';
 import { renderProgressImage, canvasToFile } from '../../utils/progressImageGenerator';
 import './ProgressShareModal.css';
@@ -37,8 +38,10 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [selectedType, setSelectedType] = useState(progressTypes[0]);
+  const [isDragging, setIsDragging] = useState(false);
   const canvasRef = useRef(null);
-  
+  const fileInputRef = useRef(null);
+
   const courseTitle = course?.title || 'this course';
   const courseCategory = course?.category || 'Learning';
 
@@ -57,11 +60,17 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
 
   const handleFileChange = (e) => {
     setError('');
-    const selectedFile = e.target.files[0];
+    const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
+    // Validate file type and size
     if (!selectedFile.type.startsWith('image/')) {
-      setError('Please upload an image file');
+      setError('Please upload an image file (JPEG, PNG)');
+      return;
+    }
+
+    if (selectedFile.size > 5 * 1024 * 1024) { // 5MB limit
+      setError('Image must be smaller than 5MB');
       return;
     }
 
@@ -69,10 +78,31 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
     setPreviewUrl(URL.createObjectURL(selectedFile));
   };
 
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileChange({ target: { files: e.dataTransfer.files } });
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   const handleTypeChange = (typeId) => {
     const type = progressTypes.find(t => t.id === typeId);
     setSelectedType(type);
-    // Update description with template if it hasn't been modified yet
     if (!description || description === selectedType.template(progress, courseTitle)) {
       setDescription(type.template(progress, courseTitle));
     }
@@ -151,28 +181,41 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
             rows={4}
           />
           
-          <div className="file-upload-section">
-            <label>
-              Add a photo (optional):
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-            </label>
+          <div 
+            className={`file-upload-container ${isDragging ? 'dragging' : ''} ${previewUrl ? 'has-preview' : ''}`}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={!previewUrl ? triggerFileInput : null}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+            />
             
-            {previewUrl && (
-              <div className="media-preview">
-                <img src={previewUrl} alt="Preview" width="150" />
+            {!previewUrl ? (
+              <div className="upload-prompt">
+                <FiUpload className="upload-icon" />
+                <p>Drag & drop a photo here or click to browse</p>
+                <span className="upload-hint">(Optional - Max 5MB)</span>
+              </div>
+            ) : (
+              <div className="image-preview-container">
+                <img src={previewUrl} alt="Preview" className="preview-image" />
                 <button
                   type="button"
-                  className="remove-button"
-                  onClick={() => {
+                  className="remove-image-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setFile(null);
                     setPreviewUrl('');
                   }}
                 >
-                  &times;
+                  <FiX />
                 </button>
               </div>
             )}
@@ -182,8 +225,8 @@ const ProgressShareModal = ({ isOpen, onClose, course, progress }) => {
           {success && <div className="success-message">{success}</div>}
           
           <div className="modal-buttons">
-            <button type="button" onClick={onClose}>Cancel</button>
-            <button type="submit">Share</button>
+            <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
+            <button type="submit" className="submit-btn">Share Progress</button>
           </div>
         </form>
       </div>
