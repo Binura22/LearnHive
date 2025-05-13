@@ -23,6 +23,7 @@ import UpdateLearningPlanForm from './components/pages/LearningPlans/UpdateLearn
 import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LearningPlanDetails from './components/pages/LearningPlans/LearningPlanDetails';
+import Analytics from './components/pages/Analytics';
 
 function App() {
   return (
@@ -66,6 +67,11 @@ function App() {
           <Route path="/admin/courses" element={
             <ProtectedRoute requiredRole="ADMIN">
               <AdminCourseList />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/analytics" element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <Analytics />
             </ProtectedRoute>
           } />
           <Route path="/admin/courses/:courseId/edit" element={

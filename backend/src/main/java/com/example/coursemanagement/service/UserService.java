@@ -6,6 +6,7 @@ import com.example.coursemanagement.repository.UserRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -228,13 +229,13 @@ public class UserService implements UserDetailsService {
 
     // Follow/Unfollow Interactions
     public void followUser(String userId, String targetUserId) {
-        // Add target to current user’s following
+        // Add target to current user's following
         mongoTemplate.updateFirst(
                 Query.query(Criteria.where("_id").is(userId)),
                 new Update().addToSet("following", targetUserId),
                 User.class);
 
-        // Add current user to target’s followers
+        // Add current user to target's followers
         mongoTemplate.updateFirst(
                 Query.query(Criteria.where("_id").is(targetUserId)),
                 new Update().addToSet("followers", userId),
@@ -242,13 +243,13 @@ public class UserService implements UserDetailsService {
     }
 
     public void unfollowUser(String userId, String targetUserId) {
-        // Remove target from current user’s following
+        // Remove target from current user's following
         mongoTemplate.updateFirst(
                 Query.query(Criteria.where("_id").is(userId)),
                 new Update().pull("following", targetUserId),
                 User.class);
 
-        // Remove current user from target’s followers
+        // Remove current user from target's followers
         mongoTemplate.updateFirst(
                 Query.query(Criteria.where("_id").is(targetUserId)),
                 new Update().pull("followers", userId),
@@ -269,6 +270,26 @@ public class UserService implements UserDetailsService {
 
     public List<User> getUsersByIds(List<String> userIds) {
         return userRepository.findByIdIn(userIds);
+    }
+
+    public long getTotalUsers() {
+        return userRepository.count();
+    }
+
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findByRole(role);
+    }
+
+    public Map<String, Long> getUsersByProvider() {
+        List<User> allUsers = userRepository.findAll();
+        Map<String, Long> providerCount = new HashMap<>();
+        
+        for (User user : allUsers) {
+            String provider = user.getProvider() != null ? user.getProvider() : "LOCAL";
+            providerCount.merge(provider, 1L, Long::sum);
+        }
+        
+        return providerCount;
     }
 
 }
