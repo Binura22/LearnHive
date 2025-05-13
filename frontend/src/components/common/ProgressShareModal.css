@@ -111,3 +111,22 @@
   color: #00C851;
   margin: 10px 0;
 }
+
+.progress-type-selector {
+  margin-bottom: 15px;
+}
+
+.progress-type-selector label {
+  margin-right: 10px;
+}
+
+.progress-type-selector select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+.progress-type-selector option {
+  padding: 5px;
+}
