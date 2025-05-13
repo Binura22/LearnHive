@@ -29,12 +29,43 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   // Carousel settings
   const carouselSettings = {
     dots: true,
-    infinite: true,
-    speed: 500,
+    infinite: false,
+    speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
-    adaptiveHeight: true
+    adaptiveHeight: true,
+    appendDots: dots => (
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <ul style={{
+          margin: '0',
+          padding: '0',
+          display: 'flex',
+          gap: '8px'
+        }}>{dots}</ul>
+      </div>
+    ),
+    customPaging: i => (
+      <div
+        style={{
+          width: '8px',
+          height: '8px',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(255,255,255,0.5)',
+          transition: 'all 0.3s ease'
+        }}
+      />
+    ),
+    dotsClass: "slick-dots slick-thumb"
   };
 
   const currentUserName =
@@ -253,8 +284,15 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
                     <source src={url} type="video/mp4" />
                   </video>
                 ) : (
-                  <img src={url} alt={`Post ${index + 1}`} className="post-media-item" />
+                  <img
+                    src={url}
+                    alt={`Post ${index + 1}`}
+                    className="post-media-item"
+                  />
                 )}
+                <div className="image-counter">
+                  {index + 1}/{post.mediaUrls.length}
+                </div>
               </div>
             ))}
           </Slider>
