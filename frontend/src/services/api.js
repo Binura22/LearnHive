@@ -154,4 +154,8 @@ export const deleteLearningPlan = async (learningPlanId) => {
   return axiosInstance.delete(`/api/learning-plans/${learningPlanId}`);
 };
 
+// AI Goal Generation
+export const generateLearningPlanFromAI = async (goal) => {
+  return axiosInstance.post('/api/ai/generate-plan', { goal });
+};
 

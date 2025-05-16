@@ -23,6 +23,7 @@ import UpdateLearningPlanForm from './components/pages/LearningPlans/UpdateLearn
 import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LearningPlanDetails from './components/pages/LearningPlans/LearningPlanDetails';
+import AIGoalGenerator from './components/common/AIGoalGenerator';
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
             <Route path="/learning-plans" element={<LearningPlanList />} />
             <Route path="/learning-plans/:id/edit" element={<UpdateLearningPlanForm />} />
             <Route path="/learning-plans/:id" element={<LearningPlanDetails />} />
+            <Route path='/learning-plans/generate-plan' element={<AIGoalGenerator />} />
           </Route>
           {/* Admin routes */}
           <Route path="/admin/dashboard" element={
