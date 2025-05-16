@@ -91,6 +91,12 @@ const LearningPlanList = () => {
                             <div className="progress" style={{ width: `${plan.progressPercentage || 0}%` }}></div>
                         </div>
 
+                        {new Date(plan.targetCompletionDate) - new Date() < 3 * 24 * 60 * 60 * 1000 &&
+                            new Date(plan.targetCompletionDate) > new Date() && (
+                                <div className="deadline-warning">⚠️ Completion date is near!</div>
+                            )}
+
+
                     </div>
                 ))}
             </div>
