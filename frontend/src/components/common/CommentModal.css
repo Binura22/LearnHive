@@ -351,3 +351,99 @@ single-post-comment-text {
     border-color: var(--border-color) !important;
     color: var(--text-color-primary) !important;
 }
+
+.delete-confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.delete-confirmation-modal {
+    background-color: var(--background-color-light);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.delete-confirmation-modal h4 {
+    margin-top: 0;
+    color: var(--text-color-primary);
+}
+
+.delete-confirmation-modal p {
+    color: var(--text-color-secondary);
+    margin-bottom: 20px;
+}
+
+.delete-confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.cancel-delete-btn {
+    background-color: #2e482d;
+    color: #e2e8f0;
+    border-color: #4a5568;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cancel-delete-btn:hover {
+    background-color: #3a5a39;
+    color: rgb(24, 23, 23);
+    border-color: #4a5568;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.confirm-delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.confirm-delete-btn:hover {
+    background-color: #000000;
+    color: #121213;
+    border-color: #4a5568;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-delete-btn:disabled {
+    background-color: #e74c3c80;
+    cursor: not-allowed;
+}
+
+.dark-theme .delete-confirmation-modal {
+    background-color: var(--background-color-dark);
+    border: 1px solid var(--border-color);
+}
+
+.dark-theme .cancel-delete-btn {
+    background-color: #2e482d;
+    color: #e2e8f0;
+    border-color: #4a5568;
+}
+
+.dark-theme .confirm-delete-btn:hover {
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
