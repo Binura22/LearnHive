@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PostItem from './PostItem';
 
-const PostList = ({ posts: propPosts, filterByUserId = null }) => {
+const PostList = ({ posts: propPosts, filterByUserId = null, sortBy = null }) => {
   const [posts, setPosts] = useState([]);
   const [userEmail, setUserEmail] = useState('');
   const [loading, setLoading] = useState(true);
@@ -68,13 +68,23 @@ const PostList = ({ posts: propPosts, filterByUserId = null }) => {
   useEffect(() => {
     if (!authChecked) return;
 
+    const applyFiltersAndSorting = (postList) => {
+      let filtered = [...postList];
+
+      if (filterByUserId) {
+        filtered = filtered.filter(post => post.userId === filterByUserId);
+      }
+
+      if (sortBy === 'latest') {
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }
+
+      return filtered;
+    };
 
     if (propPosts) {
-      let filteredPosts = [...propPosts];
-      if (filterByUserId) {
-        filteredPosts = filteredPosts.filter(post => post.userId === filterByUserId);
-      }
-      setPosts(filteredPosts);
+      const processedPosts = applyFiltersAndSorting(propPosts);
+      setPosts(processedPosts);
       setLoading(false);
       return;
     }
@@ -86,13 +96,9 @@ const PostList = ({ posts: propPosts, filterByUserId = null }) => {
         if (response.data.length > 0) {
           console.log("First post:", response.data[0]);
         }
-        let fetchedPosts = response.data;
+        const processedPosts = applyFiltersAndSorting(response.data);
 
-        if (filterByUserId) {
-          fetchedPosts = fetchedPosts.filter(post => post.userId === filterByUserId);
-        }
-
-        setPosts(fetchedPosts);
+        setPosts(processedPosts);
         setPostsError(null);
       })
       .catch(error => {
@@ -109,7 +115,7 @@ const PostList = ({ posts: propPosts, filterByUserId = null }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [authChecked, propPosts, filterByUserId]);
+  }, [authChecked, propPosts, filterByUserId, sortBy]);
 
   if (loading) {
     return <div>Loading posts...</div>;
@@ -129,7 +135,7 @@ const PostList = ({ posts: propPosts, filterByUserId = null }) => {
             key={post.id}
             post={post}
             userEmail={userEmail}
-            onPostDelete={handlePostDelete}  
+            onPostDelete={handlePostDelete}
           />
         ))
       )}
