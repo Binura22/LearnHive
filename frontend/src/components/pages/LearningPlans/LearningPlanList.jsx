@@ -25,6 +25,8 @@ const LearningPlanList = () => {
         reordered.splice(result.destination.index, 0, moved);
         setLearningPlans(reordered);
     };
+    const [searchTerm, setSearchTerm] = useState('');
+
 
 
     useEffect(() => {
@@ -41,6 +43,12 @@ const LearningPlanList = () => {
 
         fetchLearningPlans();
     }, [userId]);
+
+    const filteredPlans = learningPlans.filter(plan =>
+        plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        plan.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
 
     const handleCreatePlan = () => {
         navigate('/create-learning-plan');
@@ -91,19 +99,32 @@ const LearningPlanList = () => {
                 <button className="create-button" onClick={handleCreatePlan}>+ Create New Plan</button>
             </div>
 
+            <input
+                type="text"
+                className="search-input"
+                placeholder="Search plans..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
 
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="learningPlans">
                     {(provided) => (
                         <div className="plan-cards" {...provided.droppableProps} ref={provided.innerRef}>
-                            {learningPlans.map((plan, index) => (
+                            {filteredPlans.map((plan, index) => (
                                 <Draggable key={plan.id} draggableId={plan.id.toString()} index={index}>
-                                    {(provided) => (
+                                    {(provided, snapshot) => (
                                         <div
-                                            className="plan-card"
+                                            className={`plan-card ${snapshot.isDragging ? 'dragging' : ''}`}
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
+                                            style={{
+                                                ...provided.draggableProps.style,
+                                                transition: snapshot.isDragging ? 'transform 0.2s ease' : 'transform 0.3s ease',
+                                                boxShadow: snapshot.isDragging ? '0 4px 12px rgba(0,0,0,0.2)' : 'none',
+                                            }}
                                         >
                                             <h3>{plan.title}</h3>
                                             <p>{plan.description}</p>
