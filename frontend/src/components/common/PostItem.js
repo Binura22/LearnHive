@@ -26,7 +26,6 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [authorProfileImage, setAuthorProfileImage] = useState(null);
 
-  // Carousel settings
   const carouselSettings = {
     dots: true,
     infinite: false,
@@ -35,38 +34,14 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     slidesToScroll: 1,
     arrows: true,
     adaptiveHeight: true,
+    customPaging: () => <div className="tiny-dot" />,
     appendDots: dots => (
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '10px',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <ul style={{
-          margin: '0',
-          padding: '0',
-          display: 'flex',
-          gap: '8px'
-        }}>{dots}</ul>
+      <div className="dots-wrapper">
+        <ul>{dots}</ul>
       </div>
-    ),
-    customPaging: i => (
-      <div
-        style={{
-          width: '8px',
-          height: '8px',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(255,255,255,0.5)',
-          transition: 'all 0.3s ease'
-        }}
-      />
-    ),
-    dotsClass: "slick-dots slick-thumb"
+    )
   };
+
 
   const currentUserName =
     localStorage.getItem("userName") || userEmail?.split("@")[0] || "User";
@@ -74,6 +49,16 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
   // check current user == post owner
   const isPostOwner = post.userId === loggedUserId;
+
+  useEffect(() => {
+    if (post.mediaUrls?.length > 1) {
+      const dots = document.querySelectorAll('.custom-dot');
+      if (dots.length > 0) {
+        dots[0].style.opacity = '1';
+        dots[0].style.transform = 'scale(1.2)';
+      }
+    }
+  }, [post.mediaUrls]);
 
   useEffect(() => {
     const handleClickOutside = () => setShowMenu(false);
@@ -290,9 +275,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
                     className="post-media-item"
                   />
                 )}
-                <div className="image-counter">
-                  {index + 1}/{post.mediaUrls.length}
-                </div>
+                
               </div>
             ))}
           </Slider>
