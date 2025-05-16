@@ -515,3 +515,75 @@ video.post-media-item {
   color: white;
   text-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
+
+.custom-dots-container {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+}
+
+.custom-dots-container ul {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 6px;
+}
+
+.custom-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-dot:hover {
+  opacity: 0.8;
+}
+
+.custom-dot.slick-active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.custom-dot.active {
+  background-color: white;
+  width: 12px;
+  height: 12px;
+}
+
+.dots-wrapper {
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+}
+
+.dots-wrapper ul {
+  display: flex;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.tiny-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.tiny-dot.slick-active {
+  background-color: white;
+  transform: scale(1.3);
+}
