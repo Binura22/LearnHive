@@ -84,9 +84,13 @@ const LearningPlanList = () => {
                         <p><strong>Progress:</strong> {plan.progressPercentage}%</p>
                         <div className="card-actions">
                             <button className="view-button" onClick={() => handleViewPlan(plan.id)}>View</button>
-                            <button className="edit-button" onClick={() => handleEditPlan(plan.id)}><FaEdit/></button>
-                            <button className="delete-button" onClick={() => handleDeletePlan(plan.id)}><FaTrash/></button>
+                            <button className="edit-button" onClick={() => handleEditPlan(plan.id)}><FaEdit /></button>
+                            <button className="delete-button" onClick={() => handleDeletePlan(plan.id)}><FaTrash /></button>
                         </div>
+                        <div className="progress-bar">
+                            <div className="progress" style={{ width: `${plan.progressPercentage || 0}%` }}></div>
+                        </div>
+
                     </div>
                 ))}
             </div>
