@@ -36,23 +36,33 @@ public class OpenAIService {
 
         System.out.println("Available titles" + availableTitles);
 
+        String today = java.time.LocalDate.now().toString();
+
         String userMessage = String.format(
                 """
                         You are an educational planning assistant.
+
+                        Today's date is %s.
 
                         Based on the goal: "%s", generate a structured learning plan.
 
                         Only use course titles from this list: [%s].
 
+                       ⚠️ Important:
+                        - Only include courses that are highly relevant to the goal.
+                        - Do NOT include unrelated or general-purpose courses just to fill space.
+                        - It's okay to include 1 to 3 course titles, but they must be directly applicable to the goal.
+                        - If none match, return an empty courseTitles array.
+
                         Respond **strictly** in valid JSON format with the following fields:
                         - title: A short title for the learning plan.
                         - description: A brief summary of the plan.
-                        - targetCompletionDate: A future date in YYYY-MM-DD format.
-                        - courseTitles: An array of exactly 2 course titles from the provided list.
+                        - targetCompletionDate: A future date in YYYY-MM-DD format (must be after today).
+                        - courseTitles: An array of 0 to 3 course titles from the provided list, only if truly relevant.
 
                         Do not include any text outside the JSON.
                         """,
-                goal, availableTitlesStr);
+                today, goal, availableTitlesStr);
 
         // Set up headers
         HttpHeaders headers = new HttpHeaders();
