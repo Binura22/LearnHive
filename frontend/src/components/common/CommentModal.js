@@ -3,7 +3,15 @@ import axios from "axios";
 import './CommentModal.css';
 import { getUserById } from "../../services/api";
 
-const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerName }) => {
+const CommentModal = ({ 
+  postId, 
+  onClose, 
+  userEmail, 
+  postOwnerEmail, 
+  postOwnerName,
+  onCommentAdded,
+  onCommentDeleted
+}) => {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
   const [error, setError] = useState(null);
@@ -164,16 +172,32 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       setError("Comment cannot be empty");
       return;
     }
+    
+
+    setError(null);
+    
     try {
-      await axios.post(
+      let commentAddedSuccessfully = false;
+      
+      const response = await axios.post(
         `http://localhost:8080/api/posts/${postId}/comment`,
         { text: commentText },
         { withCredentials: true }
       );
-      fetchComments();
-      setCommentText("");
-      setError(null);
-    } catch {
+      
+      commentAddedSuccessfully = true;
+      console.log("Comment added successfully:", response.data);
+      
+      if (commentAddedSuccessfully) {
+        fetchComments();
+        setCommentText("");
+        
+        if (typeof onCommentAdded === 'function') {
+          onCommentAdded();
+        }
+      }
+    } catch (err) {
+      console.error("Error posting comment:", err);
       setError("Failed to post comment. Please try again.");
     }
   };
@@ -249,6 +273,10 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       );
       fetchComments();
       setError(null);
+      
+      if (typeof onCommentDeleted === 'function') {
+        onCommentDeleted();
+      }
     } catch (err) {
       console.error("Error deleting comment:", err);
       if (err.response && err.response.status === 403) {
