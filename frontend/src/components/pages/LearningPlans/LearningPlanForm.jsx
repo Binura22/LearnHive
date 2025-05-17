@@ -13,8 +13,6 @@ const LearningPlanForm = () => {
   const [courses, setCourses] = useState([]);
   const userId = localStorage.getItem('userId')
   const navigate = useNavigate()
-  const todayDateString = new Date().toISOString().split('T')[0];
-
 
   useEffect(() => {
     // Fetch all published courses to show in dropdown
@@ -94,8 +92,7 @@ const LearningPlanForm = () => {
           <label>Target Completion Date</label>
           <input 
             type="date" 
-            min={todayDateString}
-            value={targetCompletionDate}
+            value={targetCompletionDate} 
             onChange={(e) => setTargetCompletionDate(e.target.value)} 
             required 
           />

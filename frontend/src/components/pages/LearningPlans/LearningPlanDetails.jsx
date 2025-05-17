@@ -77,7 +77,7 @@ const LearningPlanDetails = () => {
                                         onClick={() => navigate(course.link)}
                                         aria-label={`View details for ${course.title}`}
                                     >
-                                        Start
+                                        View
                                     </button>
                                 </div>
                                 {/* <p className="modules">
