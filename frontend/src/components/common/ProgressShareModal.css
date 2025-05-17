@@ -69,14 +69,150 @@
   opacity: 0.9;
 }
 
+.file-upload-section {
+  margin: 15px 0;
+}
+
+.file-upload-section label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.media-preview {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.remove-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-button:hover {
+  background: #cc0000;
+}
+
 .error-message {
-  color: #dc3545;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  color: #ff4444;
+  margin: 10px 0;
 }
 
 .success-message {
-  color: #28a745;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-} 
+  color: #00C851;
+  margin: 10px 0;
+}
+
+.progress-type-selector {
+  margin-bottom: 15px;
+}
+
+.progress-type-selector label {
+  margin-right: 10px;
+}
+
+.progress-type-selector select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+.progress-type-selector option {
+  padding: 5px;
+}
+
+.file-upload-container {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 15px 0;
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+}
+
+.file-upload-container.dragging {
+  border-color: #4285f4;
+  background-color: #f0f7ff;
+}
+
+.file-upload-container.has-preview {
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.upload-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: #4285f4;
+  margin-bottom: 10px;
+}
+
+.upload-hint {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.remove-image-btn svg {
+  width: 24px;
+  height: 24px;
+  color: #ff4444;
+  background-color: white;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.remove-image-btn:hover svg {
+  color: #cc0000;
+  transform: scale(1.1);
+}
