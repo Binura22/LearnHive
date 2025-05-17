@@ -1,14 +1,15 @@
 import React from 'react';
 import CreatePostForm from './CreatePostForm';
+import './CreatePostForm.css';
 
 const CreatePostPage = () => {
   return (
-    <>
-      <div style={{ padding: '2rem' }}>
-        <h2>New Post</h2>
-        <CreatePostForm />
-      </div>
-    </>
+    <div className="post-page-container">
+      <header className="post-page-header">
+        <h2>Create New Post</h2>
+      </header>
+      <CreatePostForm />
+    </div>
   );
 };
 

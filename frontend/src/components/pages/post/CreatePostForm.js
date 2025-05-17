@@ -8,7 +8,7 @@ const CreatePostForm = () => {
   const [previewUrls, setPreviewUrls] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const fileInputRef = useRef(null); // Add this ref
+  const fileInputRef = useRef(null); 
 
   const handleFileChange = (e) => {
     setErrorMsg("");
@@ -23,14 +23,13 @@ const CreatePostForm = () => {
     const newImageFiles = selectedFiles.filter(file => file.type.startsWith("image/"));
     const newVideoFiles = selectedFiles.filter(file => file.type.startsWith("video/"));
 
-    // Mixed media check
+
     if ((newVideoFiles.length > 0 && (files.length > 0 || newImageFiles.length > 0)) ||
         (newImageFiles.length > 0 && isVideoAlready)) {
       setErrorMsg("You can only upload either 1 video or up to 3 images.");
       return;
     }
 
-    // Handle video
     if (newVideoFiles.length === 1) {
       const video = document.createElement("video");
       video.preload = "metadata";
@@ -53,7 +52,6 @@ const CreatePostForm = () => {
       return;
     }
 
-    // Handle images
     if (newImageFiles.length > 0) {
       const totalImages = files.length + newImageFiles.length;
 
@@ -87,12 +85,12 @@ const CreatePostForm = () => {
     setFiles(updatedFiles);
     setPreviewUrls(updatedPreviews);
 
-    // Reset the file input to allow selecting the same file again
+
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
 
-    // Reset error if now valid
+
     if (updatedFiles.every(f => f.type.startsWith("image/")) && updatedFiles.length <= 3) {
       setErrorMsg("");
     }
@@ -127,7 +125,6 @@ const CreatePostForm = () => {
       setPreviewUrls([]);
       setErrorMsg("");
       setSuccessMsg("✅ Post uploaded successfully!");
-      // Reset file input after successful submission
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -142,18 +139,26 @@ const CreatePostForm = () => {
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        placeholder="What's on your mind?"
-        rows={4}
+        placeholder="Share your knowledge or ask a question..."
         required
       />
 
-      <input
-        type="file"
-        ref={fileInputRef} // Add ref to the file input
-        accept="image/*,video/*"
-        multiple
-        onChange={handleFileChange}
-      />
+      <div className="file-input-container">
+        <label htmlFor="media-upload" className="file-input-label">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z"/>
+          </svg>
+          Select images or video to upload
+        </label>
+        <input
+          id="media-upload"
+          type="file"
+          ref={fileInputRef}
+          accept="image/*,video/*"
+          multiple
+          onChange={handleFileChange}
+        />
+      </div>
 
       <div className="media-preview">
         {previewUrls.map((url, index) => {
@@ -161,28 +166,32 @@ const CreatePostForm = () => {
           return (
             <div className="media-container" key={index}>
               {isVideo ? (
-                <video src={url} controls width="200" />
+                <video src={url} controls width="150" height="100" />
               ) : (
-                <img src={url} alt={`Preview ${index}`} width="150" />
+                <img src={url} alt={`Preview ${index}`} width="120" height="100" />
               )}
               <button
                 type="button"
                 className="remove-button"
                 onClick={() => handleRemoveMedia(index)}
+                title="Remove"
               >
-                &times;
+                ×
               </button>
             </div>
           );
         })}
       </div>
 
-      {errorMsg && <div className="error-message">{errorMsg}</div>}
-      {successMsg && <div className="success-message">{successMsg}</div>}
-
-      <button type="submit" disabled={files.length === 0 || !description}>
-        Post
-      </button>
+      <div className="form-actions">
+        <div className="message-container">
+          {errorMsg && <div className="error-message">⚠️ {errorMsg}</div>}
+          {successMsg && <div className="success-message">✅ {successMsg}</div>}
+        </div>
+        <button type="submit" disabled={files.length === 0 || !description}>
+          Publish Post
+        </button>
+      </div>
     </form>
   );
 };

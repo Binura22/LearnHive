@@ -5,21 +5,15 @@ import "./NotificationsPage.css";
 import SinglePostPage from "./SinglePostPage"; 
 import { ThemeContext } from '../../../contexts/ThemeContext';
 import { getModalContentStyle } from '../../../components/common/ModalStyles';
-<<<<<<< HEAD
-=======
 import { Bell, Check, Trash2, AlertCircle, MessageCircle, Heart, UserPlus, Star } from 'lucide-react';
->>>>>>> f48a54fea78213080cf35e0c80bb8c3fb1e76005
 
 function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [modalPostId, setModalPostId] = useState(null); 
   const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
-<<<<<<< HEAD
-=======
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState(null);
->>>>>>> f48a54fea78213080cf35e0c80bb8c3fb1e76005
 
   const fetchNotifications = async () => {
     try {
@@ -45,8 +39,6 @@ function NotificationsPage() {
     }
   };
 
-<<<<<<< HEAD
-=======
   const handleDeleteClick = (e, notificationId) => {
     e.stopPropagation();
     setNotificationToDelete(notificationId);
@@ -66,7 +58,6 @@ function NotificationsPage() {
     setNotificationToDelete(null);
   };
 
->>>>>>> f48a54fea78213080cf35e0c80bb8c3fb1e76005
   const markAsRead = async (id) => {
     try {
       await axios.post(
@@ -78,8 +69,6 @@ function NotificationsPage() {
     }
   };
 
-<<<<<<< HEAD
-=======
   const getNotificationIcon = (message) => {
     if (message.includes("liked")) return <Heart size={20} className="notification-icon like-icon" />;
     if (message.includes("commented")) return <MessageCircle size={20} className="notification-icon comment-icon" />;
@@ -111,52 +100,12 @@ function NotificationsPage() {
     }
   };
 
->>>>>>> f48a54fea78213080cf35e0c80bb8c3fb1e76005
   useEffect(() => {
     fetchNotifications();
   }, []);
 
   return (
     <div className="notifications-container">
-<<<<<<< HEAD
-      <h2 className="notifications-title">Notifications</h2>
-      {notifications.length === 0 ? (
-        <div className="no-notifications">No notifications yet.</div>
-      ) : (
-        notifications.map((n) => (
-          <div
-            key={n.id}
-            className={`notification-card${n.read ? " read" : ""}`}
-            onClick={() => setModalPostId(n.postId)} 
-            style={{ cursor: "pointer" }}
-          >
-            <div className="notification-message">
-              {n.message}
-            </div>
-            <div className="notification-meta">
-              <span className="notification-time">
-                {new Date(n.timestamp).toLocaleString()}
-              </span>
-              <div className="notification-actions">
-                {!n.read && (
-                  <button
-                    className="notification-btn mark-read"
-                    onClick={e => { e.stopPropagation(); markAsRead(n.id); }}
-                  >
-                    Mark as Read
-                  </button>
-                )}
-                <button
-                  className="notification-btn delete"
-                  onClick={e => { e.stopPropagation(); deleteNotification(n.id); }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))
-=======
       <div className="notifications-header">
         <h2 className="notifications-title">
           <Bell size={24} className="notifications-title-icon" />
@@ -294,7 +243,6 @@ function NotificationsPage() {
             </div>
           </div>
         </div>
->>>>>>> f48a54fea78213080cf35e0c80bb8c3fb1e76005
       )}
 
       {modalPostId && (
