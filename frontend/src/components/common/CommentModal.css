@@ -80,7 +80,15 @@
     cursor: pointer;
     transition: transform 0.2s ease;
     color: white;
-    background: var(--avatar-color, #436aa5); 
+    background: var(--avatar-color, #436aa5);
+    overflow: hidden; /* Add this to ensure the image stays within the circle */
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .user-avatar:hover {
