@@ -17,6 +17,7 @@
 }
 
 .plan-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   background-color: #ffffff;
   padding: 20px;
   border-radius: 12px;
@@ -126,9 +127,12 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -158,10 +162,14 @@
     transform: translateY(0);
   }
 }
+
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.03);
   }
@@ -181,5 +189,18 @@
   animation: fadeSlideIn 0.6s ease-out forwards, pulse 1.5s ease-in-out infinite;
 }
 
+.search-input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+}
 
-
+.plan-card.dragging {
+  transform: scale(1.03);
+  background-color: #f8f9fa;
+  z-index: 10;
+}
