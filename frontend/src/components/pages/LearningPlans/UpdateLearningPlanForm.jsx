@@ -15,9 +15,11 @@ const UpdateLearningPlanForm = () => {
     selectedCourses: []
   });
 
-  const [allCourses, setAllCourses] = useState([]); // 🔥 all available courses
+  const [allCourses, setAllCourses] = useState([]);
   const [newCourseId, setNewCourseId] = useState('');
   const [loading, setLoading] = useState(true);
+  const todayDateString = new Date().toISOString().split('T')[0];
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -122,13 +124,13 @@ const UpdateLearningPlanForm = () => {
         />
         <input
           type="date"
+          min={todayDateString}
           name="targetCompletionDate"
           value={formData.targetCompletionDate}
           onChange={handleChange}
           required
         />
 
-        {/* Courses Section */}
         <div className="courses-section">
           <h3>Courses</h3>
           <ul className="course-list">

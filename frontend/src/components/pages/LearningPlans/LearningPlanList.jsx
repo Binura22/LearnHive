@@ -5,12 +5,29 @@ import { FaTrash, FaEdit } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './LearningPlanList.css';
+import {
+    DragDropContext,
+    Droppable,
+    Draggable,
+} from '@hello-pangea/dnd';
+
 
 const LearningPlanList = () => {
     const [learningPlans, setLearningPlans] = useState([]);
     const [loading, setLoading] = useState(true);
     const userId = localStorage.getItem('userId');
     const navigate = useNavigate();
+    const handleDragEnd = (result) => {
+        if (!result.destination) return;
+
+        const reordered = Array.from(learningPlans);
+        const [moved] = reordered.splice(result.source.index, 1);
+        reordered.splice(result.destination.index, 0, moved);
+        setLearningPlans(reordered);
+    };
+    const [searchTerm, setSearchTerm] = useState('');
+
+
 
     useEffect(() => {
         const fetchLearningPlans = async () => {
@@ -26,6 +43,12 @@ const LearningPlanList = () => {
 
         fetchLearningPlans();
     }, [userId]);
+
+    const filteredPlans = learningPlans.filter(plan =>
+        plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        plan.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
 
     const handleCreatePlan = () => {
         navigate('/create-learning-plan');
@@ -75,23 +98,62 @@ const LearningPlanList = () => {
                 <h2>Your Learning Plans</h2>
                 <button className="create-button" onClick={handleCreatePlan}>+ Create New Plan</button>
             </div>
-            <div className="plan-cards">
-                {learningPlans.map(plan => (
-                    <div key={plan.id} className="plan-card">
-                        <h3>{plan.title}</h3>
-                        <p>{plan.description}</p>
-                        <p><strong>Target Completion:</strong> {plan.targetCompletionDate ? plan.targetCompletionDate.split('T')[0] : 'N/A'}</p>
-                        <p><strong>Progress:</strong> {plan.progressPercentage}%</p>
-                        <div className="card-actions">
-                            <button className="view-button" onClick={() => handleViewPlan(plan.id)}>View</button>
-                            <button className="edit-button" onClick={() => handleEditPlan(plan.id)}><FaEdit/></button>
-                            <button className="delete-button" onClick={() => handleDeletePlan(plan.id)}><FaTrash/></button>
+
+            <input
+                type="text"
+                className="search-input"
+                placeholder="Search plans..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+
+            <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="learningPlans">
+                    {(provided) => (
+                        <div className="plan-cards" {...provided.droppableProps} ref={provided.innerRef}>
+                            {filteredPlans.map((plan, index) => (
+                                <Draggable key={plan.id} draggableId={plan.id.toString()} index={index}>
+                                    {(provided, snapshot) => (
+                                        <div
+                                            className={`plan-card ${snapshot.isDragging ? 'dragging' : ''}`}
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            style={{
+                                                ...provided.draggableProps.style,
+                                                transition: snapshot.isDragging ? 'transform 0.2s ease' : 'transform 0.3s ease',
+                                                boxShadow: snapshot.isDragging ? '0 4px 12px rgba(0,0,0,0.2)' : 'none',
+                                            }}
+                                        >
+                                            <h3>{plan.title}</h3>
+                                            <p>{plan.description}</p>
+                                            <p><strong>Target Completion:</strong> {plan.targetCompletionDate ? plan.targetCompletionDate.split('T')[0] : 'N/A'}</p>
+                                            <p><strong>Progress:</strong> {plan.progressPercentage}%</p>
+                                            <div className="card-actions">
+                                                <button className="view-button" onClick={() => handleViewPlan(plan.id)}>View</button>
+                                                <button className="edit-button" onClick={() => handleEditPlan(plan.id)}><FaEdit /></button>
+                                                <button className="delete-button" onClick={() => handleDeletePlan(plan.id)}><FaTrash /></button>
+                                            </div>
+                                            <div className="progress-bar">
+                                                <div className="progress" style={{ width: `${plan.progressPercentage || 0}%` }}></div>
+                                            </div>
+                                            {new Date(plan.targetCompletionDate) - new Date() < 3 * 24 * 60 * 60 * 1000 &&
+                                                new Date(plan.targetCompletionDate) > new Date() && (
+                                                    <div className="deadline-warning">⚠️ Completion date is near!</div>
+                                                )}
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
                         </div>
-                    </div>
-                ))}
-            </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
         </div>
     );
+
 };
 
 export default LearningPlanList;
