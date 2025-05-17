@@ -28,15 +28,14 @@ public class OpenAIService {
         // Create message body
         Map<String, Object> message = Map.of(
                 "role", "user",
-                "content", "Create a step-by-step learning plan for: " + goal
-        );
+                "content", "Generate a structured learning plan for this goal: \"" + goal +
+                        "\". Respond in JSON format with fields: title, description, targetCompletionDate (YYYY-MM-DD), and courseTitles (array of 3 course titles).");
 
         // Create request body
         Map<String, Object> request = Map.of(
                 "model", "gpt-3.5-turbo",
                 "messages", List.of(message),
-                "temperature", 0.7
-        );
+                "temperature", 0.7);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
 
