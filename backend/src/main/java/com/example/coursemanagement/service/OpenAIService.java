@@ -1,9 +1,13 @@
 package com.example.coursemanagement.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.coursemanagement.model.Course;
+import com.example.coursemanagement.repository.CourseRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -13,12 +17,42 @@ public class OpenAIService {
 
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
+    @Autowired
+    private CourseRepository courseRepository;
+
     @Value("${openai.api.key}")
     private String openaiApiKey;
 
     @SuppressWarnings("unchecked")
     public String generateLearningPlan(String goal) {
         RestTemplate restTemplate = new RestTemplate();
+
+        List<String> availableTitles = courseRepository.findAll()
+                .stream()
+                .map(Course::getTitle)
+                .toList();
+
+        String availableTitlesStr = String.join(", ", availableTitles);
+
+        System.out.println("Available titles" + availableTitles);
+
+        String userMessage = String.format(
+                """
+                        You are an educational planning assistant.
+
+                        Based on the goal: "%s", generate a structured learning plan.
+
+                        Only use course titles from this list: [%s].
+
+                        Respond **strictly** in valid JSON format with the following fields:
+                        - title: A short title for the learning plan.
+                        - description: A brief summary of the plan.
+                        - targetCompletionDate: A future date in YYYY-MM-DD format.
+                        - courseTitles: An array of exactly 2 course titles from the provided list.
+
+                        Do not include any text outside the JSON.
+                        """,
+                goal, availableTitlesStr);
 
         // Set up headers
         HttpHeaders headers = new HttpHeaders();
@@ -28,8 +62,7 @@ public class OpenAIService {
         // Create message body
         Map<String, Object> message = Map.of(
                 "role", "user",
-                "content", "Generate a structured learning plan for this goal: \"" + goal +
-                        "\". Respond in JSON format with fields: title, description, targetCompletionDate (YYYY-MM-DD), and courseTitles (array of 3 course titles).");
+                "content", userMessage);
 
         // Create request body
         Map<String, Object> request = Map.of(

@@ -50,10 +50,12 @@ const LearningPlanForm = () => {
       setDescription(description || '');
       setTargetCompletionDate(targetCompletionDate || '');
 
-      // Match courseTitles with actual course IDs
+      const normalize = str => str?.toLowerCase().trim();
+
       const matchingIds = courses
-        .filter(c => courseTitles?.includes(c.title))
+        .filter(c => courseTitles?.some(t => normalize(t) === normalize(c.title)))
         .map(c => c.id);
+
       setSelectedCourses(matchingIds || []);
 
       toast.success('AI-generated plan applied!');
