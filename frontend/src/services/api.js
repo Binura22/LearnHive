@@ -160,9 +160,6 @@ export const getAdminLearningPlans = async () => {
   return axiosInstance.get('/api/admin/learning-plans');
 };
 
-export const getAdminLearningPlans = async () => {
-  return axiosInstance.get('/api/admin/learning-plans');
-};
 
 // AI Goal Generation
 export const generateLearningPlanFromAI = async (goal) => {
