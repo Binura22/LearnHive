@@ -3,7 +3,7 @@ import axios from "axios";
 import "./MainPage.css";
 import { useNavigate, Link } from "react-router-dom";
 import PostList from "../common/PostList";
-import { Book, Share2, Sparkles, User, BookOpen, Layout, Award, Star, Compass } from "lucide-react"; 
+import { Book, Share2, User, BookOpen, Layout, Award, Star, Compass } from "lucide-react"; 
 
 const MainPage = () => {
   const navigate = useNavigate();

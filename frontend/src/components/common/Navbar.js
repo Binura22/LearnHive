@@ -14,8 +14,9 @@ const Navbar = () => {
   const userMenuRef = useRef(null);
   const themeItemRef = useRef(null);
   const [userName, setUserName] = useState('User');
+  const [userProfileImage, setUserProfileImage] = useState(null);
 
-  // get the logged-in user ID from localStorage
+
   const userId = localStorage.getItem('userId');
   
   useEffect(() => {
@@ -52,7 +53,7 @@ const Navbar = () => {
     };
 
     fetchUnread();
-    const interval = setInterval(fetchUnread, 10000); 
+    const interval = setInterval(fetchUnread, 4000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -64,9 +65,16 @@ const Navbar = () => {
           setUserName(response.data.name);
           localStorage.setItem('userName', response.data.name);
         }
+        
+        if (response.data.profileImage) {
+          setUserProfileImage(response.data.profileImage);
+          localStorage.setItem('userProfileImage', response.data.profileImage);
+        }
       } catch (err) {
         const storedName = localStorage.getItem('userName');
         if (storedName) setUserName(storedName);
+        const storedImage = localStorage.getItem('userProfileImage');
+        if (storedImage) setUserProfileImage(storedImage);
       }
     };
     
@@ -111,19 +119,67 @@ const Navbar = () => {
           <Link to="/courses" className="nav-link">Courses</Link>
           <Link to="/learning-plans" className="nav-link">My Learning Plans</Link>
           
-          <div className="notification-bell">
-            <Link to="/notifications" className="nav-link">
-              <Bell size={24} />
-              {unreadCount > 0 && (
-                <span className="notification-count">{unreadCount}</span>
-              )}
+          <div className="notification-bell" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '18px', position: 'relative', height: 'auto', minHeight: '0', justifyContent: 'center' }}>
+            <Link to="/notifications" className="nav-link" style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', padding: 0 }}>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '24px' }}>
+                <Bell size={22} style={{ color: unreadCount > 0 ? '#ef4444' : '#6b7280', margin: 0, padding: 0 }} />
+                {unreadCount > 0 && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '-7px',
+                      right: '-7px',
+                      background: '#ef4444',
+                      color: 'white',
+                      borderRadius: '50%',
+                      minWidth: '18px',
+                      height: '18px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      fontSize: '11px',
+                      fontWeight: 'bold',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.18)',
+                      border: '2px solid #fff',
+                      padding: '0 4px',
+                      zIndex: 2
+                    }}
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </div>
+              <span style={{
+                fontSize: '11px',
+                color: '#6b7280',
+                marginTop: '0px',
+                fontWeight: 500,
+                letterSpacing: '0.01em',
+                lineHeight: 1.1,
+                padding: 0
+              }}>
+                Notification
+              </span>
             </Link>
           </div>
           
           <div className="user-menu-container" ref={userMenuRef}>
             <button onClick={toggleUserMenu} className="avatar-button">
               <div className="navbar-avatar">
-                <User size={18} strokeWidth={2} />
+                {userProfileImage ? (
+                  <img 
+                    src={userProfileImage} 
+                    alt="Profile" 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '50%'
+                    }}
+                  />
+                ) : (
+                  <User size={18} strokeWidth={2} />
+                )}
               </div>
               <span className="me-text">Me</span>
               <span className="dropdown-arrow">▼</span>

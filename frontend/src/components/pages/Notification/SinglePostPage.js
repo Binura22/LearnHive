@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./SinglePostPage.css";
+import { getUserById } from "../../../services/api";
 
 function SinglePostPage({ postId: propPostId }) {
   const params = useParams();
@@ -10,6 +11,27 @@ function SinglePostPage({ postId: propPostId }) {
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
   const [replyLoading, setReplyLoading] = useState(false);
+  const [userProfileImages, setUserProfileImages] = useState({});
+  const [currentUserProfileImage, setCurrentUserProfileImage] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/user/me', { withCredentials: true });
+        if (response.data.profileImage) {
+          setCurrentUserProfileImage(response.data.profileImage);
+        } else {
+          const storedImage = localStorage.getItem('userProfileImage');
+          if (storedImage) setCurrentUserProfileImage(storedImage);
+        }
+      } catch (err) {
+        const storedImage = localStorage.getItem('userProfileImage');
+        if (storedImage) setCurrentUserProfileImage(storedImage);
+      }
+    };
+    
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     if (!postId) return;
@@ -17,9 +39,59 @@ function SinglePostPage({ postId: propPostId }) {
       .get(`http://localhost:8080/api/posts/${postId}`)
       .then((res) => {
         setPost(res.data);
+        fetchUserProfileImages(res.data);
       })
       .catch((err) => console.error("Error fetching post:", err));
   }, [postId]);
+  
+  const fetchUserProfileImages = async (post) => {
+    const profiles = { ...userProfileImages };
+    
+
+    if (post.userId && !profiles[post.userId]) {
+      try {
+        const response = await getUserById(post.userId);
+        if (response.data && response.data.profileImage) {
+          profiles[post.userId] = response.data.profileImage;
+        }
+      } catch (error) {
+        console.error(`Failed to fetch profile for user ${post.userId}:`, error);
+      }
+    }
+    
+
+    if (post.comments && post.comments.length > 0) {
+      for (const comment of post.comments) {
+        if (comment.userId && !profiles[comment.userId]) {
+          try {
+            const response = await getUserById(comment.userId);
+            if (response.data && response.data.profileImage) {
+              profiles[comment.userId] = response.data.profileImage;
+            }
+          } catch (error) {
+            console.error(`Failed to fetch profile for user ${comment.userId}:`, error);
+          }
+        }
+        
+        if (comment.replies && comment.replies.length > 0) {
+          for (const reply of comment.replies) {
+            if (reply.userId && !profiles[reply.userId]) {
+              try {
+                const response = await getUserById(reply.userId);
+                if (response.data && response.data.profileImage) {
+                  profiles[reply.userId] = response.data.profileImage;
+                }
+              } catch (error) {
+                console.error(`Failed to fetch profile for user ${reply.userId}:`, error);
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    setUserProfileImages(profiles);
+  };
 
   const handleReply = async (commentId) => {
     if (!replyText.trim()) return;
@@ -44,9 +116,18 @@ function SinglePostPage({ postId: propPostId }) {
     <div className="single-post-replies">
       {replies.map((reply, idx) => (
         <div key={reply.id || idx} className="single-post-comment single-post-reply">
-          <div className="single-post-comment-avatar">
-            {reply.userName ? reply.userName.charAt(0).toUpperCase() : "U"}
-          </div>
+          {userProfileImages[reply.userId] ? (
+            <img 
+              src={userProfileImages[reply.userId]} 
+              alt={reply.userName}
+              className="single-post-comment-avatar" 
+              style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "50%" }}
+            />
+          ) : (
+            <div className="single-post-comment-avatar">
+              {reply.userName ? reply.userName.charAt(0).toUpperCase() : "U"}
+            </div>
+          )}
           <div>
             <div className="single-post-comment-user">{reply.userName || "Unknown User"}</div>
             <div className="single-post-comment-text">{reply.text}</div>
@@ -63,9 +144,18 @@ function SinglePostPage({ postId: propPostId }) {
   return (
     <div className="single-post-card">
       <div className="single-post-header">
-        <div className="single-post-avatar">
-          {post.userName ? post.userName.charAt(0).toUpperCase() : "U"}
-        </div>
+        {userProfileImages[post.userId] ? (
+          <img 
+            src={userProfileImages[post.userId]} 
+            alt={post.userName}
+            className="single-post-avatar" 
+            style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "50%" }}
+          />
+        ) : (
+          <div className="single-post-avatar">
+            {post.userName ? post.userName.charAt(0).toUpperCase() : "U"}
+          </div>
+        )}
         <div>
           <div className="single-post-author">{post.userName}</div>
           <div className="single-post-date">
@@ -105,9 +195,19 @@ function SinglePostPage({ postId: propPostId }) {
         {post.comments && post.comments.length > 0 ? (
           post.comments.map((comment, index) => (
             <div key={comment.id || index} className="single-post-comment">
-              <div className="single-post-comment-avatar">
-                {comment.userName ? comment.userName.charAt(0).toUpperCase() : "U"}
-              </div>
+              {userProfileImages[comment.userId] ? (
+                <img 
+                  src={userProfileImages[comment.userId]} 
+                  alt={comment.userName}
+                  className="single-post-comment-avatar" 
+                  style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "50%" }}
+                />
+              ) : (
+                <div className="single-post-comment-avatar">
+                  {comment.userName ? comment.userName.charAt(0).toUpperCase() : "U"}
+                </div>
+              )}
+              
               <div style={{ flex: 1 }}>
                 <div className="single-post-comment-user">{comment.userName || "Unknown User"}</div>
                 <div className="single-post-comment-text">{comment.text}</div>
@@ -119,18 +219,50 @@ function SinglePostPage({ postId: propPostId }) {
                 </span>
                 {replyingTo === comment.id && (
                   <div className="single-post-reply-form">
-                    <textarea
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Write a reply..."
-                      rows={2}
-                    />
-                    <button onClick={() => handleReply(comment.id)} disabled={replyLoading}>
-                      {replyLoading ? "Replying..." : "Reply"}
-                    </button>
-                    <button onClick={() => { setReplyingTo(null); setReplyText(""); }}>
-                      Cancel
-                    </button>
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                      {currentUserProfileImage ? (
+                        <img 
+                          src={currentUserProfileImage} 
+                          alt="You"
+                          style={{ 
+                            width: "32px", 
+                            height: "32px", 
+                            borderRadius: "50%", 
+                            objectFit: "cover" 
+                          }}
+                        />
+                      ) : (
+                        <div style={{ 
+                          width: "32px", 
+                          height: "32px", 
+                          borderRadius: "50%",
+                          backgroundColor: "#3b82f6", 
+                          color: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "14px",
+                          fontWeight: "bold"
+                        }}>
+                          Y
+                        </div>
+                      )}
+                      <textarea
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Write a reply..."
+                        style={{ flex: 1, marginTop: '8px', padding: '8px' }}
+                        rows={2}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '8px', justifyContent: 'flex-end' }}>
+                      <button onClick={() => handleReply(comment.id)} disabled={replyLoading}>
+                        {replyLoading ? "Replying..." : "Reply"}
+                      </button>
+                      <button onClick={() => { setReplyingTo(null); setReplyText(""); }}>
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 )}
                 {comment.replies && comment.replies.length > 0 && renderReplies(comment.replies)}
