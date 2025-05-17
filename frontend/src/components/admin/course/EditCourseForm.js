@@ -139,9 +139,7 @@ const EditCourseForm = () => {
 
       // Then handle course image 
       if (courseImage) {
-        const formData = new FormData();
-        formData.append('file', courseImage);
-        await uploadCourseImage(courseId, formData);
+        await uploadCourseImage(courseId, courseImage);
       }
 
       // Then update each module
@@ -163,12 +161,8 @@ const EditCourseForm = () => {
             pdfLink: module.pdfLink || ''
           };
           
-          console.log(`Updating module ${module.id} with data:`, moduleData);
-          
-          // Add module data as JSON
-          formData.append('module', new Blob([JSON.stringify(moduleData)], { 
-            type: 'application/json' 
-          }));
+          // Add module data as JSON string
+          formData.append('module', JSON.stringify(moduleData));
 
           // Add files if they exist
           if (files.videoFile) {
@@ -184,7 +178,7 @@ const EditCourseForm = () => {
 
           // Update the local state with the response data
           setModules(prev => prev.map((m, i) => 
-            i === index ? { ...response.data || response } : m
+            i === index ? { ...response.data } : m
           ));
         } catch (err) {
           console.error(`Error updating module ${module.id}:`, err);
