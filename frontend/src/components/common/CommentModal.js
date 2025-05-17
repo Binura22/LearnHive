@@ -18,6 +18,9 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
   const [editText, setEditText] = useState("");
   const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
+  const [isReply, setIsReply] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -130,14 +133,22 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
   };
 
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm("Are you sure you want to delete this comment?")) {
-      return;
-    }
-    
+    setCommentToDelete(commentId);
+    setIsReply(false);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteReply = async (replyId) => {
+    setCommentToDelete(replyId);
+    setIsReply(true);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
     setDeleteLoading(true);
     try {
       await axios.delete(
-        `http://localhost:8080/api/posts/${postId}/comment/${commentId}`,
+        `http://localhost:8080/api/posts/${postId}/comment/${commentToDelete}`,
         { withCredentials: true }
       );
       fetchComments();
@@ -151,31 +162,8 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       }
     } finally {
       setDeleteLoading(false);
-    }
-  };
-
-  const handleDeleteReply = async (replyId) => {
-    if (!window.confirm("Are you sure you want to delete this reply?")) {
-      return;
-    }
-    
-    setDeleteLoading(true);
-    try {
-      await axios.delete(
-        `http://localhost:8080/api/posts/${postId}/comment/${replyId}`,
-        { withCredentials: true }
-      );
-      fetchComments();
-      setError(null);
-    } catch (err) {
-      console.error("Error deleting reply:", err);
-      if (err.response && err.response.status === 403) {
-        setError("You can only delete your own replies");
-      } else {
-        setError("Failed to delete reply. Please try again.");
-      }
-    } finally {
-      setDeleteLoading(false);
+      setShowDeleteModal(false);
+      setCommentToDelete(null);
     }
   };
 
@@ -466,6 +454,30 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
           />
           <button onClick={handleCommentSubmit}>Post</button>
         </div>
+
+        {showDeleteModal && (
+          <div className="delete-confirmation-overlay" onClick={() => setShowDeleteModal(false)}>
+            <div className="delete-confirmation-modal" onClick={(e) => e.stopPropagation()}>
+              <h4>Delete {isReply ? 'Reply' : 'Comment'}</h4>
+              <p>Are you sure you want to delete this {isReply ? 'reply' : 'comment'}? This action cannot be undone.</p>
+              <div className="delete-confirmation-buttons">
+                <button 
+                  className="cancel-delete-btn" 
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="confirm-delete-btn" 
+                  onClick={confirmDelete}
+                  disabled={deleteLoading}
+                >
+                  {deleteLoading ? "Deleting..." : "Delete"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

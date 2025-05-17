@@ -55,7 +55,7 @@ const ProfilePage = () => {
         await followUser(loggedInUserId, userId);
       }
       setIsFollowing(!isFollowing);
-      fetchProfile(); // Refresh counts
+      fetchProfile();
     } catch (err) {
       console.error("Follow/unfollow failed:", err);
     }
