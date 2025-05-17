@@ -130,7 +130,8 @@ const ProfilePage = () => {
 
       <div className="user-posts-section">
         <h3>{isOwnProfile ? "Your Posts" : `${profile.name}'s Posts`}</h3>
-        <PostList filterByUserId={profile.id} />
+        <PostList filterByUserId={profile.id} sortBy="latest" />
+
       </div>
     </div>
   );
