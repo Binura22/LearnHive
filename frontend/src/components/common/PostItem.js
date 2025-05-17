@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./PostItem.css";
 import CommentModal from "./CommentModal";
 import LikesModal from "./LikesModal";
@@ -23,6 +26,22 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [authorProfileImage, setAuthorProfileImage] = useState(null);
 
+  const carouselSettings = {
+    dots: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    adaptiveHeight: true,
+    customPaging: () => <div className="tiny-dot" />,
+    appendDots: dots => (
+      <div className="dots-wrapper">
+        <ul>{dots}</ul>
+      </div>
+    )
+  };
+
 
   const currentUserName =
     localStorage.getItem("userName") || userEmail?.split("@")[0] || "User";
@@ -30,6 +49,16 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
   // check current user == post owner
   const isPostOwner = post.userId === loggedUserId;
+
+  useEffect(() => {
+    if (post.mediaUrls?.length > 1) {
+      const dots = document.querySelectorAll('.custom-dot');
+      if (dots.length > 0) {
+        dots[0].style.opacity = '1';
+        dots[0].style.transform = 'scale(1.2)';
+      }
+    }
+  }, [post.mediaUrls]);
 
   useEffect(() => {
     const handleClickOutside = () => setShowMenu(false);
@@ -59,7 +88,6 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
       fetchAuthorData();
     }
   }, [post.userId]);
-
 
   const commentCount = post.comments ? post.comments.length : 0;
 
@@ -231,11 +259,35 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
 
   return (
     <div className="postItem">
-      <div className="postImage">
-        {post.mediaUrls?.length > 0 &&
-          post.mediaUrls.map((url, index) => (
-            <img key={index} src={url} alt={`Post ${index + 1}`} />
-          ))}
+      <div className="postMedia">
+        {post.mediaUrls?.length > 1 ? (
+          <Slider {...carouselSettings} className="post-carousel">
+            {post.mediaUrls.map((url, index) => (
+              <div key={index} className="carousel-slide">
+                {url.endsWith('.mp4') || url.endsWith('.webm') ? (
+                  <video controls className="post-media-item">
+                    <source src={url} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img
+                    src={url}
+                    alt={`Post ${index + 1}`}
+                    className="post-media-item"
+                  />
+                )}
+                
+              </div>
+            ))}
+          </Slider>
+        ) : post.mediaUrls?.length === 1 ? (
+          post.mediaUrls[0].endsWith('.mp4') || post.mediaUrls[0].endsWith('.webm') ? (
+            <video controls className="post-media-item">
+              <source src={post.mediaUrls[0]} type="video/mp4" />
+            </video>
+          ) : (
+            <img src={post.mediaUrls[0]} alt="Post" className="post-media-item" />
+          )
+        ) : null}
       </div>
 
       <div className="postContent">
