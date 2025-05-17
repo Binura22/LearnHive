@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import './CommentModal.css';
+import { getUserById } from "../../services/api";
 
-const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerName }) => {
+const CommentModal = ({ 
+  postId, 
+  onClose, 
+  userEmail, 
+  postOwnerEmail, 
+  postOwnerName,
+  onCommentAdded,
+  onCommentDeleted
+}) => {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentUserEmail, setCurrentUserEmail] = useState(userEmail || "");
   const [currentUserName, setCurrentUserName] = useState("");
+  const [currentUserProfileImage, setCurrentUserProfileImage] = useState(null);
   const [isPostOwner, setIsPostOwner] = useState(false);
   const loggedUserId = localStorage.getItem("userId");
   const [replyingTo, setReplyingTo] = useState(null);
@@ -21,34 +31,128 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
   const [isReply, setIsReply] = useState(false);
+  const [userProfileImages, setUserProfileImages] = useState({});
+  
+
+  const fetchCurrentUserProfile = async (userId) => {
+    console.log("Specifically fetching profile for current user ID:", userId);
+    if (!userId) {
+      console.log("No user ID provided to fetchCurrentUserProfile");
+      return;
+    }
+    
+    try {
+      const response = await getUserById(userId);
+      console.log("Current user profile response:", response);
+      
+      if (response?.data?.profileImage) {
+        const imgUrl = response.data.profileImage;
+        console.log("Setting current user profile image:", imgUrl);
+        setCurrentUserProfileImage(imgUrl);
+        localStorage.setItem('userProfileImage', imgUrl);
+        
+        setUserProfileImages(prev => ({
+          ...prev,
+          [userId]: imgUrl
+        }));
+        return imgUrl;
+      } else {
+        console.log(" No profile image in response for current user");
+      }
+    } catch (error) {
+      console.error(" Error fetching current user profile:", error);
+    }
+    return null;
+  };
+
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const currentUserId = localStorage.getItem('userId');
+    if (currentUserId) {
+      fetchCurrentUserProfile(currentUserId);
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (loggedUserId) {
+      fetchCurrentUserProfile(loggedUserId);
+    }
+  }, [loggedUserId]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
       try {
+        // Fetch current user data
         const response = await axios.get('http://localhost:8080/api/user/me', { withCredentials: true });
+        const userId = response.data.id;
         const email = response.data.email;
-        console.log(" API returned user email:", email);
+        console.log("API returned user data:", response.data);
         
-        if (email && email !== currentUserEmail) {
-          console.log("Updating current user email from API");
+        if (email) {
           setCurrentUserEmail(email);
           localStorage.setItem('userEmail', email);
         }
+        
         const name = response.data.name;
         if (name) {
           setCurrentUserName(name);
           localStorage.setItem('userName', name);
         }
-      } catch (err) {
-        const storedEmail = localStorage.getItem('userEmail');
-        if (storedEmail) setCurrentUserEmail(storedEmail);
-        const storedName = localStorage.getItem('userName');
-        if (storedName) setCurrentUserName(storedName);
+        
 
+        if (userId) {
+          localStorage.setItem('userId', userId);
+          
+          try {
+            console.log("Attempting to fetch user profile image directly...");
+            const profileResponse = await getUserById(userId);
+            console.log("Profile response:", profileResponse);
+            
+            if (profileResponse.data && profileResponse.data.profileImage) {
+              const imageUrl = profileResponse.data.profileImage;
+              console.log("Setting profile image from API:", imageUrl);
+              setCurrentUserProfileImage(imageUrl);
+              localStorage.setItem('userProfileImage', imageUrl);
+              
+              setUserProfileImages(prev => ({
+                ...prev,
+                [userId]: imageUrl
+              }));
+            }
+          } catch (profileError) {
+            console.error("Error fetching profile details:", profileError);
+            
+            const storedImage = localStorage.getItem('userProfileImage');
+            if (storedImage) {
+              console.log("Using profile image from localStorage:", storedImage);
+              setCurrentUserProfileImage(storedImage);
+              setUserProfileImages(prev => ({ ...prev, [userId]: storedImage }));
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error in fetchUserData:", err);
+        
+        const storedUserId = localStorage.getItem('userId');
+        const storedEmail = localStorage.getItem('userEmail');
+        const storedName = localStorage.getItem('userName');
+        const storedImage = localStorage.getItem('userProfileImage');
+        
+        if (storedEmail) setCurrentUserEmail(storedEmail);
+        if (storedName) setCurrentUserName(storedName);
+        
+        if (storedImage) {
+          console.log("Setting profile image from localStorage fallback:", storedImage);
+          setCurrentUserProfileImage(storedImage);
+          
+          if (storedUserId) {
+            setUserProfileImages(prev => ({ ...prev, [storedUserId]: storedImage }));
+          }
+        }
       }
     };
 
-    fetchUser();
+    fetchUserData();
     fetchComments();
   }, [postId]);
 
@@ -68,16 +172,32 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       setError("Comment cannot be empty");
       return;
     }
+    
+
+    setError(null);
+    
     try {
-      await axios.post(
+      let commentAddedSuccessfully = false;
+      
+      const response = await axios.post(
         `http://localhost:8080/api/posts/${postId}/comment`,
         { text: commentText },
         { withCredentials: true }
       );
-      fetchComments();
-      setCommentText("");
-      setError(null);
-    } catch {
+      
+      commentAddedSuccessfully = true;
+      console.log("Comment added successfully:", response.data);
+      
+      if (commentAddedSuccessfully) {
+        fetchComments();
+        setCommentText("");
+        
+        if (typeof onCommentAdded === 'function') {
+          onCommentAdded();
+        }
+      }
+    } catch (err) {
+      console.error("Error posting comment:", err);
       setError("Failed to post comment. Please try again.");
     }
   };
@@ -153,6 +273,10 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
       );
       fetchComments();
       setError(null);
+      
+      if (typeof onCommentDeleted === 'function') {
+        onCommentDeleted();
+      }
     } catch (err) {
       console.error("Error deleting comment:", err);
       if (err.response && err.response.status === 403) {
@@ -230,9 +354,17 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
           
           return (
             <div key={reply.id || idx} className="single-post-reply">
-              <div className="user-avatar">
-                {firstLetter}
-              </div>
+              {userProfileImages[reply.userId] ? (
+                <img 
+                  src={userProfileImages[reply.userId]} 
+                  alt={reply.userName}
+                  className="user-avatar"
+                />
+              ) : (
+                <div className="user-avatar">
+                  {firstLetter}
+                </div>
+              )}
               <div style={{ flex: 1 }}>
                 <div className="reply-header" style={{ 
                   display: 'flex',
@@ -245,7 +377,13 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
                       className="comment-user"
                       style={{ marginRight: '8px' }}
                     >
-                      {displayName}
+                      {reply.userName || (reply.userId ? (
+                        reply.userId.includes('@') 
+                          ? reply.userId.split('@')[0] 
+                          : (reply.userId.length > 20 
+                            ? `User ${reply.userId.substring(0, 5)}...` 
+                            : reply.userId)
+                      ) : "Unknown User")}
                     </a>
                     <span className="comment-time">{formatTimestamp(reply.timestamp)}</span>
                   </div>
@@ -283,6 +421,47 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
     }
   }, [comments]);
 
+  useEffect(() => {
+    const fetchProfileImages = async () => {
+      const profiles = { ...userProfileImages };
+      
+      for (const comment of comments) {
+        if (comment.userId && !profiles[comment.userId]) {
+          try {
+            const response = await getUserById(comment.userId);
+            if (response.data && response.data.profileImage) {
+              profiles[comment.userId] = response.data.profileImage;
+            }
+          } catch (error) {
+            console.error(`Failed to fetch profile for user ${comment.userId}:`, error);
+          }
+        }
+        
+
+        if (comment.replies) {
+          for (const reply of comment.replies) {
+            if (reply.userId && !profiles[reply.userId]) {
+              try {
+                const response = await getUserById(reply.userId);
+                if (response.data && response.data.profileImage) {
+                  profiles[reply.userId] = response.data.profileImage;
+                }
+              } catch (error) {
+                console.error(`Failed to fetch profile for user ${reply.userId}:`, error);
+              }
+            }
+          }
+        }
+      }
+      
+      setUserProfileImages(profiles);
+    };
+    
+    if (comments.length > 0) {
+      fetchProfileImages();
+    }
+  }, [comments]);
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -292,9 +471,17 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
           ) : comments.length > 0 ? (
             comments.map((c, index) => (
               <div key={c.id || index} className="comment-item">
-                <div className="user-avatar">
-                  {c.userName?.charAt(0).toUpperCase()}
-                </div>
+                {userProfileImages[c.userId] ? (
+                  <img 
+                    src={userProfileImages[c.userId]} 
+                    alt={c.userName}
+                    className="user-avatar"
+                  />
+                ) : (
+                  <div className="user-avatar">
+                    {c.userName?.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <div style={{ flex: 1 }}>
                   <div className="comment-header">
                     <div className="comment-user-info">
@@ -437,7 +624,68 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
                     </div>
                   )}
                   
-                  {c.replies && c.replies.length > 0 && renderReplies(c.replies)}
+                  {c.replies && c.replies.length > 0 && (
+                    <div className="single-post-replies">
+                      {c.replies.map((reply, idx) => (
+                        <div key={reply.id || idx} className="single-post-reply">
+                          {userProfileImages[reply.userId] ? (
+                            <img 
+                              src={userProfileImages[reply.userId]} 
+                              alt={reply.userName}
+                              className="user-avatar"
+                            />
+                          ) : (
+                            <div className="user-avatar">
+                              {reply.userName?.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <div style={{ flex: 1 }}>
+                            <div className="reply-header" style={{ 
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center'
+                            }}>
+                              <div className="reply-info" style={{ display: 'flex', alignItems: 'center' }}>
+                                <a 
+                                  href={`/profile/${encodeURIComponent(reply.userId)}`} 
+                                  className="comment-user"
+                                  style={{ marginRight: '8px' }}
+                                >
+                                  {reply.userName || (reply.userId ? (
+                                    reply.userId.includes('@') 
+                                      ? reply.userId.split('@')[0] 
+                                      : (reply.userId.length > 20 
+                                        ? `User ${reply.userId.substring(0, 5)}...` 
+                                        : reply.userId)
+                                  ) : "Unknown User")}
+                                </a>
+                                <span className="comment-time">{formatTimestamp(reply.timestamp)}</span>
+                              </div>
+                              
+                              {reply.userId === loggedUserId && (
+                                <button
+                                  onClick={() => handleDeleteReply(reply.id)}
+                                  disabled={deleteLoading}
+                                  className="delete-btn"
+                                  style={{ 
+                                    background: "none", 
+                                    border: "none", 
+                                    color: "#ff4d4d", 
+                                    fontSize: "12px", 
+                                    cursor: "pointer",
+                                    padding: "0 8px"
+                                  }}
+                                >
+                                  Delete
+                                </button>
+                              )}
+                            </div>
+                            <div className="comment-text">{reply.text}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))
@@ -447,12 +695,70 @@ const CommentModal = ({ postId, onClose, userEmail, postOwnerEmail, postOwnerNam
         </div>
         {error && <div className="error-message" style={{ color: 'red', margin: '10px 0' }}>{error}</div>}
         <div className="comment-form">
-          <textarea
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Write a comment..."
-          />
-          <button onClick={handleCommentSubmit}>Post</button>
+          <div className="comment-input-area" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+            {loggedUserId ? (
+              currentUserProfileImage ? (
+                <img 
+                  src={currentUserProfileImage} 
+                  alt={currentUserName || "User"}
+                  className="user-avatar"
+                  style={{ 
+                    alignSelf: 'flex-start',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '2px solid #e2e8f0'
+                  }}
+                  onError={(e) => {
+                    console.error("Failed to load profile image:", e);
+                    e.target.style.display = 'none';
+                    setTimeout(() => fetchCurrentUserProfile(loggedUserId), 1000);
+                  }}
+                />
+              ) : (
+                <div 
+                  className="user-avatar" 
+                  style={{ 
+                    alignSelf: 'flex-start', 
+                    backgroundColor: getAvatarColor(loggedUserId || currentUserEmail),
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    border: '2px solid #e2e8f0'
+                  }}
+                >
+                  {currentUserName ? currentUserName.charAt(0).toUpperCase() : '?'}
+                </div>
+              )
+            ) : (
+              <div className="user-avatar" style={{ 
+                alignSelf: 'flex-start', 
+                backgroundColor: '#cbd5e0',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontWeight: 'bold',
+                border: '2px solid #e2e8f0'
+              }}>?</div>
+            )}
+            <textarea
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="Write a comment..."
+              style={{ flex: 1 }}
+            />
+          </div>
+          <button onClick={handleCommentSubmit} style={{ alignSelf: 'flex-end', marginLeft: 'auto', display: 'block' }}>Post</button>
         </div>
 
         {showDeleteModal && (
