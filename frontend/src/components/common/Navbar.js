@@ -14,8 +14,9 @@ const Navbar = () => {
   const userMenuRef = useRef(null);
   const themeItemRef = useRef(null);
   const [userName, setUserName] = useState('User');
+  const [userProfileImage, setUserProfileImage] = useState(null);
 
-  // get the logged-in user ID from localStorage
+
   const userId = localStorage.getItem('userId');
   
   useEffect(() => {
@@ -64,9 +65,16 @@ const Navbar = () => {
           setUserName(response.data.name);
           localStorage.setItem('userName', response.data.name);
         }
+        
+        if (response.data.profileImage) {
+          setUserProfileImage(response.data.profileImage);
+          localStorage.setItem('userProfileImage', response.data.profileImage);
+        }
       } catch (err) {
         const storedName = localStorage.getItem('userName');
         if (storedName) setUserName(storedName);
+        const storedImage = localStorage.getItem('userProfileImage');
+        if (storedImage) setUserProfileImage(storedImage);
       }
     };
     
@@ -123,7 +131,20 @@ const Navbar = () => {
           <div className="user-menu-container" ref={userMenuRef}>
             <button onClick={toggleUserMenu} className="avatar-button">
               <div className="navbar-avatar">
-                <User size={18} strokeWidth={2} />
+                {userProfileImage ? (
+                  <img 
+                    src={userProfileImage} 
+                    alt="Profile" 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '50%'
+                    }}
+                  />
+                ) : (
+                  <User size={18} strokeWidth={2} />
+                )}
               </div>
               <span className="me-text">Me</span>
               <span className="dropdown-arrow">▼</span>
