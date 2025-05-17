@@ -17,7 +17,7 @@ const LearningPlanForm = () => {
 
 
   useEffect(() => {
-    // Fetch all published courses to show in dropdown
+    
     const fetchCourses = async () => {
       try {
         const response = await getAllCourses();
@@ -55,7 +55,7 @@ const LearningPlanForm = () => {
     try {
       await createLearningPlan(learningPlanData);
       toast.success('Learning plan created successfully!');
-      // reset form
+      
       setTitle('');
       setDescription('');
       setSelectedCourses([]);
