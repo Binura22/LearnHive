@@ -1,79 +1,131 @@
 .learning-plan-container {
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 25px;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  }
-  
-  .learning-plan-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .learning-plan-form .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .learning-plan-form label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #555;
-  }
-  
-  .learning-plan-form input[type="text"],
-  .learning-plan-form input[type="date"],
-  .learning-plan-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-  }
-  
-  .learning-plan-form textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-  
-  .course-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .course-item {
-    background-color: #ffffff;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  
-  .course-item input[type="checkbox"] {
-    transform: scale(1.2);
-  }
-  
-  .submit-btn {
-    background-color: #007bff;
-    color: #fff;
-    padding: 12px 18px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
-  }
-  
-  .submit-btn:hover {
-    background-color: #0056b3;
-  }
-  
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.learning-plan-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.learning-plan-form .form-group {
+  margin-bottom: 20px;
+}
+
+.learning-plan-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.learning-plan-form input[type="text"],
+.learning-plan-form input[type="date"],
+.learning-plan-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.learning-plan-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.course-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.course-item {
+  background-color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.course-item input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+
+.ai-goal-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.ai-goal-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.ai-goal-section input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.ai-goal-section input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.ai-goal-section button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.ai-goal-section button:hover {
+  background-color: #0056b3;
+}
+
+.ai-goal-section button:disabled {
+  background-color: #a6c8ff;
+  cursor: not-allowed;
+}
