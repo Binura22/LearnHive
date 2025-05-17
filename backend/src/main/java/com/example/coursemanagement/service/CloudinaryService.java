@@ -23,7 +23,9 @@ public class CloudinaryService {
             if (contentType.startsWith("video/")) {
                 options.put("resource_type", "video");
             } else if (contentType.equals("application/pdf")) {
-                options.put("resource_type", "raw");
+                options.put("resource_type", "auto");
+                options.put("format", "pdf");
+                options.put("flags", "attachment");
             }
         }
 
