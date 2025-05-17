@@ -1,5 +1,5 @@
 .course-list-container {
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -122,12 +122,14 @@
 }
 
 .search-container {
-  max-width: 600px;
-  margin: 0 auto 2rem auto;
+  display: flex;
+  max-width: 1000px;
+  margin: 2px auto 2rem auto;
 }
 
 .search-container .course-search {
-  width: 100%;
+  margin-top: 10px;
+  width: 50%;
 }
 
 .search-container .search-bar {

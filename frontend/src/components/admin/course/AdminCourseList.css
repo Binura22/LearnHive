@@ -2,6 +2,8 @@
   padding: 2rem;
   min-height: 100vh;
   background-color: var(--background-color-dark);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .header {
@@ -17,7 +19,7 @@
 }
 
 .add-course-btn {
-  background-color: var(--primary-color);
+  background-color: rgba(16, 199, 16, 0.758);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
