@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RestController
 @RequestMapping("/api/courses")
 public class CourseController {
@@ -140,10 +142,12 @@ public class CourseController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateModule(
             @PathVariable String id,
-            @RequestPart("module") Module updatedModule,
+            @RequestPart(value = "module", required = true) String moduleJson,
             @RequestPart(value = "video", required = false) MultipartFile videoFile,
             @RequestPart(value = "pdf", required = false) MultipartFile pdfFile) {
         try {
+            ObjectMapper mapper = new ObjectMapper();
+            Module updatedModule = mapper.readValue(moduleJson, Module.class);
             Module updated = moduleService.updateModuleWithFiles(id, updatedModule, videoFile, pdfFile);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {

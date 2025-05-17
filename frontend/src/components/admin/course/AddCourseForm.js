@@ -5,6 +5,7 @@ import './AddCourseForm.css';
 const AddCourseForm = ({ onClose, onCourseAdded }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [moduleError, setModuleError] = useState('');
   
   // Course state
   const [courseData, setCourseData] = useState({
@@ -60,6 +61,10 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
   };
 
   const addNewModule = () => {
+    if (modules.length >= 10) {
+      setModuleError('Maximum 10 modules per course allowed.');
+      return;
+    }
     setModules(prev => [
       ...prev,
       {
@@ -70,16 +75,38 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
         orderIndex: prev.length
       }
     ]);
+    setModuleError('');
   };
 
   const removeModule = (index) => {
+    if (modules.length <= 1) {
+      setModuleError('At least 1 module is required.');
+      return;
+    }
     setModules(prev => prev.filter((_, i) => i !== index));
+    setModuleError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setModuleError('');
+
+    if (modules.length < 1) {
+      setModuleError('At least 1 module is required.');
+      setIsLoading(false);
+      return;
+    }
+
+    // Each module has both a video and a PDF
+    for (const [index, module] of modules.entries()) {
+      if (!module.videoFile || module.videoFile.length === 0 || !module.pdfFile || module.pdfFile.length === 0) {
+        setModuleError(`Module ${index + 1} requires both a video and a PDF file.`);
+        setIsLoading(false);
+        return;
+      }
+    }
 
     try {
       // Create the course
@@ -151,14 +178,20 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
 
             <div className="form-group">
               <label htmlFor="category">Category</label>
-              <input
-                type="text"
+              <select
                 id="category"
                 name="category"
                 value={courseData.category}
                 onChange={handleCourseChange}
                 required
-              />
+              >
+                <option value="">Select Category</option>
+                <option value="Programming">Programming</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="DevOps">DevOps</option>
+              </select>
             </div>
 
             <div className="form-group">
@@ -214,7 +247,7 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
           {/* Modules Section */}
           <section className="modules-section">
             <h3>Course Modules</h3>
-            
+            {moduleError && <div className="error-message">{moduleError}</div>}
             {modules.map((module, index) => (
               <div key={index} className="module-container">
                 <h4>Module {index + 1}</h4>
@@ -269,6 +302,7 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
                     type="button"
                     className="remove-module-btn"
                     onClick={() => removeModule(index)}
+                    disabled={modules.length <= 1}
                   >
                     Remove Module
                   </button>
@@ -280,9 +314,13 @@ const AddCourseForm = ({ onClose, onCourseAdded }) => {
               type="button"
               className="add-module-btn"
               onClick={addNewModule}
+              disabled={modules.length >= 10}
             >
               Add Module
             </button>
+            {modules.length >= 10 && (
+              <div className="info-message">Maximum 10 modules allowed per course.</div>
+            )}
           </section>
 
           <div className="form-actions">

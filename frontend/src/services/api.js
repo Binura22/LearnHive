@@ -77,7 +77,12 @@ export const addModule = async (courseId, moduleData, videoFile, pdfFile) => {
 };
 
 export const updateModule = async (moduleId, formData) => {
-  return fileUploadInstance.put(`/api/courses/modules/${moduleId}`, formData);
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  };
+  return fileUploadInstance.put(`/api/courses/modules/${moduleId}`, formData, config);
 };
 
 export const deleteModule = async (id) => {
