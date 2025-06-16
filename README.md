@@ -1,6 +1,9 @@
 # LearnHive
 
-![LearnHive Logo](frontend/public/logos/LearnHive_logo-white.png)
+<p align="center">
+  <img src="frontend/public/logos/LearnHive_logo_nav.png" alt="LearnHive Logo" />
+</p>
+
 
 LearnHive is an open-source skill-sharing and learning platform designed for individuals eager to enhance their expertise and grow professionally in the modern corporate IT sector. The platform focuses on professional development and soft skills, enabling users to learn various courses based on their interests.
 
