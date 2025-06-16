@@ -6,6 +6,7 @@ LearnHive is an open-source skill-sharing and learning platform designed for ind
 
 ### Learning & Skill Development
 - Access to diverse courses focused on professional development and soft skills
+- Create AI-powered learning plans
 - Personalized learning paths based on user interests
 - Track and showcase learning progress and achievements
 
@@ -16,8 +17,6 @@ LearnHive is an open-source skill-sharing and learning platform designed for ind
   - Edit or delete your comments
   - Post owners can moderate comments
 - Public profile pages to showcase skills and professional activities
-- Create AI-powered learning plans
-- Follow courses and level up your skills
 - Follow other users to stay updated with their learning journey
 
 ### Engagement & Notifications
