@@ -1,5 +1,3 @@
-# LearnHive
-
 <p align="center">
   <img src="frontend/public/logos/LearnHive_logo_nav.png" alt="LearnHive Logo" />
 </p>
