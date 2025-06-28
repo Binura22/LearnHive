@@ -46,38 +46,6 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     )
   };
 
-  const carouselSettings = {
-    dots: true,
-    infinite: false,
-    speed: 300,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    adaptiveHeight: true,
-    customPaging: () => <div className="tiny-dot" />,
-    appendDots: dots => (
-      <div className="dots-wrapper">
-        <ul>{dots}</ul>
-      </div>
-    )
-  };
-
-  const carouselSettings = {
-    dots: true,
-    infinite: false,
-    speed: 300,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    adaptiveHeight: true,
-    customPaging: () => <div className="tiny-dot" />,
-    appendDots: dots => (
-      <div className="dots-wrapper">
-        <ul>{dots}</ul>
-      </div>
-    )
-  };
-
 
   const currentUserName =
     localStorage.getItem("userName") || userEmail?.split("@")[0] || "User";

@@ -1,4 +1,7 @@
-# LearnHive
+<p align="center">
+  <img src="frontend/public/logos/LearnHive_logo_nav.png" alt="LearnHive Logo" />
+</p>
+
 
 LearnHive is an open-source skill-sharing and learning platform designed for individuals eager to enhance their expertise and grow professionally in the modern corporate IT sector. The platform focuses on professional development and soft skills, enabling users to learn various courses based on their interests.
 
@@ -6,6 +9,7 @@ LearnHive is an open-source skill-sharing and learning platform designed for ind
 
 ### Learning & Skill Development
 - Access to diverse courses focused on professional development and soft skills
+- Create AI-powered learning plans
 - Personalized learning paths based on user interests
 - Track and showcase learning progress and achievements
 

@@ -13,6 +13,7 @@ const AdminCourseList = () => {
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [showAddCourse, setShowAddCourse] = useState(false);
   const navigate = useNavigate();
+  const [selectedLevel, setSelectedLevel] = useState('');
 
   useEffect(() => {
     fetchCourses();
@@ -22,7 +23,7 @@ const AdminCourseList = () => {
     try {
       const response = await getAllCourses();
       setCourses(response.data);
-      setFilteredCourses(response.data); // update filteredCourses
+      applyFilters('', selectedLevel, response.data);
       setError('');
     } catch (err) {
       setError('Failed to fetch courses');
@@ -31,15 +32,31 @@ const AdminCourseList = () => {
     }
   };
 
-  const handleSearch = (searchTerm) => {
+  const applyFilters = (searchTerm, levelFilter, coursesToFilter) => {
+    let updatedFilteredCourses = coursesToFilter;
+
+    if (levelFilter) {
+      updatedFilteredCourses = updatedFilteredCourses.filter(course => course.level === levelFilter);
+    }
+
     if (searchTerm) {
-      const filtered = courses.filter(course =>
+      updatedFilteredCourses = updatedFilteredCourses.filter(course =>
         course.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setFilteredCourses(filtered);
-    } else {
-      setFilteredCourses(courses);
     }
+
+    setFilteredCourses(updatedFilteredCourses);
+  };
+
+  const handleSearch = (searchTerm) => {
+    applyFilters(searchTerm, selectedLevel, courses);
+  };
+
+  const handleLevelChange = (e) => {
+    const level = e.target.value;
+    setSelectedLevel(level);
+    const currentSearchTerm = document.querySelector('.course-search input')?.value || '';
+    applyFilters(currentSearchTerm, level, courses);
   };
 
   const handleDeleteCourse = async (courseId) => {
@@ -52,7 +69,6 @@ const AdminCourseList = () => {
         const errorMessage = err.response?.data?.error || err.message || 'Failed to delete course';
         setError(`Failed to delete course: ${errorMessage}`);
         
-        // after unauthorized, redirect to login
         if (err.response?.status === 401 || err.response?.status === 403) {
           navigate('/login');
         }
@@ -83,7 +99,18 @@ const AdminCourseList = () => {
 
       {error && <div className="error-message">{error}</div>}
       <div className="search-container">
-        <SearchBar onSearch={handleSearch} placeholder="Search courses..." className="course-search"/>
+        <div className="search-filter-area">
+          <SearchBar onSearch={handleSearch} placeholder="Search courses..." className="course-search"/>
+          <div className="filter-container">
+            <label htmlFor="level-filter">Filter by Level:</label>
+            <select id="level-filter" value={selectedLevel} onChange={handleLevelChange}>
+              <option value="">All Levels</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+        </div>
       </div>
       {filteredCourses.length === 0 ? (
         <div className="no-results">
