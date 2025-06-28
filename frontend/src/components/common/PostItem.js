@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./PostItem.css";
 import CommentModal from "./CommentModal";
 import LikesModal from "./LikesModal";
@@ -25,6 +28,39 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
   const [editedDescription, setEditedDescription] = useState(post.description);
   const [isUpdating, setIsUpdating] = useState(false);
   const [authorProfileImage, setAuthorProfileImage] = useState(null);
+  const [currentCommentCount, setCurrentCommentCount] = useState(post.comments ? post.comments.length : 0);
+
+  const carouselSettings = {
+    dots: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    adaptiveHeight: true,
+    customPaging: () => <div className="tiny-dot" />,
+    appendDots: dots => (
+      <div className="dots-wrapper">
+        <ul>{dots}</ul>
+      </div>
+    )
+  };
+
+  const carouselSettings = {
+    dots: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    adaptiveHeight: true,
+    customPaging: () => <div className="tiny-dot" />,
+    appendDots: dots => (
+      <div className="dots-wrapper">
+        <ul>{dots}</ul>
+      </div>
+    )
+  };
 
   const carouselSettings = {
     dots: true,
@@ -88,8 +124,6 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
       fetchAuthorData();
     }
   }, [post.userId]);
-
-  const commentCount = post.comments ? post.comments.length : 0;
 
   const handleLikeClick = async () => {
     try {
@@ -257,6 +291,29 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
     setIsEditing(false);
   };
 
+  const handleCommentAdded = () => {
+    setCurrentCommentCount(prevCount => prevCount + 1);
+  };
+
+  const handleCommentDeleted = () => {
+    setCurrentCommentCount(prevCount => Math.max(0, prevCount - 1));
+  };
+
+  const refreshPostData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/posts/${post.id}`,
+        { withCredentials: true }
+      );
+      
+      if (response.data) {
+        setCurrentCommentCount(response.data.comments ? response.data.comments.length : 0);
+      }
+    } catch (error) {
+      console.error("Error refreshing post data:", error);
+    }
+  };
+
   return (
     <div className="postItem">
       <div className="postMedia">
@@ -379,7 +436,7 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
             onClick={handleOpenComments}
             style={{ cursor: "pointer", color: "#3b5998" }}
           >
-            {commentCount} {commentCount === 1 ? "Comment" : "Comments"}
+            {currentCommentCount} {currentCommentCount === 1 ? "Comment" : "Comments"}
           </span>
         </p>
 
@@ -408,10 +465,15 @@ const PostItem = ({ post, userEmail, onPostDelete }) => {
       {showComments && (
         <CommentModal
           postId={post.id}
-          onClose={() => setShowComments(false)}
+          onClose={() => {
+            setShowComments(false);
+            refreshPostData(); // Refresh data when modal closes
+          }}
           userEmail={userEmail}
           postOwnerEmail={post.userEmail}
           postOwnerName={post.userName}
+          onCommentAdded={handleCommentAdded}
+          onCommentDeleted={handleCommentDeleted}
         />
       )}
 

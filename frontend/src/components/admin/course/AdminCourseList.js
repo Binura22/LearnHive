@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCourses, deleteCourse } from '../../../services/api';
+import SearchBar from '../../common/SearchBar';
 import AddCourseForm from './AddCourseForm';
+import BackButton from '../../common/BackButton';
 import './AdminCourseList.css';
 
 const AdminCourseList = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [showAddCourse, setShowAddCourse] = useState(false);
   const navigate = useNavigate();
 
@@ -19,11 +22,23 @@ const AdminCourseList = () => {
     try {
       const response = await getAllCourses();
       setCourses(response.data);
+      setFilteredCourses(response.data); // update filteredCourses
       setError('');
     } catch (err) {
       setError('Failed to fetch courses');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSearch = (searchTerm) => {
+    if (searchTerm) {
+      const filtered = courses.filter(course =>
+        course.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCourses(filtered);
+    } else {
+      setFilteredCourses(courses);
     }
   };
 
@@ -46,7 +61,9 @@ const AdminCourseList = () => {
   };
 
   const handleCourseAdded = (newCourse) => {
-    setCourses([...courses, newCourse]);
+    const updated = [...courses, newCourse];
+    setCourses(updated);
+    setFilteredCourses(updated);
     setShowAddCourse(false);
   };
 
@@ -57,6 +74,7 @@ const AdminCourseList = () => {
   return (
     <div className="admin-course-list">
       <div className="header">
+        <BackButton />
         <h1>Manage Courses</h1>
         <button className="add-course-btn" onClick={() => setShowAddCourse(true)}>
           Add New Course
@@ -64,35 +82,43 @@ const AdminCourseList = () => {
       </div>
 
       {error && <div className="error-message">{error}</div>}
-
-      <div className="courses-grid">
-        {courses.map(course => (
-          <div key={course.id} className="course-card">
-            {course.imageUrl && (
-              <img 
-                src={course.imageUrl} 
-                alt={course.title}
-                className="course-image"
-              />
-            )}
-            <h3>{course.title}</h3>
-            <div className="course-actions">
-              <button 
-                className="edit-btn"
-                onClick={() => navigate(`/admin/courses/${course.id}/edit`)}
-              >
-                Edit
-              </button>
-              <button 
-                className="delete-btn"
-                onClick={() => handleDeleteCourse(course.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="search-container">
+        <SearchBar onSearch={handleSearch} placeholder="Search courses..." className="course-search"/>
       </div>
+      {filteredCourses.length === 0 ? (
+        <div className="no-results">
+          <p>No courses found matching your search.</p>
+        </div>
+      ) : (
+        <div className="courses-grid">
+          {filteredCourses.map(course => (
+            <div key={course.id} className="course-card">
+              {course.imageUrl && (
+                <img 
+                  src={course.imageUrl} 
+                  alt={course.title}
+                  className="course-image"
+                />
+              )}
+              <h3>{course.title}</h3>
+              <div className="course-actions">
+                <button 
+                  className="edit-btn"
+                  onClick={() => navigate(`/admin/courses/${course.id}/edit`)}
+                >
+                  Edit
+                </button>
+                <button 
+                  className="delete-btn"
+                  onClick={() => handleDeleteCourse(course.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {showAddCourse && (
         <AddCourseForm
