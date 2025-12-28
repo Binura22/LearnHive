@@ -3,7 +3,7 @@
 </p>
 
 
-LearnHive is an open-source skill-sharing and learning platform designed for individuals eager to enhance their expertise and grow professionally in the modern corporate IT sector. The platform focuses on professional development and soft skills, enabling users to learn various courses based on their interests.
+LearnHive is an open-source skill-sharing and AI powered learning platform designed for individuals eager to enhance their expertise and grow professionally in the modern corporate IT sector. The platform focuses on professional development and soft skills, enabling users to learn various courses based on their interests.
 
 ## Features
 
